@@ -10,17 +10,31 @@
 
 ---
 
-## 🚀 快速啟動方式
+## 🚀 啟動與分享方式 (支援方案 A 與方案 C)
 
-### 方法一：一鍵指令啟動（推薦）
-在專案目錄下開啟終端機（PowerShell 或 CMD），輸入：
-```bash
-python run_game.py
-```
-系統會自動在本機啟動 Web 服務，並在預設瀏覽器中開啟遊戲介面！
+### 方案 C：單檔離線遊玩 / 壓縮包分享（最快、零門檻）
+* **真・單一離線 HTML** (`python_agent_score100_standalone.html`)：
+  * 已將題庫、合成音效、核心程式與 4 大機甲視覺圖以 Base64 完整打包。
+  * **只需將該單一檔案傳給同學**，對方只要雙擊即可在任何電腦或手機瀏覽器離線遊玩，完全不需安裝 Python、不需要開伺服器，甚至不用解壓縮！
+* **完整專案 ZIP 包** (`python_agent_score100.zip`)：
+  * 適合直接丟到 Line / Discord / Google 雲端硬碟整包備份。
+* **本機一鍵啟動**：
+  * 執行 `python run_game.py`，會自動啟動本機伺服器並彈出遊戲視窗。
 
-### 方法二：直接點擊開啟
-直接使用 Chrome、Edge 等現代瀏覽器雙擊打開 `index.html`，即可完全離線遊玩！
+---
+
+### 方案 A：GitHub Pages 雲端部署（公開網址、一鍵雲端同步）
+* 專案內已準備好一鍵發布腳本 `deploy_to_github.py`。
+* **操作流程（只需 1 分鐘）**：
+  1. 在 [GitHub 建立新倉庫](https://github.com/new)（例如取名 `python-agent-score100`，設為 Public）。
+  2. 複製該倉庫的網址（如 `https://github.com/你的帳號/python-agent-score100.git`）。
+  3. 在本機執行：
+     ```bash
+     python deploy_to_github.py
+     ```
+     貼上你的倉庫網址，腳本會自動將專案推送到 main 分支。
+  4. 至 GitHub 倉庫頁面 ➔【Settings】➔【Pages】➔ Build and deployment Source 選擇【Deploy from a branch】➔ 選擇【main】與【/ (root)】點擊【Save】。
+  5. 約 1 分鐘後，即可獲得永久公開遊戲網址（例如：`https://你的帳號.github.io/python-agent-score100/`），分享給任何同學都能直接連線遊玩！
 
 ---
 

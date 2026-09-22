@@ -253,6 +253,32 @@ function closeBriefingModal() {
   document.getElementById("briefing-modal").classList.add("hidden");
 }
 
+// ==================== ALARM & REVIVAL MODAL ====================
+function openAlarmModal() {
+  const modal = document.getElementById("alarm-modal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    window.soundFX.playWrong();
+    lucide.createIcons();
+  }
+}
+
+function closeAlarmModal() {
+  window.soundFX.playClick();
+  const modal = document.getElementById("alarm-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function reviveAgent() {
+  window.soundFX.playLevelUp();
+  appState.hp = appState.maxHp;
+  saveState();
+  closeAlarmModal();
+  showToast("🛡️ 核心重啟成功！特務生命值已修復至 3/3！");
+}
+
 // ==================== CHAPTER QUIZ RUNNER ====================
 function startChapterQuiz(chapterId, difficulty) {
   window.soundFX.playClick();
@@ -379,6 +405,12 @@ function selectQuizAnswer(chosenLetter) {
     if (correctBtn) {
       correctBtn.classList.remove("bg-slate-900", "border-slate-700");
       correctBtn.classList.add("bg-emerald-950/80", "border-emerald-500", "text-emerald-200");
+    }
+
+    if (appState.hp === 0) {
+      setTimeout(() => {
+        openAlarmModal();
+      }, 700);
     }
   }
 

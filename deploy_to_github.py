@@ -8,6 +8,9 @@ import subprocess
 import os
 import sys
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 GIT_BIN = r"C:\Program Files\Git\cmd\git.exe"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

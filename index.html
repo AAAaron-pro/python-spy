@@ -77,6 +77,31 @@
       0% { transform: scale(0.95); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+    /* Cyber & Mecha Animations */
+    @keyframes cyberFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    .cyber-float {
+      animation: cyberFloat 4s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.85)); }
+    }
+    .neon-pulse {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .scanline-box::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 20;
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body class="font-sans antialiased text-slate-200">
@@ -165,20 +190,26 @@
 
     <!-- ==================== TAB 1: CHAPTERS VIEW ==================== -->
     <section id="view-chapters" class="space-y-8">
-      <!-- Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-950/60 via-cyan-950/40 to-slate-900 border border-agent-border p-6 shadow-2xl">
-        <div class="relative z-10 max-w-3xl space-y-2">
-          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
-            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-            MISSION CAMPAIGN // W1-W5 核心全解密
+      <!-- Banner with Cyber Python Image -->
+      <div class="relative overflow-hidden rounded-2xl border border-agent-border shadow-2xl bg-gradient-to-r from-[#070b14] via-[#0d1527] to-[#0a1020]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+          <div class="lg:col-span-7 p-6 sm:p-8 space-y-3 z-10">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              MISSION CAMPAIGN // W1-W5 核心全解密
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-wide">
+              PYTHON 特務：<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">滿分計畫</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+              針對國立臺灣大學「程式設計與網路資料搜集」期中考研發！機械巨蟒盤踞主控台，帶你徹底攻克 I/O 格式化、ASCII 編碼演算、串列記憶體淺拷貝、巢狀迴圈與可變預設參數陷阱。
+            </p>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-white">主題特訓章節地圖</h1>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            每個章節均含 <strong class="text-cyan-300">「觀念情報卡」</strong>、<strong class="text-emerald-300">「基礎突擊戰」</strong> 與考古題原型改造的 <strong class="text-rose-300">「進階陷阱試煉」</strong>。徹底攻克可變預設參數、記憶體參照、切片與變數作用域等最高頻失分點！
-          </p>
+          <div class="lg:col-span-5 relative h-48 lg:h-64 overflow-hidden rounded-r-2xl">
+            <img src="assets/hero_python.jpg" alt="Cyber Python Agent" class="w-full h-full object-cover object-center cyber-float opacity-90 hover:opacity-100 transition duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#070b14] via-transparent to-transparent"></div>
+          </div>
         </div>
-        <!-- Decorative grid -->
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
       </div>
 
       <!-- Chapter Cards Grid -->
@@ -189,12 +220,26 @@
 
     <!-- ==================== TAB 2: ARENA / EXAM VIEW ==================== -->
     <section id="view-arena" class="hidden space-y-8">
-      <div class="text-center max-w-2xl mx-auto space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-mono">
-          EXAM SIMULATION // TARGET DRIVEN
+      <!-- Arena Hero with Tactical Mecha Droid -->
+      <div class="relative overflow-hidden rounded-2xl border border-blue-900/40 shadow-2xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0d1630] p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6">
+          <div class="lg:col-span-4 relative h-48 sm:h-56 overflow-hidden rounded-xl border border-cyan-500/30 shadow-lg shadow-cyan-500/10">
+            <img src="assets/arena_droid.jpg" alt="Tactical Mecha Droid" class="w-full h-full object-cover object-center cyber-float" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/80 to-transparent"></div>
+            <div class="absolute bottom-2 left-3 text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded border border-cyan-500/30">
+              ARENA OVERSEER // UNIT-7
+            </div>
+          </div>
+          <div class="lg:col-span-8 space-y-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-mono">
+              EXAM SIMULATION // TARGET DRIVEN
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">期中實戰刷題考場</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              突破章節局限，全真計時高壓演練！戰術機甲哨兵即時監控作答時間與解題精準度，全面訓練臨場代碼追蹤直覺與破題敏銳度。
+            </p>
+          </div>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-white">期中實戰刷題考場</h2>
-        <p class="text-sm text-slate-400">打破章節藩籬，混合高頻考點。訓練高壓計時下的代碼追蹤直覺與解題速度！</p>
       </div>
 
       <!-- Exam Mode Cards -->
@@ -524,12 +569,15 @@
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
-          <i data-lucide="file-text" class="w-5 h-5"></i>
+      <div class="flex items-center gap-4 border-b border-slate-800 pb-4">
+        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-cyan-500/40 flex-shrink-0 shadow-lg shadow-cyan-500/10">
+          <img src="assets/briefing_owl.jpg" alt="Cyber Owl Tactical Advisor" class="w-full h-full object-cover object-center" />
         </div>
         <div>
-          <div class="text-xs font-mono text-cyan-400">INTELLIGENCE BRIEFING</div>
+          <div class="flex items-center gap-2 text-xs font-mono text-cyan-400">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>TACTICAL ADVISOR // 戰術智庫特務鴞</span>
+          </div>
           <h3 id="briefing-title" class="text-xl font-bold text-white">觀念情報卡</h3>
         </div>
       </div>
@@ -539,8 +587,40 @@
       </div>
 
       <div class="pt-4 border-t border-slate-800 flex justify-end">
-        <button onclick="closeBriefingModal()" class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition">
-          收到，開始作戰
+        <button onclick="closeBriefingModal()" class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition flex items-center gap-2">
+          <span>收到情報，開始作戰</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ALARM & REVIVAL MODAL ==================== -->
+  <div id="alarm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#0e0712] border border-rose-500/60 rounded-2xl max-w-md w-full shadow-2xl p-6 space-y-5 relative pop-anim text-center">
+      <div class="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden border-2 border-rose-500 shadow-xl shadow-rose-500/30 neon-pulse">
+        <img src="assets/alarm_drone.jpg" alt="Alarm Sentry Drone" class="w-full h-full object-cover object-center" />
+        <div class="absolute inset-0 bg-rose-500/10 mix-blend-color-dodge"></div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 text-xs font-mono font-bold">
+          <i data-lucide="shield-alert" class="w-4 h-4"></i>
+          <span>FIREWALL BREACH // 防火牆入侵</span>
+        </div>
+        <h3 class="text-xl font-extrabold text-white">特務生命值耗盡！</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          哨兵無人機已鎖定漏洞。請立即啟動系統核心重啟協定，修復防護罩並滿血重返戰場！
+        </p>
+      </div>
+
+      <div class="pt-2 flex flex-col gap-2">
+        <button onclick="reviveAgent()" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-extrabold text-sm transition shadow-lg shadow-rose-500/30 flex items-center justify-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin"></i>
+          <span>重啟核心修復（恢復 3 點生命值）</span>
+        </button>
+        <button onclick="closeAlarmModal()" class="w-full py-2 text-xs text-slate-500 hover:text-slate-300 transition">
+          稍後再修復
         </button>
       </div>
     </div>
