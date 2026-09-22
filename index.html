@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python 特務：滿分計畫 - NTU GenEdu5010 期中通關學習系統</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Prism.js for Python Code Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            agent: {
+              dark: '#0a0e17',
+              card: '#131b2e',
+              border: '#1f2d4d',
+              cyan: '#00f2fe',
+              blue: '#4facfe',
+              neon: '#10b981',
+              warning: '#f59e0b',
+              danger: '#ef4444'
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Consolas', 'Courier New', 'monospace'],
+            sans: ['Inter', 'Microsoft JhengHei', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #080c14;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.05) 0%, transparent 40%),
+        linear-gradient(to bottom, #070a12, #0d1322);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+    .neon-border-cyan {
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+    .neon-border-glow:hover {
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      border-color: #00f2fe;
+    }
+    pre[class*="language-"] {
+      background: #090d16 !important;
+      border: 1px solid #1e293b !important;
+      border-radius: 0.5rem;
+      padding: 1rem !important;
+      margin: 0.75rem 0 !important;
+      font-size: 0.95rem;
+    }
+    .shake-anim {
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+    .pop-anim {
+      animation: pop 0.3s ease-out;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-200">
+
+  <!-- ==================== TOP NAVIGATION & HUD ==================== -->
+  <header class="sticky top-0 z-40 bg-[#0a0f1c]/90 backdrop-blur-md border-b border-agent-border px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Agent Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
+          <i data-lucide="terminal" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg tracking-wide text-white">PYTHON 特務：滿分計畫</span>
+            <span class="px-2 py-0.5 text-xs rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">GENEDU5010</span>
+          </div>
+          <p class="text-xs text-slate-400">台大期中衝刺．故事闖關 & 全真刷題系統</p>
+        </div>
+      </div>
+
+      <!-- Agent HUD Status (XP, Level, HP, Combo) -->
+      <div class="flex items-center gap-4 bg-[#111827] px-4 py-2 rounded-xl border border-agent-border shadow-inner">
+        <!-- Rank & Level -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 font-bold font-mono text-sm" id="hud-level">
+            L1
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-400" id="hud-rank">見習探員</span>
+            <div class="w-24 bg-slate-800 h-2 rounded-full overflow-hidden mt-0.5">
+              <div id="hud-xp-bar" class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-300" style="width: 20%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-6 w-[1px] bg-slate-800"></div>
+
+        <!-- Heart HP -->
+        <div class="flex items-center gap-1 text-rose-500" title="特務生命值 (答錯扣除)">
+          <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+          <span id="hud-hp" class="font-mono font-bold text-sm text-slate-200">3/3</span>
+        </div>
+
+        <div class="h-6 w-[1px] bg-slate-800"></div>
+
+        <!-- Streak Combo -->
+        <div class="flex items-center gap-1 text-amber-400" title="連續答對連擊">
+          <i data-lucide="flame" class="w-4 h-4 fill-current animate-pulse"></i>
+          <span id="hud-combo" class="font-mono font-bold text-sm text-amber-300">0 Combo</span>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button id="btn-sound-toggle" class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition" title="切換音效">
+          <i data-lucide="volume-2" id="icon-sound" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex items-center gap-1 bg-[#111827] p-1 rounded-xl border border-agent-border">
+        <button onclick="switchTab('chapters')" id="tab-btn-chapters" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>章節冒險</span>
+        </button>
+        <button onclick="switchTab('arena')" id="tab-btn-arena" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
+          <i data-lucide="crosshair" class="w-4 h-4"></i>
+          <span>刷題模擬考</span>
+        </button>
+        <button onclick="switchTab('mistakes')" id="tab-btn-mistakes" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition relative">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>錯題筆記</span>
+          <span id="mistake-badge" class="hidden px-1.5 py-0.2 text-[10px] bg-rose-500 text-white rounded-full font-bold">0</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          <span>弱點分析</span>
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+
+    <!-- ==================== TAB 1: CHAPTERS VIEW ==================== -->
+    <section id="view-chapters" class="space-y-8">
+      <!-- Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-950/60 via-cyan-950/40 to-slate-900 border border-agent-border p-6 shadow-2xl">
+        <div class="relative z-10 max-w-3xl space-y-2">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            MISSION CAMPAIGN // W1-W5 核心全解密
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white">主題特訓章節地圖</h1>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            每個章節均含 <strong class="text-cyan-300">「觀念情報卡」</strong>、<strong class="text-emerald-300">「基礎突擊戰」</strong> 與考古題原型改造的 <strong class="text-rose-300">「進階陷阱試煉」</strong>。徹底攻克可變預設參數、記憶體參照、切片與變數作用域等最高頻失分點！
+          </p>
+        </div>
+        <!-- Decorative grid -->
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+
+      <!-- Chapter Cards Grid -->
+      <div id="chapters-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: ARENA / EXAM VIEW ==================== -->
+    <section id="view-arena" class="hidden space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-mono">
+          EXAM SIMULATION // TARGET DRIVEN
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white">期中實戰刷題考場</h2>
+        <p class="text-sm text-slate-400">打破章節藩籬，混合高頻考點。訓練高壓計時下的代碼追蹤直覺與解題速度！</p>
+      </div>
+
+      <!-- Exam Mode Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Mode 1: 50min Exam 1 (114-1) -->
+        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30 group-hover:scale-105 transition">
+              <i data-lucide="timer" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-white text-lg">50 分鐘急速模考</h3>
+              <p class="text-xs text-cyan-400 font-mono">仿 114-1 期中試卷規格</p>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              隨機抽取 25 題跨章節題目，嚴格計時 50 分鐘，考驗第一時間破題與敏銳度。
+            </p>
+          </div>
+          <button onclick="startExam('quick50', 25, 50)" class="mt-5 w-full py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>開始測驗</span>
+          </button>
+        </div>
+
+        <!-- Mode 2: 120min Exam 1 (114-2) -->
+        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-blue-500/50 transition flex flex-col justify-between group shadow-lg">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-105 transition">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-white text-lg">全真深度模擬考</h3>
+              <p class="text-xs text-blue-400 font-mono">仿 114-2 (120分/大題量)</p>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              抽取 40 題全方位混合題庫，計時 120 分鐘。全面涵蓋巢狀迴圈與記憶體參照魔王題。
+            </p>
+          </div>
+          <button onclick="startExam('full120', 40, 120)" class="mt-5 w-full py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>進入考場</span>
+          </button>
+        </div>
+
+        <!-- Mode 3: 10 Q Sprint -->
+        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-emerald-500/50 transition flex flex-col justify-between group shadow-lg">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-105 transition">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-white text-lg">10 題快速突擊</h3>
+              <p class="text-xs text-emerald-400 font-mono">5 分鐘碎片化刷題</p>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              隨機抽取 10 題快節奏速刷，適合搭車、課間或考前 10 分鐘迅速喚醒題感。
+            </p>
+          </div>
+          <button onclick="startExam('sprint10', 10, 15)" class="mt-5 w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>立即開打</span>
+          </button>
+        </div>
+
+        <!-- Mode 4: Weakness Drill -->
+        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-rose-500/50 transition flex flex-col justify-between group shadow-lg">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/30 group-hover:scale-105 transition">
+              <i data-lucide="target" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-white text-lg">高頻陷阱突擊</h3>
+              <p class="text-xs text-rose-400 font-mono">專攻最高失分率題目</p>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              匯總所有進階難度的陷阱題（可變引數、切片賦值、Scope 遮蔽），正面擊破難點！
+            </p>
+          </div>
+          <button onclick="startExam('traps', 15, 25, 'advanced')" class="mt-5 w-full py-2.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>直面陷阱</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Active Exam Interface Container (Shown when an exam is running) -->
+      <div id="exam-active-container" class="hidden bg-agent-card border border-agent-border rounded-2xl p-6 shadow-2xl space-y-6">
+        <!-- Exam Header -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <span id="exam-title-badge" class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold rounded border border-cyan-500/30">
+              50 分鐘模考
+            </span>
+            <span class="text-slate-400 text-sm">進度：<strong id="exam-progress-text" class="text-white">1 / 25</strong></span>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Timer -->
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700">
+              <i data-lucide="clock" class="w-4 h-4 text-cyan-400"></i>
+              <span id="exam-timer" class="font-mono text-base font-bold text-cyan-300">49:59</span>
+            </div>
+
+            <!-- Hand in exam button -->
+            <button onclick="confirmSubmitExam()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition">
+              提前交卷結算
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="exam-progress-bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 4%"></div>
+        </div>
+
+        <!-- Exam Question Body -->
+        <div id="exam-question-body" class="space-y-6">
+          <!-- Dynamically inserted -->
+        </div>
+
+        <!-- Exam Navigation Buttons -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+          <button id="btn-exam-prev" onclick="navigateExamQuestion(-1)" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition flex items-center gap-2">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            <span>上一題</span>
+          </button>
+
+          <!-- Dot palette -->
+          <div id="exam-dots" class="flex flex-wrap gap-1.5 max-w-md justify-center">
+            <!-- Question jump dots -->
+          </div>
+
+          <button id="btn-exam-next" onclick="navigateExamQuestion(1)" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition flex items-center gap-2">
+            <span>下一題</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Exam Result Report Modal Container -->
+      <div id="exam-result-container" class="hidden bg-agent-card border border-cyan-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <!-- Rendered dynamically on exam finish -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: MISTAKES VIEW ==================== -->
+    <section id="view-mistakes" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="book-open" class="text-rose-400 w-6 h-6"></i>
+            <span>特務錯題情報庫</span>
+          </h2>
+          <p class="text-sm text-slate-400">系統自動收集歷次闖關與模考答錯的題目。在此重新答對即可消滅錯題！</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="reQuizAllMistakes()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-rose-600/20">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>集中消滅所有錯題</span>
+          </button>
+          <button onclick="clearAllMistakes()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-sm transition">
+            清空錯題
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter by chapter -->
+      <div class="flex flex-wrap gap-2 pt-2" id="mistake-filter-bar">
+        <button onclick="filterMistakes(0)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">全部章節</button>
+        <button onclick="filterMistakes(1)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch1 基礎與 PEP8</button>
+        <button onclick="filterMistakes(2)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch2 字串與 ASCII</button>
+        <button onclick="filterMistakes(3)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch3 串列記憶體</button>
+        <button onclick="filterMistakes(4)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch4 迴圈與邊界</button>
+        <button onclick="filterMistakes(5)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch5 函式與作用域</button>
+        <button onclick="filterMistakes(6)" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">Ch6 高階表達式</button>
+      </div>
+
+      <!-- Mistake Cards List -->
+      <div id="mistake-list" class="space-y-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: ANALYTICS VIEW ==================== -->
+    <section id="view-analytics" class="hidden space-y-6">
+      <div class="space-y-1">
+        <h2 class="text-2xl font-bold text-white">特務能力分析與弱點雷達</h2>
+        <p class="text-sm text-slate-400">追蹤你在各章節的答題正確率，精確鎖定考前需要補強的知識模組。</p>
+      </div>
+
+      <!-- Stats Overview Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-agent-card border border-agent-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400">總答題數</div>
+          <div id="stat-total-answered" class="text-2xl font-bold font-mono text-cyan-400 mt-1">0</div>
+        </div>
+        <div class="bg-agent-card border border-agent-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400">平均正確率</div>
+          <div id="stat-accuracy" class="text-2xl font-bold font-mono text-emerald-400 mt-1">0%</div>
+        </div>
+        <div class="bg-agent-card border border-agent-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400">最高連擊 (Combo)</div>
+          <div id="stat-max-streak" class="text-2xl font-bold font-mono text-amber-400 mt-1">0</div>
+        </div>
+        <div class="bg-agent-card border border-agent-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400">累積獲得星級</div>
+          <div id="stat-total-stars" class="text-2xl font-bold font-mono text-purple-400 mt-1">0 / 36</div>
+        </div>
+      </div>
+
+      <!-- Chapter Mastery Bars -->
+      <div class="bg-agent-card border border-agent-border rounded-2xl p-6 space-y-6">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i data-lucide="bar-chart-3" class="w-5 h-5 text-cyan-400"></i>
+          <span>各單元掌握度分佈</span>
+        </h3>
+        <div id="mastery-bars-container" class="space-y-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== INTERACTIVE QUIZ MODAL (STORY MODE) ==================== -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#0f172a] border border-agent-border rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 space-y-6 relative pop-anim">
+      
+      <!-- Close Button -->
+      <button onclick="closeQuizModal()" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Quiz Header -->
+      <div class="flex items-center gap-3">
+        <span id="quiz-tag-difficulty" class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
+          BASIC
+        </span>
+        <span id="quiz-tag-chapter" class="text-xs text-slate-400 font-mono">CH 1</span>
+        <span id="quiz-tag-category" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">print格式化</span>
+        <div class="ml-auto pr-8 text-xs font-mono text-slate-400">
+          題號：<span id="quiz-current-num" class="text-cyan-400 font-bold">1</span> / <span id="quiz-total-num">5</span>
+        </div>
+      </div>
+
+      <!-- Question Text -->
+      <div class="space-y-3">
+        <h3 id="quiz-question-text" class="text-lg font-bold text-white leading-relaxed">
+          執行下列 Python 程式碼後，終端機的輸出結果為何？
+        </h3>
+        <!-- Python Code Block -->
+        <div id="quiz-code-container" class="relative group">
+          <pre class="language-python"><code id="quiz-code-content"># Python Code</code></pre>
+        </div>
+      </div>
+
+      <!-- 4 Options Grid -->
+      <div id="quiz-options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Buttons rendered dynamically -->
+      </div>
+
+      <!-- Explanation & Step-by-Step Code Tracer Section (Appears after answer) -->
+      <div id="quiz-feedback-container" class="hidden space-y-4 pt-4 border-t border-slate-800 pop-anim">
+        
+        <!-- Feedback Banner -->
+        <div id="quiz-feedback-banner" class="p-4 rounded-xl flex items-start gap-3">
+          <!-- Dynamically styled green/red -->
+        </div>
+
+        <!-- Python Tutor Step Tracer Viewer -->
+        <div class="bg-[#0b101d] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i>
+              <span class="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">Python Tutor 單步代碼追蹤</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="traceStepPrev()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-xs flex items-center gap-1 px-2">
+                <i data-lucide="skip-back" class="w-3.5 h-3.5"></i> 上一步
+              </button>
+              <span id="trace-step-indicator" class="text-xs font-mono px-2 text-slate-400">1 / 3</span>
+              <button onclick="traceStepNext()" class="p-1 rounded bg-cyan-900/50 hover:bg-cyan-800 text-cyan-300 transition text-xs flex items-center gap-1 px-2">
+                下一步 <i data-lucide="skip-forward" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tracer Step Details -->
+          <div class="bg-slate-900/90 rounded-lg p-3 border border-slate-800/80 space-y-2">
+            <div class="flex items-center gap-2 text-xs font-mono text-amber-300" id="trace-line-indicator">
+              <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+              <span>執行行數：第 1 行</span>
+            </div>
+            <p id="trace-step-text" class="text-xs text-slate-300 leading-relaxed">
+              直譯器讀取並執行指令...
+            </p>
+            <!-- Variables snapshot table -->
+            <div class="pt-2 border-t border-slate-800">
+              <div class="text-[11px] font-mono text-slate-500 mb-1">變數記憶體快照 (Variables in Scope):</div>
+              <div id="trace-vars-pills" class="flex flex-wrap gap-1.5">
+                <!-- e.g. a = 10, b = 20 -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Question Action Button -->
+        <div class="flex justify-end pt-2">
+          <button id="btn-quiz-next" onclick="nextQuizQuestion()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+            <span>前往下一題</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== BRIEFING MODAL (CONCEPTS) ==================== -->
+  <div id="briefing-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-agent-card border border-cyan-500/40 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl p-6 space-y-5 relative pop-anim">
+      <button onclick="closeBriefingModal()" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
+          <i data-lucide="file-text" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs font-mono text-cyan-400">INTELLIGENCE BRIEFING</div>
+          <h3 id="briefing-title" class="text-xl font-bold text-white">觀念情報卡</h3>
+        </div>
+      </div>
+
+      <div id="briefing-content" class="space-y-3 text-sm text-slate-300 leading-relaxed">
+        <!-- Bullets inserted dynamically -->
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 flex justify-end">
+        <button onclick="closeBriefingModal()" class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition">
+          收到，開始作戰
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="questions.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Initialize Lucide Icons on load
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+
+      // Support URL Query Params for direct previews (e.g. ?tab=arena, ?preview=quiz, ?preview=briefing)
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam) {
+        switchTab(tabParam);
+      }
+
+      const previewParam = params.get('preview');
+      if (previewParam === 'quiz') {
+        startChapterQuiz(1, 'advanced');
+        // Auto select option B to trigger feedback & step tracer view
+        setTimeout(() => {
+          selectQuizAnswer('B');
+        }, 100);
+      } else if (previewParam === 'briefing') {
+        openBriefingModal(3);
+      } else if (previewParam === 'exam_run') {
+        startExam('quick50', 25, 50);
+      }
+    });
+  </script>
+</body>
+</html>
