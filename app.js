@@ -1024,7 +1024,6 @@ function submitExam() {
 
 // ==================== VIEW 3: MISTAKES VAULT ====================
 let currentMistakeFilter = 0;
-let currentMistakeDimensionFilter = 'all';
 
 function filterMistakes(chId) {
   window.soundFX.playClick();

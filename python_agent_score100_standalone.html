@@ -929,7 +929,7 @@ const QUESTIONS_DATABASE = [
       "D. False True True True"
     ],
     answer: "B",
-    explanation: "在 Python 中，數值 0、空字串 \\"\\"、空容器與 None 被 bool() 轉換時均為 False；非零數值 10 為 True，且包含一個空白鍵的字串 \\" \\" 不是空字串（長度為 1），因此為 True！故印出 False True False True。",
+    explanation: "在 Python 中，數值 0、空字串 ''、空容器與 None 被 bool() 轉換時均為 False；非零數值 10 為 True，且包含一個空白鍵的字串 ' ' 不是空字串（長度為 1），因此為 True！故印出 False True False True。",
     traceSteps: [
       { line: 1, text: "bool(0) 為數值 0，評估為 False", vars: { "bool(0)": "False" } },
       { line: 1, text: "bool(10) 為非零數值，評估為 True", vars: { "bool(10)": "True" } },
@@ -6620,7 +6620,6 @@ function submitExam() {
 
 // ==================== VIEW 3: MISTAKES VAULT ====================
 let currentMistakeFilter = 0;
-let currentMistakeDimensionFilter = 'all';
 
 function filterMistakes(chId) {
   window.soundFX.playClick();
