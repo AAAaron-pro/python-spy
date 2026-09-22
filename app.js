@@ -6,7 +6,6 @@
 // ==================== GLOBAL APP STATE & PROFILE SYSTEM ====================
 const PROFILES_LIST_KEY = "ntu_python_agent_profiles_v2";
 const ACTIVE_PROFILE_KEY = "ntu_python_agent_active_profile_v2";
-const DEFAULT_STUDENT_ID = "B15609014";
 
 const DEFAULT_DIMENSION_STATS = {
   syntax_io: { correct: 0, total: 0 },
@@ -27,7 +26,7 @@ const DIMENSION_MAP = {
 };
 
 const DEFAULT_STATE = {
-  studentId: DEFAULT_STUDENT_ID,
+  studentId: null,
   level: 1,
   xp: 0,
   hp: 3,
@@ -60,7 +59,7 @@ const DEFAULT_STATE = {
 // ==================== STATE PERSISTENCE & PROFILES ====================
 function getActiveStudentId() {
   const saved = localStorage.getItem(ACTIVE_PROFILE_KEY);
-  return (saved || DEFAULT_STUDENT_ID).trim().toUpperCase();
+  return saved ? saved.trim().toUpperCase() : null;
 }
 
 function getAllProfiles() {
@@ -68,10 +67,10 @@ function getAllProfiles() {
     const raw = localStorage.getItem(PROFILES_LIST_KEY);
     if (raw) {
       const list = JSON.parse(raw);
-      if (Array.isArray(list) && list.length > 0) return list;
+      if (Array.isArray(list)) return list;
     }
   } catch (e) {}
-  return [DEFAULT_STUDENT_ID];
+  return [];
 }
 
 function saveProfilesList(list) {
@@ -86,21 +85,17 @@ function getStorageKeyForProfile(id) {
 
 function loadState() {
   const studentId = getActiveStudentId();
+  if (!studentId) {
+    return {
+      ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
+      studentId: null
+    };
+  }
+
   try {
     const raw = localStorage.getItem(getStorageKeyForProfile(studentId));
     if (raw) {
       const parsed = JSON.parse(raw);
-      return {
-        ...DEFAULT_STATE,
-        ...parsed,
-        studentId,
-        dimensionStats: { ...DEFAULT_DIMENSION_STATS, ...(parsed.dimensionStats || {}) }
-      };
-    }
-    // Migration check: if v1 exists and studentId is DEFAULT_STUDENT_ID
-    const legacy = localStorage.getItem("ntu_python_agent_state_v1");
-    if (legacy) {
-      const parsed = JSON.parse(legacy);
       return {
         ...DEFAULT_STATE,
         ...parsed,
@@ -117,6 +112,7 @@ function loadState() {
 let appState = loadState();
 
 function saveState() {
+  if (!appState || !appState.studentId) return;
   try {
     localStorage.setItem(getStorageKeyForProfile(appState.studentId), JSON.stringify(appState));
     localStorage.setItem(ACTIVE_PROFILE_KEY, appState.studentId);
@@ -138,25 +134,52 @@ let examTimerInterval = null;
 let currentMistakeDimensionFilter = "all";
 
 // ==================== PROFILE MODAL CONTROLLERS ====================
-function openProfileModal() {
-  window.soundFX.playClick();
+function openProfileModal(isMandatory = false) {
+  const isActuallyMandatory = isMandatory || !appState || !appState.studentId;
+  if (!isActuallyMandatory && window.soundFX) window.soundFX.playClick();
+
   const modal = document.getElementById("profile-modal");
   const input = document.getElementById("input-student-id");
+  const closeBtn = document.getElementById("btn-close-profile-modal");
+  const noticeEl = document.getElementById("profile-mandatory-notice");
+  const historySec = document.getElementById("profile-history-section");
   const historyContainer = document.getElementById("profile-history-list");
 
-  if (input) {
-    input.value = appState.studentId || "";
+  if (closeBtn) {
+    if (isActuallyMandatory) {
+      closeBtn.classList.add("hidden");
+    } else {
+      closeBtn.classList.remove("hidden");
+    }
   }
 
-  if (historyContainer) {
-    const profiles = getAllProfiles();
-    historyContainer.innerHTML = profiles.map(id => `
-      <button type="button" onclick="switchProfile('${id}')" class="px-2.5 py-1 rounded-lg text-xs font-mono transition border ${
-        id === appState.studentId ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500'
-      }">
-        ${id} ${id === appState.studentId ? '●' : ''}
-      </button>
-    `).join("");
+  if (noticeEl) {
+    if (isActuallyMandatory) {
+      noticeEl.classList.remove("hidden");
+    } else {
+      noticeEl.classList.add("hidden");
+    }
+  }
+
+  if (input) {
+    input.value = (appState && appState.studentId) ? appState.studentId : "";
+    setTimeout(() => input.focus(), 150);
+  }
+
+  const profiles = getAllProfiles();
+  if (historySec && historyContainer) {
+    if (profiles.length > 0) {
+      historySec.classList.remove("hidden");
+      historyContainer.innerHTML = profiles.map(id => `
+        <button type="button" onclick="switchProfile('${id}')" class="px-2.5 py-1 rounded-lg text-xs font-mono transition border ${
+          (appState && id === appState.studentId) ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500'
+        }">
+          ${id} ${(appState && id === appState.studentId) ? '●' : ''}
+        </button>
+      `).join("");
+    } else {
+      historySec.classList.add("hidden");
+    }
   }
 
   modal.classList.remove("hidden");
@@ -164,7 +187,14 @@ function openProfileModal() {
 }
 
 function closeProfileModal() {
-  window.soundFX.playClick();
+  if (!appState || !appState.studentId) {
+    if (window.soundFX) window.soundFX.playWrong();
+    showToast("⚠️ 請先輸入特務學號以完成建檔！");
+    const input = document.getElementById("input-student-id");
+    if (input) input.focus();
+    return;
+  }
+  if (window.soundFX) window.soundFX.playClick();
   const modal = document.getElementById("profile-modal");
   if (modal) modal.classList.add("hidden");
 }
@@ -173,19 +203,26 @@ function handleProfileSubmit(e) {
   if (e) e.preventDefault();
   const input = document.getElementById("input-student-id");
   const newId = (input ? input.value : "").trim().toUpperCase();
-  if (!newId) return;
+  if (!newId || newId.length < 2) {
+    if (window.soundFX) window.soundFX.playWrong();
+    showToast("⚠️ 請輸入有效的特務學號或代號！");
+    return;
+  }
 
   switchProfile(newId);
-  closeProfileModal();
-  showToast(`🎖️ 特務檔案已切換至：【${newId}】！`);
+  const modal = document.getElementById("profile-modal");
+  if (modal) modal.classList.add("hidden");
+  showToast(`🎖️ 特務檔案已啟動：探員【${newId}】！`);
 }
 
 function switchProfile(targetId) {
   if (!targetId) return;
   targetId = targetId.trim().toUpperCase();
 
-  // Save existing state first
-  saveState();
+  // Save existing state first if there was a student
+  if (appState && appState.studentId) {
+    saveState();
+  }
 
   localStorage.setItem(ACTIVE_PROFILE_KEY, targetId);
   const profiles = getAllProfiles();
@@ -199,7 +236,10 @@ function switchProfile(targetId) {
   renderChapters();
   renderMistakes();
   renderAnalytics();
-  closeProfileModal();
+
+  const modal = document.getElementById("profile-modal");
+  if (modal) modal.classList.add("hidden");
+  if (window.soundFX) window.soundFX.playCorrect();
 }
 
 // ==================== XP & RANK SYSTEM ====================
@@ -234,6 +274,11 @@ function addXP(amount) {
 }
 
 function updateHUD() {
+  const studentIdEl = document.getElementById("hud-student-id");
+  if (studentIdEl) {
+    studentIdEl.textContent = (appState && appState.studentId) ? appState.studentId : "未登入特務";
+  }
+
   const levelEl = document.getElementById("hud-level");
   const rankEl = document.getElementById("hud-rank");
   const xpBarEl = document.getElementById("hud-xp-bar");
@@ -448,6 +493,11 @@ function randomizeQuestionOptions(q) {
 }
 
 function startChapterQuiz(chapterId, difficulty) {
+  if (!appState || !appState.studentId) {
+    openProfileModal(true);
+    showToast("⚠️ 請先輸入特務學號以開始作戰！");
+    return;
+  }
   window.soundFX.playClick();
   const pool = QUESTIONS_DATABASE.filter(q => q.chapterId === chapterId && q.difficulty === difficulty);
 
@@ -717,6 +767,11 @@ function finishChapterQuiz() {
 
 // ==================== VIEW 2: ARENA & EXAM ENGINE ====================
 function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = null) {
+  if (!appState || !appState.studentId) {
+    openProfileModal(true);
+    showToast("⚠️ 請先輸入特務學號以進入考場！");
+    return;
+  }
   window.soundFX.playClick();
 
   let pool = [...QUESTIONS_DATABASE];
@@ -1347,6 +1402,12 @@ function escapeHtml(text) {
 
 // ==================== APP BOOTSTRAP ====================
 document.addEventListener("DOMContentLoaded", () => {
+  const currentId = getActiveStudentId();
+  if (!currentId) {
+    // 未登入特務：遊戲開始前強制彈出不可關閉之學號建檔視窗
+    openProfileModal(true);
+  }
+
   updateHUD();
   renderChapters();
 
@@ -1354,7 +1415,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const soundBtn = document.getElementById("btn-sound-toggle");
   const soundIcon = document.getElementById("icon-sound");
   if (soundBtn && soundIcon) {
-    if (window.soundFX.muted) {
+    if (window.soundFX && window.soundFX.muted) {
       soundIcon.setAttribute("data-lucide", "volume-x");
     }
     soundBtn.onclick = () => {
@@ -1364,4 +1425,19 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(isMuted ? "🔇 音效已靜音" : "🔊 音效已開啟");
     };
   }
+
+  // Prevent Escape key from closing mandatory modal if unauthenticated
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const pModal = document.getElementById("profile-modal");
+      if (pModal && !pModal.classList.contains("hidden")) {
+        if (!appState || !appState.studentId) {
+          e.preventDefault();
+          showToast("⚠️ 請先輸入特務學號以完成建檔！");
+          const input = document.getElementById("input-student-id");
+          if (input) input.focus();
+        }
+      }
+    }
+  });
 });
