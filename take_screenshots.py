@@ -47,9 +47,11 @@ def main():
 
     targets = [
         ("preview_chapters_hub.png", f"http://localhost:{PORT}/index.html"),
-        ("preview_exam_arena.png", f"http://localhost:{PORT}/index.html?tab=arena"),
-        ("preview_quiz_tracer.png", f"http://localhost:{PORT}/index.html?preview=quiz"),
+        ("preview_profile_modal.png", f"http://localhost:{PORT}/index.html?preview=profile"),
         ("preview_briefing.png", f"http://localhost:{PORT}/index.html?preview=briefing"),
+        ("preview_radar_analytics.png", f"http://localhost:{PORT}/index.html?preview=radar"),
+        ("preview_quiz_tracer.png", f"http://localhost:{PORT}/index.html?preview=quiz"),
+        ("preview_exam_arena.png", f"http://localhost:{PORT}/index.html?tab=arena"),
         ("preview_exam_active.png", f"http://localhost:{PORT}/index.html?tab=arena&preview=exam_run")
     ]
 

@@ -30,6 +30,7 @@ def test_endpoints():
     files_to_check = [
         "index.html",
         "questions.js",
+        "concept_briefings.js",
         "audio.js",
         "app.js"
     ]

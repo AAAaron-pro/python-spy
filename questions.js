@@ -83,12 +83,11 @@ const CHAPTERS_DATA = [
 ];
 
 const QUESTIONS_DATABASE = [
-  // ==========================================
-  // CHAPTER 1: 訊號與變數基地
-  // ==========================================
   {
     id: "ch1_b1",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "print格式化",
     difficulty: "basic",
     category: "print格式化",
     question: "執行下列 Python 程式碼後，終端機的輸出結果為何？",
@@ -110,6 +109,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_b2",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "input型態",
     difficulty: "basic",
     category: "input型態",
     question: "若使用者在鍵盤輸入數字 7，下列程式碼印出的結果為何？",
@@ -118,7 +119,7 @@ const QUESTIONS_DATABASE = [
       "A. 14",
       "B. 77",
       "C. 7 * 2",
-      "D. TypeError: can't multiply sequence by non-int"
+      "D. TypeError: can"
     ],
     answer: "B",
     explanation: "input() 函式取得的輸入內容其型態永遠是字串（str），即使使用者輸入純數字也是字串 '7'。當字串乘上整數時（'7' * 2），Python 會執行字串重複操作，得到 '77'。",
@@ -131,6 +132,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_b3",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "型態轉換與整數除法",
     difficulty: "basic",
     category: "型態轉換與整數除法",
     question: "下列程式碼的輸出結果是什麼？",
@@ -152,6 +155,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_b4",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "布林真假值",
     difficulty: "basic",
     category: "布林真假值",
     question: "執行下列程式碼會印出什麼？",
@@ -163,7 +168,7 @@ const QUESTIONS_DATABASE = [
       "D. False True True True"
     ],
     answer: "B",
-    explanation: "在 Python 中，數值 0、空字串 \"\"、空容器與 None 被 bool() 轉換時均為 False；非零數值 10 為 True，且包含一個空白鍵的字串 \" \" 不是空字串（長度為 1），因此為 True！故印出 False True False True。",
+    explanation: "在 Python 中，數值 0、空字串 \\"\\"、空容器與 None 被 bool() 轉換時均為 False；非零數值 10 為 True，且包含一個空白鍵的字串 \\" \\" 不是空字串（長度為 1），因此為 True！故印出 False True False True。",
     traceSteps: [
       { line: 1, text: "bool(0) 為數值 0，評估為 False", vars: { "bool(0)": "False" } },
       { line: 1, text: "bool(10) 為非零數值，評估為 True", vars: { "bool(10)": "True" } },
@@ -174,6 +179,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_b5",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "變數多重賦值",
     difficulty: "basic",
     category: "變數多重賦值",
     question: "執行下列 Python 程式碼後，x 與 y 的值分別為何？",
@@ -197,6 +204,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_a1",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "型態轉換與複合運算",
     difficulty: "advanced",
     category: "型態轉換與複合運算",
     question: "下列程式碼的輸出結果為何？",
@@ -205,7 +214,7 @@ const QUESTIONS_DATABASE = [
       "A. 8.4 15",
       "B. 7.5 15",
       "C. 8.5 15",
-      "D. 7.5 '15'"
+      "D. 7.5 "
     ],
     answer: "B",
     explanation: "1. float('4.5') 轉為 4.5；\n2. int(3.9) 是無條件捨去小數部分，得到整數 3（不是四捨五入成4！）；\n3. int('10') + 5 = 15，經 str() 轉為字串 '15'；\n4. val1 + val2 = 4.5 + 3 = 7.5。print(7.5, '15') 輸出 7.5 15。",
@@ -219,14 +228,17 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_a2",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "PEP 8 規範檢驗",
     difficulty: "advanced",
     category: "PEP 8 規範檢驗",
     question: "依據投影片所介紹的 PEP 8 與 Python 變數命名標準，下列何者符合良好的 Coding Style？",
+    code: ``,
     options: [
       "A. 變數命名以數字開頭，如 2nd_score = 90",
       "B. 串列索引前加空格，如 items[ 0 ]",
       "C. 二元運算子前後空一格，如 total = score_a + score_b",
-      "D. 使用關鍵字當變數名，如 class = 'Data Science'"
+      "D. 使用關鍵字當變數名，如 class = "
     ],
     answer: "C",
     explanation: "根據 PEP 8：\n1. 二元運算子（如 =, +）前後應各留一個空白，變數命名應有語意且以底線分隔（snake_case）。\n2. 變數不可用數字開頭（2nd_score 語法錯誤）。\n3. 中括號、小括號內側緊鄰邊界處不應加空白（應為 items[0]）。\n4. class 是保留關鍵字，不能作為識別字。",
@@ -238,6 +250,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_a3",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "浮點數格式化輸出",
     difficulty: "advanced",
     category: "浮點數格式化輸出",
     question: "執行下列程式碼會印出什麼？",
@@ -245,7 +259,7 @@ const QUESTIONS_DATABASE = [
     options: [
       "A. PI:3.141:float",
       "B. PI:3.142:float",
-      "C. PI:3.141:<class 'float'>",
+      "C. PI:3.141:<class ",
       "D. PI:3.14:float"
     ],
     answer: "B",
@@ -260,6 +274,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_a4",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "複合賦值運算順序",
     difficulty: "advanced",
     category: "複合賦值運算順序",
     question: "下列程式碼執行完畢後，變數 total 的值為何？",
@@ -283,6 +299,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch1_a5",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "短路求值與真值判斷",
     difficulty: "advanced",
     category: "短路求值與真值判斷",
     question: "下列程式碼的輸出結果為何？",
@@ -301,13 +319,11 @@ const QUESTIONS_DATABASE = [
       { line: 2, text: "輸出 Agent", vars: { output: "Agent" } }
     ]
   },
-
-  // ==========================================
-  // CHAPTER 2: 字符密碼解析室
-  // ==========================================
   {
     id: "ch2_b1",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串切片基礎",
     difficulty: "basic",
     category: "字串切片基礎",
     question: "執行下列程式碼會印出什麼內容？",
@@ -329,6 +345,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_b2",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串方法與不可變性",
     difficulty: "basic",
     category: "字串方法與不可變性",
     question: "執行下列程式碼後，輸出為何？",
@@ -350,6 +368,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_b3",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "ASCII與ord/chr",
     difficulty: "basic",
     category: "ASCII與ord/chr",
     question: "下列程式碼的執行結果為何？",
@@ -372,6 +392,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_b4",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串切片步長",
     difficulty: "basic",
     category: "字串切片步長",
     question: "執行下列程式碼會印出什麼？",
@@ -393,6 +415,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_b5",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串判定方法",
     difficulty: "basic",
     category: "字串判定方法",
     question: "下列程式碼的輸出結果為何？",
@@ -415,6 +439,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_a1",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "負數步長與反轉切片",
     difficulty: "advanced",
     category: "負數步長與反轉切片",
     question: "下列這段程式碼的輸出結果為何？",
@@ -438,6 +464,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_a2",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "大小寫ASCII轉換演算",
     difficulty: "advanced",
     category: "大小寫ASCII轉換演算",
     question: "執行下列程式碼會得到什麼輸出？（常考的大寫轉小寫位移演算法）",
@@ -461,6 +489,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_a3",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串切片與字元運算組合",
     difficulty: "advanced",
     category: "字串切片與字元運算組合",
     question: "下列程式碼的輸出結果為何？",
@@ -483,6 +513,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_a4",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "split與join組合過濾",
     difficulty: "advanced",
     category: "split與join組合過濾",
     question: "下列程式碼將產生什麼輸出？",
@@ -505,6 +537,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch2_a5",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "replace連鎖操作與不可變性",
     difficulty: "advanced",
     category: "replace連鎖操作與不可變性",
     question: "執行下列程式碼後，印出的結果是什麼？",
@@ -525,13 +559,11 @@ const QUESTIONS_DATABASE = [
       { line: 4, text: "輸出 4", vars: { output: 4 } }
     ]
   },
-
-  // ==========================================
-  // CHAPTER 3: 資料矩陣防線
-  // ==========================================
   {
     id: "ch3_b1",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列基礎操作",
     difficulty: "basic",
     category: "串列基礎操作",
     question: "下列程式碼的輸出結果為何？",
@@ -554,6 +586,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_b2",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "sorted 與 list.sort 區別",
     difficulty: "basic",
     category: "sorted 與 list.sort 區別",
     question: "執行下列程式碼會印出什麼？",
@@ -575,6 +609,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_b3",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "sorted 函式特性",
     difficulty: "basic",
     category: "sorted 函式特性",
     question: "執行下列程式碼後，輸出為何？",
@@ -596,15 +632,17 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_b4",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "insert 與 remove 方法",
     difficulty: "basic",
     category: "insert 與 remove 方法",
     question: "下列程式碼的執行結果為何？",
     code: `data = ["x", "y", "z"]\ndata.insert(1, "a")\ndata.remove("y")\nprint(data)`,
     options: [
-      "A. ['x', 'a', 'z']",
-      "B. ['a', 'x', 'z']",
-      "C. ['x', 'y', 'a', 'z']",
-      "D. ['x', 'a', 'y', 'z']"
+      "A. [",
+      "B. [",
+      "C. [",
+      "D. ["
     ],
     answer: "A",
     explanation: "1. data.insert(1, 'a') 在索引 1 處插入 'a'，原本的 'y', 'z' 往後挪移，串列變為 ['x', 'a', 'y', 'z']；\n2. data.remove('y') 尋找並移除第一個值為 'y' 的元素，剩餘 ['x', 'a', 'z']。",
@@ -618,6 +656,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_b5",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "成員運算子與長度",
     difficulty: "basic",
     category: "成員運算子與長度",
     question: "執行下列程式碼會印出什麼？",
@@ -639,6 +679,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_a1",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "記憶體參照 vs 淺拷貝（考古超常考）",
     difficulty: "advanced",
     category: "記憶體參照 vs 淺拷貝（考古超常考）",
     question: "下列程式碼中，print(a, c) 會印出什麼？",
@@ -663,6 +705,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_a2",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "重綁定 vs 原地修改",
     difficulty: "advanced",
     category: "重綁定 vs 原地修改",
     question: "執行下列這段程式碼，最後印出的結果是什麼？",
@@ -686,6 +730,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_a3",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "二維串列淺拷貝陷阱",
     difficulty: "advanced",
     category: "二維串列淺拷貝陷阱",
     question: "下列程式碼的輸出結果為何？",
@@ -708,6 +754,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_a4",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "切片賦值（Slice Assignment）",
     difficulty: "advanced",
     category: "切片賦值（Slice Assignment）",
     question: "執行下列程式碼會印出什麼？",
@@ -730,6 +778,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch3_a5",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "sort key 與 reverse 組合",
     difficulty: "advanced",
     category: "sort key 與 reverse 組合",
     question: "下列程式碼的輸出結果為何？",
@@ -749,13 +799,11 @@ const QUESTIONS_DATABASE = [
       { line: 3, text: "輸出 banana 4", vars: { output: "banana 4" } }
     ]
   },
-
-  // ==========================================
-  // CHAPTER 4: 循環迴路之謎
-  // ==========================================
   {
     id: "ch4_b1",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "range 負步長運算",
     difficulty: "basic",
     category: "range 負步長運算",
     question: "下列迴圈會印出什麼數字序列？",
@@ -781,6 +829,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_b2",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "while 條件與計數",
     difficulty: "basic",
     category: "while 條件與計數",
     question: "執行這段代碼後，變數 total 的值為何？",
@@ -804,6 +854,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_b3",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "break 與 continue 行為",
     difficulty: "basic",
     category: "break 與 continue 行為",
     question: "下列程式碼會印出什麼結果？",
@@ -827,6 +879,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_b4",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "巢狀迴圈總次數",
     difficulty: "basic",
     category: "巢狀迴圈總次數",
     question: "下列程式碼中，print('*', end='') 一共會被執行幾次？",
@@ -849,6 +903,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_b5",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "迴圈終止後變數值",
     difficulty: "basic",
     category: "迴圈終止後變數值",
     question: "迴圈結束後，變數 x 的最終值為何？",
@@ -872,6 +928,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_a1",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "while ... else 機制陷阱",
     difficulty: "advanced",
     category: "while ... else 機制陷阱",
     question: "下列這段程式碼的輸出結果為何？",
@@ -895,6 +953,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_a2",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "巢狀迴圈與內層 break 交互",
     difficulty: "advanced",
     category: "巢狀迴圈與內層 break 交互",
     question: "執行下列程式碼會印出什麼結果？",
@@ -919,6 +979,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_a3",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "圖形列印迴圈與變動範圍",
     difficulty: "advanced",
     category: "圖形列印迴圈與變動範圍",
     question: "下列程式碼的終端輸出排版為何？",
@@ -940,6 +1002,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_a4",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "迴圈累加與對角線條件",
     difficulty: "advanced",
     category: "迴圈累加與對角線條件",
     question: "執行這段計算總和的代碼後，變數 total 的值為何？",
@@ -963,6 +1027,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch4_a5",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "字串倒序累積技巧",
     difficulty: "advanced",
     category: "字串倒序累積技巧",
     question: "下列程式碼會印出什麼結果？",
@@ -983,13 +1049,11 @@ const QUESTIONS_DATABASE = [
       { line: 5, text: "輸出 nohtyP", vars: { output: "nohtyP" } }
     ]
   },
-
-  // ==========================================
-  // CHAPTER 5: 核心指令與領域
-  // ==========================================
   {
     id: "ch5_b1",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "函式預設值回傳",
     difficulty: "basic",
     category: "函式預設值回傳",
     question: "如果一個 Python 函式內沒有寫 return 語句，呼叫它時的預設回傳值為何？",
@@ -1012,14 +1076,17 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_b2",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "預設參數語法規則",
     difficulty: "basic",
     category: "預設參數語法規則",
     question: "下列哪一個函式宣告語法是合法的 Python 語法？",
+    code: ``,
     options: [
-      "A. def build_query(table='users', fields):",
-      "B. def build_query(table, fields='*'):",
-      "C. def build_query(table, fields == '*'):",
-      "D. def build_query(default table='users', fields):"
+      "A. def build_query(table=",
+      "B. def build_query(table, fields=",
+      "C. def build_query(table, fields == ",
+      "D. def build_query(default table="
     ],
     answer: "B",
     explanation: "Python 語法規定：具有預設值的參數（default parameters）必須放在所有沒有預設值的「位置參數（positional parameters）」之後。選項 A 的 table 具預設值卻排在 fields 前面，會引發 SyntaxError。只有 B 符合語法規範。",
@@ -1030,6 +1097,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_b3",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "關鍵字引數傳遞",
     difficulty: "basic",
     category: "關鍵字引數傳遞",
     question: "下列程式碼的輸出結果為何？",
@@ -1051,6 +1120,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_b4",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "全域與區域變數隔離",
     difficulty: "basic",
     category: "全域與區域變數隔離",
     question: "下列程式碼執行後會印出什麼？",
@@ -1073,6 +1144,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_b5",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "字典基本存取",
     difficulty: "basic",
     category: "字典基本存取",
     question: "下列程式碼的輸出結果為何？",
@@ -1095,14 +1168,16 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_a1",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "可變預設參數陷阱（考古題必考！）",
     difficulty: "advanced",
     category: "可變預設參數陷阱（考古題必考！）",
     question: "執行下列程式碼會印出什麼？（台大期中考最經典的可變物件預設引數陷阱）",
     code: `def collect_data(item, bucket=[]):\n    bucket.append(item)\n    return bucket\n\nprint(collect_data("A"))\nprint(collect_data("B"))`,
     options: [
-      "A. ['A'] 和 ['B']",
-      "B. ['A'] 和 ['A', 'B']",
-      "C. ['A'] 和 []",
+      "A. [",
+      "B. [",
+      "C. [",
       "D. Error"
     ],
     answer: "B",
@@ -1118,6 +1193,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_a2",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "UnboundLocalError 陷阱（考古題最高頻失分）",
     difficulty: "advanced",
     category: "UnboundLocalError 陷阱（考古題最高頻失分）",
     question: "下列程式碼執行後的結果為何？",
@@ -1140,6 +1217,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_a3",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "global 關鍵字效果",
     difficulty: "advanced",
     category: "global 關鍵字效果",
     question: "下列程式碼的輸出結果為何？",
@@ -1162,13 +1241,15 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_a4",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "高階函式與 Lambda 表達式",
     difficulty: "advanced",
     category: "高階函式與 Lambda 表達式",
     question: "執行下列程式碼會印出什麼內容？",
     code: `def apply_filter(func, items):\n    return [func(x) for x in items]\n\nresult = apply_filter(lambda x: chr(ord(x) - 1), ['B', 'C', 'D'])\nprint(result)`,
     options: [
-      "A. ['A', 'B', 'C']",
-      "B. ['C', 'D', 'E']",
+      "A. [",
+      "B. [",
       "C. [65, 66, 67]",
       "D. Error"
     ],
@@ -1185,6 +1266,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch5_a5",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "多重預設引數與求值順序",
     difficulty: "advanced",
     category: "多重預設引數與求值順序",
     question: "執行下列程式碼後，終端機顯示的內容為何？",
@@ -1205,13 +1288,11 @@ const QUESTIONS_DATABASE = [
       { line: 6, text: "輸出 10", vars: { output: 10 } }
     ]
   },
-
-  // ==========================================
-  // CHAPTER 6: 特務高階工具箱
-  // ==========================================
   {
     id: "ch6_b1",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "enumerate 基礎應用",
     difficulty: "basic",
     category: "enumerate 基礎應用",
     question: "下列程式碼會印出什麼？",
@@ -1220,7 +1301,7 @@ const QUESTIONS_DATABASE = [
       "A. 2:parse",
       "B. 2:scan",
       "C. 1:parse",
-      "D. (2, 'parse')"
+      "D. (2, "
     ],
     answer: "A",
     explanation: "enumerate(tasks, start=1) 從 1 開始計數：\n* idx=1, val='scan'\n* idx=2, val='parse'\n* idx=3, val='fetch'\n當 idx == 2 時印出，格式為 '2:parse'。",
@@ -1233,14 +1314,16 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_b2",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "zip 打包解包",
     difficulty: "basic",
     category: "zip 打包解包",
     question: "下列程式碼執行後的輸出結果是什麼？",
     code: `ids = [101, 102]\nnames = ['Alice', 'Bob', 'Charlie']\npaired = list(zip(ids, names))\nprint(paired)`,
     options: [
-      "A. [(101, 'Alice'), (102, 'Bob'), (None, 'Charlie')]",
-      "B. [(101, 'Alice'), (102, 'Bob')]",
-      "C. [[101, 'Alice'], [102, 'Bob']]",
+      "A. [(101, ",
+      "B. [(101, ",
+      "C. [[101, ",
       "D. Error"
     ],
     answer: "B",
@@ -1254,6 +1337,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_b3",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "單層串列表達式",
     difficulty: "basic",
     category: "單層串列表達式",
     question: "這段串列表達式執行後的結果為何？",
@@ -1276,6 +1361,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_b4",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "例外處理基礎 try-except",
     difficulty: "basic",
     category: "例外處理基礎 try-except",
     question: "下列程式碼會印出什麼？",
@@ -1297,14 +1384,17 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_b5",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案基本概念",
     difficulty: "basic",
     category: "檔案基本概念",
     question: "在 Python 中使用 open() 讀取檔案，下列哪一種模式（mode）會在檔案不存在時拋出 FileNotFoundError，且只允許讀取？",
+    code: ``,
     options: [
-      "A. 'w'",
-      "B. 'a'",
-      "C. 'r'",
-      "D. 'x'"
+      "A. ",
+      "B. ",
+      "C. ",
+      "D. "
     ],
     answer: "C",
     explanation: "'r' 代表唯讀模式（Read only），若指定檔案不存在會直接拋出 FileNotFoundError；'w' 與 'a' 若檔案不存在則會自動建立新檔。",
@@ -1315,6 +1405,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_a1",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "巢狀串列表達式",
     difficulty: "advanced",
     category: "巢狀串列表達式",
     question: "下列巢狀串列表達式的輸出結果為何？",
@@ -1336,6 +1428,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_a2",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "zip 矩陣轉置與索引存取",
     difficulty: "advanced",
     category: "zip 矩陣轉置與索引存取",
     question: "下列程式碼的輸出結果為何？",
@@ -1358,6 +1452,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_a3",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "例外處理 try-except-else-finally",
     difficulty: "advanced",
     category: "例外處理 try-except-else-finally",
     question: "下列這段程式碼的輸出順序為何？",
@@ -1380,6 +1476,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_a4",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "字串篩選與 join 綜合表達式",
     difficulty: "advanced",
     category: "字串篩選與 join 綜合表達式",
     question: "執行下列程式碼會印出什麼？",
@@ -1401,6 +1499,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "ch6_a5",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "enumerate 與字串條件解包",
     difficulty: "advanced",
     category: "enumerate 與字串條件解包",
     question: "下列程式碼的輸出結果為何？",
@@ -1420,13 +1520,11 @@ const QUESTIONS_DATABASE = [
       { line: 3, text: "印出 10", vars: { output: 10 } }
     ]
   },
-
-  // ==========================================
-  // COMPREHENSIVE EXAM DRILL (跨章節混合全真題)
-  // ==========================================
   {
     id: "mock_01",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "print 與 end 分隔符",
     difficulty: "advanced",
     category: "print 與 end 分隔符",
     question: "執行下列程式碼會得到什麼輸出？",
@@ -1449,6 +1547,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_02",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列切片賦值與長度變化",
     difficulty: "advanced",
     category: "串列切片賦值與長度變化",
     question: "下列程式碼的執行結果是什麼？",
@@ -1470,6 +1570,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_03",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串切片與邊界越界",
     difficulty: "advanced",
     category: "字串切片與邊界越界",
     question: "執行下列程式碼會印出什麼？",
@@ -1491,6 +1593,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_04",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "函式可變參數與不可變數值對比",
     difficulty: "advanced",
     category: "函式可變參數與不可變數值對比",
     question: "下列程式碼中，印出的 a 和 b 分別為何？",
@@ -1513,6 +1617,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_05",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "while 迴圈與 break 次數",
     difficulty: "advanced",
     category: "while 迴圈與 break 次數",
     question: "下列程式碼中，變數 count 最終為多少？",
@@ -1535,6 +1641,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_06",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "次方結合性（右結合律）",
     difficulty: "advanced",
     category: "次方結合性（右結合律）",
     question: "在 Python 中，運算式 2 ** 3 ** 2 的計算結果為何？",
@@ -1556,9 +1664,12 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_07",
     chapterId: 1,
+    dimension: "syntax_io",
+    title: "短路求值與零除保護",
     difficulty: "advanced",
     category: "短路求值與零除保護",
     question: "下列哪一段程式碼在執行時「不會」引發 ZeroDivisionError 錯誤？",
+    code: ``,
     options: [
       "A. True or (1 / 0)",
       "B. False and (1 / 0)",
@@ -1575,15 +1686,17 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_08",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串不可變性與索引修改錯誤",
     difficulty: "advanced",
     category: "字串不可變性與索引修改錯誤",
     question: "執行下列程式碼會得到什麼結果？",
     code: `s = "crawler"\ns[0] = "C"`,
     options: [
-      "A. s 變為 'Crawler'",
-      "B. TypeError: 'str' object does not support item assignment",
+      "A. s 變為 ",
+      "B. TypeError: ",
       "C. ValueError: string is immutable",
-      "D. s 變為 'C'"
+      "D. s 變為 "
     ],
     answer: "B",
     explanation: "在 Python 中，字串（str）與元組（tuple）都是「不可變物件（immutable）」。直接對字串索引進行賦值操作（s[0] = 'C'）會引發 TypeError: 'str' object does not support item assignment！若要替換開頭字母，應使用切片或 s = 'C' + s[1:]。",
@@ -1595,6 +1708,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_09",
     chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串 split 空白處理差異",
     difficulty: "advanced",
     category: "字串 split 空白處理差異",
     question: "下列程式碼的輸出結果為何？",
@@ -1616,6 +1731,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_10",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列 reverse 原地修改回傳",
     difficulty: "advanced",
     category: "串列 reverse 原地修改回傳",
     question: "下列程式碼執行後會印出什麼？",
@@ -1637,6 +1754,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_11",
     chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列乘法零長度",
     difficulty: "advanced",
     category: "串列乘法零長度",
     question: "執行下列程式碼會印出什麼？",
@@ -1658,6 +1777,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_12",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "字典 get 方法與預設值",
     difficulty: "advanced",
     category: "字典 get 方法與預設值",
     question: "下列程式碼的輸出結果為何？",
@@ -1679,6 +1800,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_13",
     chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴呼叫終止條件（課程投影片考點）",
     difficulty: "advanced",
     category: "遞迴呼叫終止條件（課程投影片考點）",
     question: "執行下列遞迴函式，fact(4) 的回傳值為何？",
@@ -1702,6 +1825,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_14",
     chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "Lambda 在 sorted 中的自訂排序 key",
     difficulty: "advanced",
     category: "Lambda 在 sorted 中的自訂排序 key",
     question: "下列程式碼中，print(students[0][0]) 會印出哪位學生的名字？",
@@ -1723,6 +1848,8 @@ const QUESTIONS_DATABASE = [
   {
     id: "mock_15",
     chapterId: 4,
+    dimension: "control_flow",
+    title: "巢狀迴圈與步長跳躍",
     difficulty: "advanced",
     category: "巢狀迴圈與步長跳躍",
     question: "下列程式碼會印出什麼結果？",
@@ -1740,15 +1867,1920 @@ const QUESTIONS_DATABASE = [
       { line: 2, text: "i=2: j=1 -> append(3), j=2 -> append(4)", vars: { out: "[1, 2, 3, 4]" } },
       { line: 5, text: "印出 [1, 2, 3, 4]", vars: { output: "[1, 2, 3, 4]" } }
     ]
+  },
+  {
+    id: "mock_16",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "字串乘法與數字轉型相加",
+    difficulty: "basic",
+    category: "型態轉換與運算",
+    question: "執行下列 Python 程式碼後，終端機印出的結果為何？",
+    code: `a = "4"
+b = int(a * 2) + 3
+print(b)`,
+    options: [
+      "A. 11",
+      "B. 47",
+      "C. 443",
+      "D. 83"
+    ],
+    answer: "B",
+    explanation: "字串乘法 a * 2 即 \"4\" * 2 得到 \"44\"；int(\"44\") 轉型為整數 44；最後 44 + 3 = 47。",
+    traceSteps: [
+      { line: 1, text: "定義字串變數 a = '4'", vars: {"a": "'4'"} },
+      { line: 2, text: "字串乘法 a * 2 得到 '44'，int('44') 轉為 44，加上 3 賦值給 b", vars: {"b": 47} },
+      { line: 3, text: "印出 b 的數值 47", vars: {"output": 47} }
+    ]
+  },
+  {
+    id: "mock_17",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "print 空引數換行效果",
+    difficulty: "basic",
+    category: "print格式化",
+    question: "執行下列程式碼後，終端機的輸出結果為何？",
+    code: `print("Line1", end="*")
+print()
+print("Line2")`,
+    options: [
+      "A. Line1*Line2",
+      "B. Line1*\nLine2",
+      "C. Line1*\n\nLine2",
+      "D. Line1* Line2"
+    ],
+    answer: "B",
+    explanation: "print(\"Line1\", end=\"*\") 輸出 \"Line1*\" 且未換行；接著無引數的 print() 預設輸出換行字元 \n；最後 print(\"Line2\") 在新行印出 \"Line2\"。整體輸出在第 1 行為 \"Line1*\"，第 2 行為 \"Line2\"。",
+    traceSteps: [
+      { line: 1, text: "印出 'Line1*'，不換行", vars: {"buffer": "'Line1*'"} },
+      { line: 2, text: "print() 輸出預設換行字元 \n", vars: {} },
+      { line: 3, text: "印出 'Line2' 並換行", vars: {"output": "'Line2'"} }
+    ]
+  },
+  {
+    id: "mock_18",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "負數整數除法向下取整",
+    difficulty: "basic",
+    category: "整數除法與取餘數",
+    question: "下列 Python 運算式執行後的輸出為何？",
+    code: `x = -13 // 4
+y = -13 % 4
+print(x, y)`,
+    options: [
+      "A. -3 -1",
+      "B. -4 3",
+      "C. -3 3",
+      "D. -4 -1"
+    ],
+    answer: "B",
+    explanation: "Python 的 // 為向下取整（朝向負無限大），-13 / 4 = -3.25，向下取整為 -4。餘數公式為 r = a - (a // b) * b，即 -13 - (-4 * 4) = -13 - (-16) = 3。",
+    traceSteps: [
+      { line: 1, text: "計算 -13 // 4：-3.25 向下取整為 -4", vars: {"x": -4} },
+      { line: 2, text: "計算 -13 % 4：-13 - (-4 * 4) = 3", vars: {"y": 3} },
+      { line: 3, text: "印出 x, y 即 '-4 3'", vars: {"output": "-4 3"} }
+    ]
+  },
+  {
+    id: "mock_19",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "布林真假值評判準則",
+    difficulty: "basic",
+    category: "布林真假值",
+    question: "下列四個 bool() 運算轉換後的輸出為何？",
+    code: `a = bool("0")
+b = bool("")
+c = bool([0])
+d = bool([])
+print(a, b, c, d)`,
+    options: [
+      "A. False False False False",
+      "B. True False True False",
+      "C. False False True False",
+      "D. True True True False"
+    ],
+    answer: "B",
+    explanation: "非空字串 \"0\" 長度大於 0 為 True；空字串 \"\" 為 False；包含一個整數 0 的串列 [0] 是非空容器為 True；空串列 [] 為 False。",
+    traceSteps: [
+      { line: 1, text: "字串 '0' 非空，bool('0') 為 True", vars: {"a": true} },
+      { line: 2, text: "字串 '' 為空，bool('') 為 False", vars: {"b": false} },
+      { line: 3, text: "串列 [0] 長度為 1 非空，bool([0]) 為 True", vars: {"c": true} },
+      { line: 4, text: "串列 [] 為空，bool([]) 為 False", vars: {"d": false} }
+    ]
+  },
+  {
+    id: "mock_20",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "多重賦值同時求值",
+    difficulty: "basic",
+    category: "變數賦值",
+    question: "執行下列 Python 程式碼後，變數 x 與 y 的值分別為何？",
+    code: `x, y = 3, 5
+x, y = y, x + y
+print(x, y)`,
+    options: [
+      "A. 5 8",
+      "B. 5 10",
+      "C. 8 8",
+      "D. 3 8"
+    ],
+    answer: "A",
+    explanation: "Python 在多重賦值時，會先將等號右側的所有表達式求值（y 為 5，x + y 為 3 + 5 = 8），再依序指派給左側的 x 與 y。因此 x 變為 5，y 變為 8。",
+    traceSteps: [
+      { line: 1, text: "初始化 x = 3, y = 5", vars: {"x": 3, "y": 5} },
+      { line: 2, text: "計算右側暫存元組 (y, x + y) 即 (5, 8)，再分別賦值給 x, y", vars: {"x": 5, "y": 8} },
+      { line: 3, text: "印出 x, y 為 '5 8'", vars: {"output": "5 8"} }
+    ]
+  },
+  {
+    id: "mock_21",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "浮點數精度比較陷阱",
+    difficulty: "basic",
+    category: "浮點數運算",
+    question: "執行下列程式碼會得到什麼輸出？",
+    code: `val = 0.1 + 0.2
+print(val == 0.3, round(val, 2) == 0.3)`,
+    options: [
+      "A. True True",
+      "B. False True",
+      "C. True False",
+      "D. False False"
+    ],
+    answer: "B",
+    explanation: "二進位浮點數無法精確表示 0.1 與 0.2，0.1 + 0.2 實際值約為 0.30000000000000004，直接比較 val == 0.3 結果為 False。但使用 round(val, 2) 四捨五入後與 0.3 比較則為 True。",
+    traceSteps: [
+      { line: 1, text: "計算 0.1 + 0.2，浮點數暫存約 0.30000000000000004", vars: {"val": 0.30000000000000004} },
+      { line: 2, text: "val == 0.3 為 False；round(val, 2) == 0.3 為 True", vars: {"eq1": false, "eq2": true} }
+    ]
+  },
+  {
+    id: "mock_22",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "短路求值 and/or 回傳運算元",
+    difficulty: "advanced",
+    category: "短路求值與真值判斷",
+    question: "下列短路求值運算式的輸出結果為何？",
+    code: `ans = [] or 0 or "Eagle" and 42 or "Falcon"
+print(ans)`,
+    options: [
+      "A. True",
+      "B. Eagle",
+      "C. 42",
+      "D. Falcon"
+    ],
+    answer: "C",
+    explanation: "and 優先權高於 or。先算 \"Eagle\" and 42：因 \"Eagle\" 為真值，and 回傳第二個運算元 42。表達式簡化為 [] or 0 or 42 or \"Falcon\"。由左至右，[] 與 0 均為假值，遇到 42 為真值，or 短路直接回傳 42！",
+    traceSteps: [
+      { line: 1, text: "and 優先於 or：'Eagle' and 42 求值為 42", vars: {"and_sub": 42} },
+      { line: 1, text: "[] or 0 or 42：遇到第一個真值 42 即短路返回", vars: {"ans": 42} },
+      { line: 2, text: "印出 ans 為 42", vars: {"output": 42} }
+    ]
+  },
+  {
+    id: "mock_23",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "負號與次方運算子優先權及結合性",
+    difficulty: "advanced",
+    category: "運算子優先權",
+    question: "下列程式碼中 a, b, c 的輸出結果依序為何？",
+    code: `a = -2 ** 4
+b = (-2) ** 4
+c = 2 ** 3 ** 2
+print(a, b, c)`,
+    options: [
+      "A. 16 16 64",
+      "B. -16 16 512",
+      "C. -16 -16 512",
+      "D. 16 16 512"
+    ],
+    answer: "B",
+    explanation: "次方運算子 ** 優先權高於單元負號 -，所以 -2 ** 4 等於 -(2 ** 4) = -16；而 (-2) ** 4 = 16；此外 ** 是由右至左結合（右結合律），2 ** 3 ** 2 = 2 ** (3 ** 2) = 2 ** 9 = 512。",
+    traceSteps: [
+      { line: 1, text: "** 優先於負號：-(2**4) = -16", vars: {"a": -16} },
+      { line: 2, text: "括號先算：(-2)**4 = 16", vars: {"b": 16} },
+      { line: 3, text: "** 右結合：2**(3**2) = 2**9 = 512", vars: {"c": 512} },
+      { line: 4, text: "印出 a, b, c", vars: {"output": "-16 16 512"} }
+    ]
+  },
+  {
+    id: "mock_24",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "短路運算避免除以零錯誤",
+    difficulty: "advanced",
+    category: "短路求值與真值判斷",
+    question: "執行下列 Python 程式碼後，終端機的輸出為何？",
+    code: `x = 5
+y = 0
+res = y != 0 and (x / y > 1)
+print(res)`,
+    options: [
+      "A. False",
+      "B. True",
+      "C. ZeroDivisionError",
+      "D. None"
+    ],
+    answer: "A",
+    explanation: "邏輯運算子 and 具有短路特性。左側表達式 y != 0 為 0 != 0 即 False，Python 立即判定整個 and 運算式結果為 False，右側 (x / y > 1) 完全不會被直譯器執行，因此絕不會引發 ZeroDivisionError。",
+    traceSteps: [
+      { line: 1, text: "賦值 x = 5, y = 0", vars: {"x": 5, "y": 0} },
+      { line: 3, text: "評估 y != 0 為 False，and 運算子觸發短路返回 False", vars: {"res": false} },
+      { line: 4, text: "印出 res 為 False", vars: {"output": false} }
+    ]
+  },
+  {
+    id: "mock_25",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "PEP 8 命名與運算子空格規範",
+    difficulty: "advanced",
+    category: "PEP 8 規範檢驗",
+    question: "依據 PEP 8 官方風格指南，下列變數定義敘述何者完全符合規範？",
+    code: `valid_pep8 = "max_score = 100"
+print(valid_pep8)`,
+    options: [
+      "A. max_score=100",
+      "B. max_score = 100",
+      "C. MaxScore = 100",
+      "D. max_score  =  100"
+    ],
+    answer: "B",
+    explanation: "PEP 8 規範明訂：一般變數應使用全小寫字母加底線（snake_case），不可用 CamelCase；二元賦值運算子 = 兩側應恰好各保留一個空格，不可緊貼或留多個空格。",
+    traceSteps: [
+      { line: 1, text: "檢查 PEP 8 規範：小寫底線命名且二元運算子前後各空一格", vars: {"valid_pep8": "'max_score = 100'"} },
+      { line: 2, text: "印出符合規範之字串", vars: {"output": "'max_score = 100'"} }
+    ]
+  },
+  {
+    id: "mock_26",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "多重鏈式比較運算子求值",
+    difficulty: "advanced",
+    category: "比較運算子特性",
+    question: "執行下列鏈式比較（Chained Comparison）程式碼後，印出的結果為何？",
+    code: `res = (1 < 3 > 2 == 2 < 5 != 4)
+print(res)`,
+    options: [
+      "A. True",
+      "B. False",
+      "C. SyntaxError",
+      "D. TypeError"
+    ],
+    answer: "A",
+    explanation: "在 Python 中，1 < 3 > 2 == 2 < 5 != 4 等價於 (1 < 3) and (3 > 2) and (2 == 2) and (2 < 5) and (5 != 4)。每個子條件皆為 True，且中間每個運算元只會被求值一次，最終結果為 True。",
+    traceSteps: [
+      { line: 1, text: "展開鏈式比較：1<3 (T), 3>2 (T), 2==2 (T), 2<5 (T), 5!=4 (T)", vars: {"all_true": true} },
+      { line: 1, text: "全部條件均為 True，res 賦值為 True", vars: {"res": true} },
+      { line: 2, text: "印出 True", vars: {"output": true} }
+    ]
+  },
+  {
+    id: "mock_27",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "print 結合 sep 與格式化引數",
+    difficulty: "advanced",
+    category: "print格式化",
+    question: "執行下列格式化輸出程式碼後，終端機顯示的內容為何？",
+    code: `agent, rank = "007", 1
+print(f"Agent:{agent}", f"Rank:{rank:02d}", sep=" | ", end=";")`,
+    options: [
+      "A. Agent:007 | Rank:1;",
+      "B. Agent:007 | Rank:01;",
+      "C. Agent:007 Rank:01;",
+      "D. Agent:007 | Rank:01"
+    ],
+    answer: "B",
+    explanation: "rank:02d 表示整數以兩位數顯示並以 0 補足，rank 1 格式化為 \"01\"；sep=\" | \" 將兩項字串以垂直線分隔；end=\";\" 在末尾加上分號，因此整體輸出為 \"Agent:007 | Rank:01;\"。",
+    traceSteps: [
+      { line: 1, text: "初始化變數 agent = '007', rank = 1", vars: {"agent": "'007'", "rank": 1} },
+      { line: 2, text: "f-string 格式化 rank:02d 得到 '01'，產生兩個字串引數", vars: {"arg1": "'Agent:007'", "arg2": "'Rank:01'"} },
+      { line: 2, text: "使用 sep=' | ' 連接並附加 end=';' 印出", vars: {"output": "'Agent:007 | Rank:01;'"} }
+    ]
+  },
+  {
+    id: "mock_28",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串切片間隔取字",
+    difficulty: "basic",
+    category: "字串切片基礎",
+    question: "執行下列字串切片程式碼後，終端機的輸出為何？",
+    code: `msg = "CyberSecurity"
+print(msg[1:9:2])`,
+    options: [
+      "A. yeSc",
+      "B. yerc",
+      "C. CbrS",
+      "D. ybrS"
+    ],
+    answer: "A",
+    explanation: "切片 [1:9:2] 包含索引 1, 3, 5, 7。在 \"CyberSecurity\" 中，msg[1]='y', msg[3]='e', msg[5]='S', msg[7]='c'，串聯結果為 \"yeSc\"。",
+    traceSteps: [
+      { line: 1, text: "定義字串 msg = 'CyberSecurity'", vars: {"msg": "'CyberSecurity'"} },
+      { line: 2, text: "計算切片 [1:9:2]：取得索引 1('y'), 3('e'), 5('S'), 7('c')", vars: {"slice": "'yeSc'"} },
+      { line: 2, text: "印出 'yeSc'", vars: {"output": "'yeSc'"} }
+    ]
+  },
+  {
+    id: "mock_29",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "ord 與 chr 位移運算",
+    difficulty: "basic",
+    category: "ASCII與ord/chr",
+    question: "下列 ASCII 運算程式碼執行後的輸出結果為何？",
+    code: `char = "G"
+shifted = chr(ord(char) + 3)
+print(shifted)`,
+    options: [
+      "A. I",
+      "B. J",
+      "C. K",
+      "D. H"
+    ],
+    answer: "B",
+    explanation: "ord('G') 的 ASCII 數值為 71，71 + 3 = 74。chr(74) 對應的字元為 'J'（'G' 後第 3 個字母）。",
+    traceSteps: [
+      { line: 1, text: "設定 char = 'G'", vars: {"char": "'G'"} },
+      { line: 2, text: "ord('G') = 71，71 + 3 = 74，chr(74) = 'J'", vars: {"shifted": "'J'"} },
+      { line: 3, text: "印出 shifted 即 'J'", vars: {"output": "'J'"} }
+    ]
+  },
+  {
+    id: "mock_30",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字元數字轉整數差值",
+    difficulty: "basic",
+    category: "ASCII與ord/chr",
+    question: "執行下列程式碼會得到什麼輸出？",
+    code: `digit_char = "8"
+diff = ord(digit_char) - ord("0")
+print(diff, type(diff).__name__)`,
+    options: [
+      "A. 8 int",
+      "B. 8 str",
+      "C. 56 int",
+      "D. 8 float"
+    ],
+    answer: "A",
+    explanation: "ASCII 碼中數字字元 '0' 到 '9' 是連續編碼（'0' 是 48，'8' 是 56）。56 - 48 = 8，且相減結果為整數 int。",
+    traceSteps: [
+      { line: 1, text: "digit_char = '8'", vars: {"digit_char": "'8'"} },
+      { line: 2, text: "ord('8') - ord('0') = 56 - 48 = 8", vars: {"diff": 8} },
+      { line: 3, text: "diff 的型態名稱為 'int'，輸出 '8 int'", vars: {"output": "8 int"} }
+    ]
+  },
+  {
+    id: "mock_31",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串不可變性賦值錯誤",
+    difficulty: "basic",
+    category: "字串不可變性",
+    question: "執行下列嘗試修改字串字元的程式碼，會發生什麼情況？",
+    code: `s = "Python"
+try:
+    s[0] = "J"
+except TypeError:
+    print("TypeError")`,
+    options: [
+      "A. Jython",
+      "B. Python",
+      "C. TypeError",
+      "D. IndexError"
+    ],
+    answer: "C",
+    explanation: "Python 的字串是不可變物件（Immutable），不支援透過索引進行元素賦值（item assignment）。執行 s[0] = 'J' 會拋出 TypeError！",
+    traceSteps: [
+      { line: 1, text: "定義字串 s = 'Python'", vars: {"s": "'Python'"} },
+      { line: 3, text: "嘗試執行 s[0] = 'J'，字串不支援原地修改，拋出 TypeError", vars: {} },
+      { line: 5, text: "except 區塊捕獲 TypeError 並印出 'TypeError'", vars: {"output": "'TypeError'"} }
+    ]
+  },
+  {
+    id: "mock_32",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串 find 找不到子字串之傳回值",
+    difficulty: "basic",
+    category: "字串方法特性",
+    question: "執行下列 Python 程式碼後，印出的 pos 數值為何？",
+    code: `text = "Agent007"
+pos = text.find("X")
+print(pos)`,
+    options: [
+      "A. -1",
+      "B. False",
+      "C. None",
+      "D. ValueError"
+    ],
+    answer: "A",
+    explanation: "str.find() 若未搜尋到指定子字串，會安全傳回整數 -1 而非拋出異常；若使用 str.index() 找不到則會拋出 ValueError。",
+    traceSteps: [
+      { line: 1, text: "text = 'Agent007'", vars: {"text": "'Agent007'"} },
+      { line: 2, text: "搜尋 'X'，子字串不存在，find() 返回 -1", vars: {"pos": -1} },
+      { line: 3, text: "印出 -1", vars: {"output": -1} }
+    ]
+  },
+  {
+    id: "mock_33",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串 split 預設空白處理機制",
+    difficulty: "basic",
+    category: "字串分割與合併",
+    question: "執行下列程式碼後，終端機輸出的長度與連接字串為何？",
+    code: `raw = "   code   fast   now   "
+parts = raw.split()
+print(len(parts), "-".join(parts))`,
+    options: [
+      "A. 3 code-fast-now",
+      "B. 7 -code--fast--now-",
+      "C. 5 code-fast-now",
+      "D. 3 code fast now"
+    ],
+    answer: "A",
+    explanation: "str.split() 不傳入引數時，會自動去除頭尾空白並將任何連續空白視為單一分隔符，切出 ['code', 'fast', 'now']，長度為 3，join 後為 'code-fast-now'。",
+    traceSteps: [
+      { line: 1, text: "raw 包含多餘前後與中間空白", vars: {"raw": "'   code   fast   now   '"} },
+      { line: 2, text: "split() 壓縮連續空白切分為 ['code', 'fast', 'now']", vars: {"parts": "['code', 'fast', 'now']"} },
+      { line: 3, text: "長度為 3，以 '-' 連接印出", vars: {"output": "'3 code-fast-now'"} }
+    ]
+  },
+  {
+    id: "mock_34",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "負步長反向切片含頭不含尾",
+    difficulty: "advanced",
+    category: "負步長切片",
+    question: "執行下列負步長切片程式碼後，印出的結果為何？",
+    code: `code = "0123456789"
+print(code[7:2:-2])`,
+    options: [
+      "A. 753",
+      "B. 7531",
+      "C. 8642",
+      "D. 246"
+    ],
+    answer: "A",
+    explanation: "切片 [7:2:-2]：從索引 7（字元 '7'）開始，每次減 2，結束界限為 2（不包含索引 2 的字元 '2'）。因此依序取出的索引為 7, 5, 3，對應字元為 '753'。",
+    traceSteps: [
+      { line: 1, text: "code = '0123456789'", vars: {"code": "'0123456789'"} },
+      { line: 2, text: "索引 7->'7', 5->'5', 3->'3'；下一個 1 超過結束條件 2 停止", vars: {"slice": "'753'"} },
+      { line: 2, text: "印出 '753'", vars: {"output": "'753'"} }
+    ]
+  },
+  {
+    id: "mock_35",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "切片越界安全機制與負索引",
+    difficulty: "advanced",
+    category: "字串邊界安全",
+    question: "下列字串切片在邊界完全越界時的輸出為何？",
+    code: `s = "Spy"
+part1 = s[10:20]
+part2 = s[-100:2]
+print(repr(part1), part2)`,
+    options: [
+      "A. IndexError Sp",
+      "B. '' Sp",
+      "C. None Sp",
+      "D. '' Spy"
+    ],
+    answer: "B",
+    explanation: "在 Python 中，直接單字元索引存取 s[10] 會拋出 IndexError，但「切片」即使完全越界也不會報錯。s[10:20] 返回空字串 ''；s[-100:2] 會自動將超出的負起點截取為 0，取得 s[0:2] 即 'Sp'。",
+    traceSteps: [
+      { line: 1, text: "s = 'Spy'，長度為 3", vars: {"s": "'Spy'"} },
+      { line: 2, text: "切片 [10:20] 超出右邊界，安全返回空字串 ''", vars: {"part1": "''"} },
+      { line: 3, text: "切片 [-100:2] 自動調節為 [0:2]，取得 'Sp'", vars: {"part2": "'Sp'"} },
+      { line: 4, text: "印出 '' Sp", vars: {"output": "'' Sp"} }
+    ]
+  },
+  {
+    id: "mock_36",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "ASCII 位元 XOR 大小寫互換",
+    difficulty: "advanced",
+    category: "ASCII與位元運算",
+    question: "執行下列利用 XOR 32 進行字元轉換的程式碼後，輸出為何？",
+    code: `word = "NtU"
+converted = "".join(chr(ord(c) ^ 32) if c.isalpha() else c for c in word)
+print(converted)`,
+    options: [
+      "A. NTU",
+      "B. ntu",
+      "C. nTu",
+      "D. NtU"
+    ],
+    answer: "C",
+    explanation: "英文字母大寫與小寫 ASCII 碼差恰為 32（二進位第 5 位為 1）。對字母的 ASCII 碼進行 ^ 32 可以翻轉大小寫：'N'(大寫) 變 'n'，'t'(小寫) 變 'T'，'U'(大寫) 變 'u'，合併為 'nTu'。",
+    traceSteps: [
+      { line: 1, text: "word = 'NtU'", vars: {"word": "'NtU'"} },
+      { line: 2, text: "ord('N')^32 -> 'n', ord('t')^32 -> 'T', ord('U')^32 -> 'u'", vars: {"converted": "'nTu'"} },
+      { line: 3, text: "印出 'nTu'", vars: {"output": "'nTu'"} }
+    ]
+  },
+  {
+    id: "mock_37",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串 strip 字元集合匹配機制",
+    difficulty: "advanced",
+    category: "字串清洗方法",
+    question: "執行下列 strip 程式碼後，清洗後的字串為何？",
+    code: `url = "www.mission-secret.tw."
+cleaned = url.strip(".w")
+print(cleaned)`,
+    options: [
+      "A. mission-secret.tw",
+      "B. mission-secret",
+      "C. .mission-secret.tw.",
+      "D. mission-secret.t"
+    ],
+    answer: "D",
+    explanation: "strip('.w') 的引數是字元集合 {'.', 'w'}，會持續移除頭尾屬於該集合的字元。開頭 'www.' 全部被移除；末尾的 '.' 被移除後，前一個字元是 'w' 也屬於集合故被移除，直到遇到 't' 停止。最終結果為 'mission-secret.t'。",
+    traceSteps: [
+      { line: 1, text: "url = 'www.mission-secret.tw.'", vars: {"url": "'www.mission-secret.tw.'"} },
+      { line: 2, text: "strip('.w') 去除頭部 'w','w','w','.' 與尾部 '.','w'，遇到 't' 終止", vars: {"cleaned": "'mission-secret.t'"} },
+      { line: 3, text: "印出 'mission-secret.t'", vars: {"output": "'mission-secret.t'"} }
+    ]
+  },
+  {
+    id: "mock_38",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "replace 連鎖替換次數限制與原字串不變",
+    difficulty: "advanced",
+    category: "字串不可變性",
+    question: "執行下列 replace 操作後，s 與 res 的輸出為何？",
+    code: `s = "banana"
+res = s.replace("a", "o", 1).replace("n", "m")
+print(s, res)`,
+    options: [
+      "A. bonama bonama",
+      "B. banana bomama",
+      "C. banana bonama",
+      "D. banana banana"
+    ],
+    answer: "B",
+    explanation: "第一個 replace('a', 'o', 1) 僅替換第 1 個 'a'，得到 'bonana'；第二個 replace('n', 'm') 將所有 'n' 替換為 'm' 得到 'bomama'。因字串具不可變性，原字串 s 依然維持 'banana'。",
+    traceSteps: [
+      { line: 1, text: "定義 s = 'banana'", vars: {"s": "'banana'"} },
+      { line: 2, text: "替換第 1 個 'a' 成 'o' 得到 'bonana'，再將所有 'n' 換成 'm' 得到 'bomama'", vars: {"res": "'bomama'"} },
+      { line: 3, text: "原字串 s 未變，輸出 'banana bomama'", vars: {"output": "'banana bomama'"} }
+    ]
+  },
+  {
+    id: "mock_39",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "字串乘法與 join 複合排版",
+    difficulty: "advanced",
+    category: "字串方法特性",
+    question: "執行下列程式碼後，變數 pattern 的值為何？",
+    code: `pattern = "-".join(["A" * 2, "B" * 3, "C" * 1])
+print(pattern)`,
+    options: [
+      "A. A-A-B-B-B-C",
+      "B. AA-BBB-C",
+      "C. A2-B3-C1",
+      "D. AA-BBB-C-"
+    ],
+    answer: "B",
+    explanation: "字串乘法分別產出 ['AA', 'BBB', 'C']。使用 '-'.join(...) 將串列元素串接，元素間以 '-' 分隔，最後不會有多餘的 '-'，因此輸出 'AA-BBB-C'。",
+    traceSteps: [
+      { line: 1, text: "建立串列 ['AA', 'BBB', 'C']", vars: {"items": "['AA', 'BBB', 'C']"} },
+      { line: 1, text: "以 '-' 作為分隔符號串接", vars: {"pattern": "'AA-BBB-C'"} },
+      { line: 2, text: "印出 pattern", vars: {"output": "'AA-BBB-C'"} }
+    ]
+  },
+  {
+    id: "mock_40",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列別名共用相同記憶體位址",
+    difficulty: "basic",
+    category: "串列記憶體機制",
+    question: "執行下列別名指派程式碼後，印出的長度與最後元素為何？",
+    code: `p = [10, 20, 30]
+q = p
+q.append(40)
+print(len(p), p[-1])`,
+    options: [
+      "A. 3 30",
+      "B. 4 40",
+      "C. 3 40",
+      "D. 4 30"
+    ],
+    answer: "B",
+    explanation: "q = p 只是建立了參照別名（Aliasing），兩個變數指向同一個記憶體串列物件。q.append(40) 會直接修改此串列，因此 p 的長度變為 4，最後一個元素 p[-1] 為 40。",
+    traceSteps: [
+      { line: 1, text: "p 指向串列 [10, 20, 30]", vars: {"p": "[10, 20, 30]"} },
+      { line: 2, text: "q = p 使 q 指向與 p 相同的記憶體位址", vars: {"q": "ref(p)"} },
+      { line: 3, text: "q.append(40) 修改共用串列", vars: {"p": "[10, 20, 30, 40]"} },
+      { line: 4, text: "len(p) 為 4，p[-1] 為 40", vars: {"output": "4 40"} }
+    ]
+  },
+  {
+    id: "mock_41",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "全切片淺拷貝獨立性",
+    difficulty: "basic",
+    category: "淺拷貝與複製",
+    question: "執行下列全切片拷貝程式碼後，終端機顯示的內容為何？",
+    code: `orig = [1, 2, 3]
+copy_list = orig[:]
+copy_list.append(99)
+print(orig, copy_list)`,
+    options: [
+      "A. [1, 2, 3] [1, 2, 3, 99]",
+      "B. [1, 2, 3, 99] [1, 2, 3, 99]",
+      "C. [1, 2, 3] [99]",
+      "D. [1, 2, 3, 99] [1, 2, 3]"
+    ],
+    answer: "A",
+    explanation: "切片 copy_list = orig[:] 建立了原始串列的獨立副本（淺拷貝）。後續對 copy_list 的 append 操作不會影響 orig，orig 依然保持 [1, 2, 3]。",
+    traceSteps: [
+      { line: 1, text: "orig = [1, 2, 3]", vars: {"orig": "[1, 2, 3]"} },
+      { line: 2, text: "orig[:] 建立獨立新串列並指派給 copy_list", vars: {"copy_list": "[1, 2, 3]"} },
+      { line: 3, text: "copy_list.append(99) 僅修改副本", vars: {"copy_list": "[1, 2, 3, 99]"} },
+      { line: 4, text: "印出 orig 與 copy_list", vars: {"output": "[1, 2, 3] [1, 2, 3, 99]"} }
+    ]
+  },
+  {
+    id: "mock_42",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "list.sort 原地排序傳回值 None",
+    difficulty: "basic",
+    category: "排序方法區別",
+    question: "執行下列 list.sort() 排序程式碼後，印出的結果為何？",
+    code: `nums = [5, 2, 8, 1]
+result = nums.sort()
+print(result, nums)`,
+    options: [
+      "A. [1, 2, 5, 8] [1, 2, 5, 8]",
+      "B. None [1, 2, 5, 8]",
+      "C. [1, 2, 5, 8] [5, 2, 8, 1]",
+      "D. None [5, 2, 8, 1]"
+    ],
+    answer: "B",
+    explanation: "list.sort() 是原地修改（In-place）的串列方法，不會產生新串列，且固定回傳 None。原串列 nums 則被排序為 [1, 2, 5, 8]。",
+    traceSteps: [
+      { line: 1, text: "nums = [5, 2, 8, 1]", vars: {"nums": "[5, 2, 8, 1]"} },
+      { line: 2, text: "nums.sort() 原地排序 nums，回傳值為 None", vars: {"result": null, "nums": "[1, 2, 5, 8]"} },
+      { line: 3, text: "印出 None [1, 2, 5, 8]", vars: {"output": "None [1, 2, 5, 8]"} }
+    ]
+  },
+  {
+    id: "mock_43",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "sorted 函式回傳新串列保留原物件",
+    difficulty: "basic",
+    category: "排序方法區別",
+    question: "執行下列 sorted 函式程式碼後，終端機顯示為何？",
+    code: `data = [3, 1, 4]
+new_data = sorted(data, reverse=True)
+print(data, new_data)`,
+    options: [
+      "A. [4, 3, 1] [4, 3, 1]",
+      "B. [3, 1, 4] [4, 3, 1]",
+      "C. [3, 1, 4] [1, 3, 4]",
+      "D. None [4, 3, 1]"
+    ],
+    answer: "B",
+    explanation: "內建函式 sorted(data) 會建立並傳回一個全新的已排序串列，原串列 data 完全不受影響保持 [3, 1, 4]；new_data 則接收逆序排序後的 [4, 3, 1]。",
+    traceSteps: [
+      { line: 1, text: "data = [3, 1, 4]", vars: {"data": "[3, 1, 4]"} },
+      { line: 2, text: "sorted() 建立新串列 [4, 3, 1]，data 保持不變", vars: {"new_data": "[4, 3, 1]"} },
+      { line: 3, text: "印出 data 與 new_data", vars: {"output": "[3, 1, 4] [4, 3, 1]"} }
+    ]
+  },
+  {
+    id: "mock_44",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列 append 與 extend 行為差異",
+    difficulty: "basic",
+    category: "串列操作方法",
+    question: "執行下列程式碼後，lst1 與 lst2 的長度分別為何？",
+    code: `lst1 = [1, 2]
+lst1.append([3, 4])
+lst2 = [1, 2]
+lst2.extend([3, 4])
+print(len(lst1), len(lst2))`,
+    options: [
+      "A. 4 4",
+      "B. 3 4",
+      "C. 4 3",
+      "D. 3 3"
+    ],
+    answer: "B",
+    explanation: "append 將傳入的 [3, 4] 視為單一子串列元素加入，lst1 變成 [1, 2, [3, 4]] 長度為 3；extend 則是展開 [3, 4] 逐一加入，lst2 變成 [1, 2, 3, 4] 長度為 4。",
+    traceSteps: [
+      { line: 2, text: "lst1.append([3, 4]) -> [1, 2, [3, 4]]", vars: {"len1": 3} },
+      { line: 4, text: "lst2.extend([3, 4]) -> [1, 2, 3, 4]", vars: {"len2": 4} },
+      { line: 5, text: "印出長度 3 4", vars: {"output": "3 4"} }
+    ]
+  },
+  {
+    id: "mock_45",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列 pop 移除指定索引與末尾元素",
+    difficulty: "basic",
+    category: "串列操作方法",
+    question: "執行下列 pop 程式碼後，印出的 val1, val2 與 items 為何？",
+    code: `items = ["Alpha", "Bravo", "Charlie", "Delta"]
+val1 = items.pop(1)
+val2 = items.pop()
+print(val1, val2, items)`,
+    options: [
+      "A. Bravo Delta ['Alpha', 'Charlie']",
+      "B. Alpha Delta ['Bravo', 'Charlie']",
+      "C. Bravo Charlie ['Alpha', 'Delta']",
+      "D. Bravo Delta ['Charlie']"
+    ],
+    answer: "A",
+    explanation: "items.pop(1) 移除並回傳索引 1 的元素 'Bravo'，items 剩下 ['Alpha', 'Charlie', 'Delta']；接著 items.pop() 預設移除並回傳末尾元素 'Delta'，items 剩下 ['Alpha', 'Charlie']。",
+    traceSteps: [
+      { line: 2, text: "pop(1) 移出 'Bravo'", vars: {"val1": "'Bravo'", "items": "['Alpha', 'Charlie', 'Delta']"} },
+      { line: 3, text: "pop() 移出末尾 'Delta'", vars: {"val2": "'Delta'", "items": "['Alpha', 'Charlie']"} },
+      { line: 4, text: "印出結果", vars: {"output": "Bravo Delta ['Alpha', 'Charlie']"} }
+    ]
+  },
+  {
+    id: "mock_46",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "二維串列乘法淺拷貝連鎖修改陷阱",
+    difficulty: "advanced",
+    category: "二維串列與淺拷貝",
+    question: "下列二維串列乘法初始化程式碼中，變數 total 的值為何？",
+    code: `grid = [[0] * 3] * 3
+grid[1][1] = 7
+total = sum(grid[i][1] for i in range(3))
+print(total)`,
+    options: [
+      "A. 7",
+      "B. 14",
+      "C. 21",
+      "D. 0"
+    ],
+    answer: "C",
+    explanation: "[[0] * 3] * 3 產生的是 3 個指向「同一個內部串列物件」的參照！當修改 grid[1][1] = 7 時，grid[0][1]、grid[1][1]、grid[2][1] 同步全部變成 7。加總為 7 + 7 + 7 = 21。",
+    traceSteps: [
+      { line: 1, text: "以乘法建立 3 列，3 列皆參照同一記憶體串列 [0, 0, 0]", vars: {"grid": "[[0,0,0], [0,0,0], [0,0,0]]"} },
+      { line: 2, text: "修改 grid[1][1] = 7，三列同步變更為 [0, 7, 0]", vars: {"grid": "[[0,7,0], [0,7,0], [0,7,0]]"} },
+      { line: 3, text: "sum(7 + 7 + 7) = 21", vars: {"total": 21} },
+      { line: 4, text: "印出 21", vars: {"output": 21} }
+    ]
+  },
+  {
+    id: "mock_47",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "切片賦值替換多個元素並縮減長度",
+    difficulty: "advanced",
+    category: "切片賦值",
+    question: "執行下列切片賦值程式碼後，串列 nums 的內容為何？",
+    code: `nums = [10, 20, 30, 40, 50]
+nums[1:4] = [99]
+print(nums)`,
+    options: [
+      "A. [10, 99, 50]",
+      "B. [10, 99, 40, 50]",
+      "C. [10, [99], 50]",
+      "D. TypeError"
+    ],
+    answer: "A",
+    explanation: "nums[1:4] 選取索引 1, 2, 3 的三個元素（20, 30, 40）。將 [99] 賦值給該區間會將這 3 個元素替換為單一元素 99，長度由 5 縮減為 3，結果為 [10, 99, 50]。",
+    traceSteps: [
+      { line: 1, text: "nums = [10, 20, 30, 40, 50]", vars: {"nums": "[10, 20, 30, 40, 50]"} },
+      { line: 2, text: "將區間 nums[1:4] (20, 30, 40) 替換為 [99]", vars: {"nums": "[10, 99, 50]"} },
+      { line: 3, text: "印出 nums", vars: {"output": "[10, 99, 50]"} }
+    ]
+  },
+  {
+    id: "mock_48",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "零長度切片賦值進行原地插入",
+    difficulty: "advanced",
+    category: "切片賦值",
+    question: "執行下列空區間切片賦值程式碼後，nums 的內容為何？",
+    code: `nums = [1, 4, 5]
+nums[1:1] = [2, 3]
+print(nums)`,
+    options: [
+      "A. [1, 2, 3, 4, 5]",
+      "B. [1, [2, 3], 4, 5]",
+      "C. [1, 2, 3, 5]",
+      "D. IndexError"
+    ],
+    answer: "A",
+    explanation: "切片 nums[1:1] 為零長度區間。對其賦值 [2, 3] 等同於在索引 1 的位置原地插入元素 2, 3，不會刪除任何既有元素，得到 [1, 2, 3, 4, 5]。",
+    traceSteps: [
+      { line: 1, text: "nums = [1, 4, 5]", vars: {"nums": "[1, 4, 5]"} },
+      { line: 2, text: "在索引 1 前插入 [2, 3]", vars: {"nums": "[1, 2, 3, 4, 5]"} },
+      { line: 3, text: "印出 nums", vars: {"output": "[1, 2, 3, 4, 5]"} }
+    ]
+  },
+  {
+    id: "mock_49",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列 += 原地擴展 vs + 重新綁定之函式效應",
+    difficulty: "advanced",
+    category: "串列記憶體機制",
+    question: "執行下列函式呼叫後，外部串列 a 與 b 的值分別為何？",
+    code: `def test_mutate(lst):
+    lst += [100]
+
+def test_rebind(lst):
+    lst = lst + [200]
+
+a = [1]
+b = [1]
+test_mutate(a)
+test_rebind(b)
+print(a, b)`,
+    options: [
+      "A. [1, 100] [1, 200]",
+      "B. [1, 100] [1]",
+      "C. [1] [1]",
+      "D. [1] [1, 200]"
+    ],
+    answer: "B",
+    explanation: "對於可變串列，lst += [100] 是原地修改（呼叫 __iadd__），會修改傳入的原物件，因此外部 a 變為 [1, 100]；而 lst = lst + [200] 則是產生全新串列並重新指派給區域變數 lst，外部 b 保持 [1]。",
+    traceSteps: [
+      { line: 9, text: "test_mutate(a)：lst += [100] 原地修改 a 的記憶體內容", vars: {"a": "[1, 100]"} },
+      { line: 10, text: "test_rebind(b)：lst = lst + [200] 僅重綁定區域變數，b 不受影響", vars: {"b": "[1]"} },
+      { line: 11, text: "印出 a 與 b", vars: {"output": "[1, 100] [1]"} }
+    ]
+  },
+  {
+    id: "mock_50",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "sort key 搭配元組雙重排序規則",
+    difficulty: "advanced",
+    category: "排序方法區別",
+    question: "執行下列使用元組 key 進行雙重條件排序的程式碼後，印出的首尾單字為何？",
+    code: `words = ["banana", "pie", "apple", "fig"]
+words.sort(key=lambda w: (len(w), w))
+print(words[0], words[-1])`,
+    options: [
+      "A. fig banana",
+      "B. apple banana",
+      "C. pie fig",
+      "D. fig apple"
+    ],
+    answer: "A",
+    explanation: "元組 key 為 (len(w), w)：優先比較長度，長度相同時比字典順序。長度為 3 的有 'fig' 與 'pie'，因 'fig' < 'pie'，'fig' 排第一位；長度最長為 'banana'(6)，排在最後一位。",
+    traceSteps: [
+      { line: 2, text: "以 (長度, 字典序) 排序：'fig'(3, 'fig') < 'pie'(3, 'pie') < 'apple'(5) < 'banana'(6)", vars: {"words": "['fig', 'pie', 'apple', 'banana']"} },
+      { line: 3, text: "印出 words[0] 與 words[-1]", vars: {"output": "'fig banana'"} }
+    ]
+  },
+  {
+    id: "mock_51",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "串列 remove 方法僅刪除第一個相符項",
+    difficulty: "advanced",
+    category: "串列操作方法",
+    question: "執行下列 remove 程式碼後，串列中 2 的數量與最終內容為何？",
+    code: `vals = [2, 1, 2, 3, 2]
+vals.remove(2)
+print(vals.count(2), vals)`,
+    options: [
+      "A. 0 [1, 3]",
+      "B. 2 [1, 2, 3, 2]",
+      "C. 2 [2, 1, 2, 3]",
+      "D. 3 [2, 1, 2, 3, 2]"
+    ],
+    answer: "B",
+    explanation: "list.remove(x) 只會尋找並刪除「第一個」相符的值。索引 0 的 2 被刪除後，剩餘 [1, 2, 3, 2]，其中依舊包含 2 個 2。",
+    traceSteps: [
+      { line: 1, text: "vals = [2, 1, 2, 3, 2]", vars: {"vals": "[2, 1, 2, 3, 2]"} },
+      { line: 2, text: "remove(2) 移除最左側的 2", vars: {"vals": "[1, 2, 3, 2]"} },
+      { line: 3, text: "count(2) 為 2，印出 '2 [1, 2, 3, 2]'", vars: {"output": "2 [1, 2, 3, 2]"} }
+    ]
+  },
+  {
+    id: "mock_52",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "range 負步長終點界限判定",
+    difficulty: "basic",
+    category: "range邊界計算",
+    question: "執行下列負步長 range 轉換為串列的程式碼，結果為何？",
+    code: `res = list(range(9, 2, -3))
+print(res)`,
+    options: [
+      "A. [9, 6, 3]",
+      "B. [9, 6, 3, 0]",
+      "C. [9, 7, 5, 3]",
+      "D. []"
+    ],
+    answer: "A",
+    explanation: "range(9, 2, -3) 起始值為 9，每次減 3，且不包含終點值 2。產生的序列為 9, 6, 3（下一個為 0，已小於等於終點 2，故停止）。",
+    traceSteps: [
+      { line: 1, text: "range(9, 2, -3) 產出 9, 6, 3", vars: {"res": "[9, 6, 3]"} },
+      { line: 2, text: "印出 [9, 6, 3]", vars: {"output": "[9, 6, 3]"} }
+    ]
+  },
+  {
+    id: "mock_53",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "range 空區間長度計算",
+    difficulty: "basic",
+    category: "range邊界計算",
+    question: "下列兩個 range 轉換為串列後的長度分別為何？",
+    code: `r1 = list(range(5, 2))
+r2 = list(range(2, 5, -1))
+print(len(r1), len(r2))`,
+    options: [
+      "A. 3 3",
+      "B. 0 0",
+      "C. 0 3",
+      "D. 3 0"
+    ],
+    answer: "B",
+    explanation: "range(5, 2) 預設步長為 +1，起點 5 大於終點 2 無法遞增，產生空序列；range(2, 5, -1) 步長為 -1，起點 2 小於終點 5 無法遞減，亦產生空序列。兩者長度皆為 0。",
+    traceSteps: [
+      { line: 1, text: "5 到 2 且步長為 +1，無元素，r1 = []", vars: {"r1": "[]"} },
+      { line: 2, text: "2 到 5 且步長為 -1，無元素，r2 = []", vars: {"r2": "[]"} },
+      { line: 3, text: "印出長度 0 0", vars: {"output": "0 0"} }
+    ]
+  },
+  {
+    id: "mock_54",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "while 迴圈狀態累加與倍增終止",
+    difficulty: "basic",
+    category: "while 條件與計數",
+    question: "執行下列 while 迴圈後，total 與 n 的值分別為何？",
+    code: `n = 1
+total = 0
+while n <= 8:
+    total += n
+    n *= 2
+print(total, n)`,
+    options: [
+      "A. 15 8",
+      "B. 15 16",
+      "C. 7 8",
+      "D. 7 16"
+    ],
+    answer: "B",
+    explanation: "各輪迭代：n=1(total=1,n=2), n=2(total=3,n=4), n=4(total=7,n=8), n=8(total=15,n=16)。當 n=16 時，16 <= 8 條件不成立結束迴圈，輸出 15 16。",
+    traceSteps: [
+      { line: 3, text: "迴圈四次：n 分別為 1, 2, 4, 8，累加 total = 15", vars: {"total": 15} },
+      { line: 5, text: "最後一輪 n 乘 2 變為 16，條件終止", vars: {"n": 16} },
+      { line: 6, text: "印出 15 16", vars: {"output": "15 16"} }
+    ]
+  },
+  {
+    id: "mock_55",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "迴圈 continue 略過偶數迭代",
+    difficulty: "basic",
+    category: "break 與 continue",
+    question: "執行下列包含 continue 敘述的程式碼後，vals 串列的內容為何？",
+    code: `vals = []
+for i in range(1, 6):
+    if i % 2 == 0:
+        continue
+    vals.append(i * 10)
+print(vals)`,
+    options: [
+      "A. [10, 30, 50]",
+      "B. [20, 40]",
+      "C. [10, 20, 30, 40, 50]",
+      "D. []"
+    ],
+    answer: "A",
+    explanation: "當 i 為偶數（2, 4）時，continue 會立刻略過該次迭代後續的 append 敘述；只有奇數 1, 3, 5 會執行 append(i * 10)，產出 [10, 30, 50]。",
+    traceSteps: [
+      { line: 3, text: "i = 1: 奇數加入 10；i = 2: 偶數 continue 跳過", vars: {"vals": "[10]"} },
+      { line: 3, text: "i = 3: 奇數加入 30；i = 4: 偶數 continue 跳過", vars: {"vals": "[10, 30]"} },
+      { line: 3, text: "i = 5: 奇數加入 50", vars: {"vals": "[10, 30, 50]"} },
+      { line: 6, text: "印出 [10, 30, 50]", vars: {"output": "[10, 30, 50]"} }
+    ]
+  },
+  {
+    id: "mock_56",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "for 迴圈變數在迴圈結束後之留存",
+    difficulty: "basic",
+    category: "迴圈作用域特性",
+    question: "執行下列 Python 程式碼後，印出的變數 k 數值為何？",
+    code: `for k in range(5):
+    pass
+print(k)`,
+    options: [
+      "A. 4",
+      "B. 5",
+      "C. None",
+      "D. NameError"
+    ],
+    answer: "A",
+    explanation: "在 Python 中，for 迴圈不會建立獨立區域作用域。迴圈執行完畢後，迭代變數 k 依然存在於當前作用域中，其值為最後一次迭代賦予的值 4。",
+    traceSteps: [
+      { line: 1, text: "range(5) 依序產生 0, 1, 2, 3, 4", vars: {"k": 4} },
+      { line: 3, text: "迴圈結束後 k 仍存在且值為 4，印出 4", vars: {"output": 4} }
+    ]
+  },
+  {
+    id: "mock_57",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "單層 break 終止尋找第一個偶數",
+    difficulty: "basic",
+    category: "break 與 continue",
+    question: "執行下列尋找第一個偶數的程式碼後，輸出為何？",
+    code: `nums = [1, 3, 5, 8, 9, 11]
+first_even = None
+for x in nums:
+    if x % 2 == 0:
+        first_even = x
+        break
+print(first_even)`,
+    options: [
+      "A. 8",
+      "B. 11",
+      "C. None",
+      "D. 2"
+    ],
+    answer: "A",
+    explanation: "尋訪串列，依序檢查 1, 3, 5 皆為奇數；當遇到 8 時符合 x % 2 == 0，指派 first_even = 8 並執行 break 立即跳出迴圈，不再檢查後續的 9 與 11。",
+    traceSteps: [
+      { line: 4, text: "檢查 1, 3, 5 不符合；x = 8 時條件成立", vars: {"first_even": 8} },
+      { line: 6, text: "執行 break 跳出迴圈", vars: {} },
+      { line: 7, text: "印出 8", vars: {"output": 8} }
+    ]
+  },
+  {
+    id: "mock_58",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "雙層巢狀迴圈 break 僅跳出當前內層",
+    difficulty: "advanced",
+    category: "巢狀迴圈機制",
+    question: "下列雙層巢狀迴圈執行完畢後，變數 count 的值為何？",
+    code: `count = 0
+for i in range(3):
+    for j in range(3):
+        if j == 1:
+            break
+        count += 1
+print(count)`,
+    options: [
+      "A. 3",
+      "B. 1",
+      "C. 9",
+      "D. 6"
+    ],
+    answer: "A",
+    explanation: "外層迴圈共執行 3 次（i = 0, 1, 2）。在每一輪外層迴圈中，內層 j = 0 時 count 加 1；當 j = 1 時觸發 break，只跳出該層內層迴圈，外層迴圈繼續進行。因此每輪 count 只加 1，總計 3 * 1 = 3。",
+    traceSteps: [
+      { line: 2, text: "i=0: j=0 (count+1), j=1 (break跳出內層)", vars: {"count": 1} },
+      { line: 2, text: "i=1: j=0 (count+1), j=1 (break跳出內層)", vars: {"count": 2} },
+      { line: 2, text: "i=2: j=0 (count+1), j=1 (break跳出內層)", vars: {"count": 3} },
+      { line: 7, text: "印出總計 count = 3", vars: {"output": 3} }
+    ]
+  },
+  {
+    id: "mock_59",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "for-else 結構與 break 中斷交互",
+    difficulty: "advanced",
+    category: "while/for-else",
+    question: "執行下列包含 for ... else 結構的程式碼後，印出的 found 為何？",
+    code: `nums = [2, 4, 6, 7, 8]
+found = False
+for n in nums:
+    if n % 2 != 0:
+        found = True
+        break
+else:
+    found = "ALL_EVEN"
+print(found)`,
+    options: [
+      "A. True",
+      "B. ALL_EVEN",
+      "C. False",
+      "D. None"
+    ],
+    answer: "A",
+    explanation: "for 迴圈在遍歷到 7 時觸發 break 跳出。在 Python 中，只有當迴圈正常遍歷完畢（未曾遭遇 break）時才會執行 else 區塊。因被 break 中斷，else 區塊不被執行，found 維持 True。",
+    traceSteps: [
+      { line: 4, text: "遍歷至 7，n % 2 != 0 成立", vars: {"found": true} },
+      { line: 6, text: "執行 break 中斷迴圈", vars: {} },
+      { line: 7, text: "遭遇 break 跳過 else 區塊", vars: {} },
+      { line: 9, text: "印出 True", vars: {"output": true} }
+    ]
+  },
+  {
+    id: "mock_60",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "邊走訪邊移除元素造成索引位移漏檢",
+    difficulty: "advanced",
+    category: "迴圈陷阱與邊界",
+    question: "執行下列在遍歷中調用 remove() 的程式碼，最終 data 串列內容為何？",
+    code: `data = [1, 2, 2, 3, 4]
+for x in data:
+    if x % 2 == 0:
+        data.remove(x)
+print(data)`,
+    options: [
+      "A. [1, 3]",
+      "B. [1, 2, 3]",
+      "C. [1, 2, 2, 3]",
+      "D. [1, 3, 4]"
+    ],
+    answer: "B",
+    explanation: "遍歷中刪除元素會導致內部索引位移：當第 1 個 2 在索引 1 被 remove 後，後續元素往前遞補，第 2 個 2 移至索引 1。下一輪迴圈檢查索引 2（數值為 3），導致第 2 個 2 被完美漏檢！最後移除 4，剩餘 [1, 2, 3]。",
+    traceSteps: [
+      { line: 2, text: "迭代至索引 1 的 2，執行 remove(2)，串列變為 [1, 2, 3, 4]", vars: {"data": "[1, 2, 3, 4]"} },
+      { line: 2, text: "下一輪內部指標移向索引 2 (值為 3)，第 2 個 2 被略過", vars: {} },
+      { line: 2, text: "迭代至 4，執行 remove(4)，串列變為 [1, 2, 3]", vars: {"data": "[1, 2, 3]"} },
+      { line: 5, text: "印出 [1, 2, 3]", vars: {"output": "[1, 2, 3]"} }
+    ]
+  },
+  {
+    id: "mock_61",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "while 迴圈配合 continue 數值累加",
+    difficulty: "advanced",
+    category: "break 與 continue",
+    question: "執行下列 while 迴圈累加程式碼後，印出的 total 為何？",
+    code: `i = 0
+total = 0
+while i < 5:
+    i += 1
+    if i == 3:
+        continue
+    total += i
+print(total)`,
+    options: [
+      "A. 12",
+      "B. 15",
+      "C. 10",
+      "D. 9"
+    ],
+    answer: "A",
+    explanation: "i 逐次加 1，值依序為 1, 2, 3, 4, 5。當 i = 3 時觸發 continue，跳過該輪的 total += i。其餘 i = 1, 2, 4, 5 均被累加：1 + 2 + 4 + 5 = 12。",
+    traceSteps: [
+      { line: 4, text: "i=1 累加 total=1; i=2 累加 total=3", vars: {"total": 3} },
+      { line: 5, text: "i=3 時遇到 continue 跳過加總", vars: {} },
+      { line: 4, text: "i=4 累加 total=7; i=5 累加 total=12", vars: {"total": 12} },
+      { line: 8, text: "印出 12", vars: {"output": 12} }
+    ]
+  },
+  {
+    id: "mock_62",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "巢狀迴圈矩陣對角線座標運算",
+    difficulty: "advanced",
+    category: "巢狀迴圈機制",
+    question: "執行下列對角線座標累加程式碼後，終端機的輸出為何？",
+    code: `ans = 0
+for r in range(4):
+    for c in range(4):
+        if r == c:
+            ans += (r + c)
+print(ans)`,
+    options: [
+      "A. 12",
+      "B. 24",
+      "C. 16",
+      "D. 8"
+    ],
+    answer: "A",
+    explanation: "只有當 r == c（主對角線）時才會累加 (r + c) = 2r。r 取值 0, 1, 2, 3：分別累加 0, 2, 4, 6。總和 ans = 0 + 2 + 4 + 6 = 12。",
+    traceSteps: [
+      { line: 4, text: "對角線座標 (0,0)->0, (1,1)->2, (2,2)->4, (3,3)->6", vars: {"terms": "[0, 2, 4, 6]"} },
+      { line: 5, text: "累加總和 ans = 12", vars: {"ans": 12} },
+      { line: 6, text: "印出 12", vars: {"output": 12} }
+    ]
+  },
+  {
+    id: "mock_63",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "while 複合短路條件提早中斷計步",
+    difficulty: "advanced",
+    category: "while 條件與計數",
+    question: "執行下列布林標誌計步程式碼後，變數 steps 的值為何？",
+    code: `flags = [False, False, True, False]
+steps = 0
+while steps < len(flags) and not flags[steps]:
+    steps += 1
+print(steps)`,
+    options: [
+      "A. 2",
+      "B. 3",
+      "C. 4",
+      "D. 1"
+    ],
+    answer: "A",
+    explanation: "steps=0: flags[0] 為 False，not False 為 True，steps 增加到 1；steps=1: flags[1] 為 False，not False 為 True，steps 增加到 2；steps=2: flags[2] 為 True，not True 為 False，while 條件不成立停止迴圈。輸出 steps = 2。",
+    traceSteps: [
+      { line: 3, text: "steps=0: not flags[0] 為 True，steps 變 1", vars: {"steps": 1} },
+      { line: 3, text: "steps=1: not flags[1] 為 True，steps 變 2", vars: {"steps": 2} },
+      { line: 3, text: "steps=2: not flags[2] 為 False，迴圈中斷", vars: {"steps": 2} },
+      { line: 5, text: "印出 2", vars: {"output": 2} }
+    ]
+  },
+  {
+    id: "mock_64",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "函式未撰寫 return 預設傳回 None",
+    difficulty: "basic",
+    category: "函式預設傳回值",
+    question: "執行下列沒有 return 語句的函式後，變數 res 的值為何？",
+    code: `def update_score(s):
+    s += 10
+
+res = update_score(50)
+print(res)`,
+    options: [
+      "A. 60",
+      "B. None",
+      "C. 50",
+      "D. 0"
+    ],
+    answer: "B",
+    explanation: "Python 函式內部若沒有執行任何 return 語句，直譯器預設會隱式回傳 None，而不是運算後的數值或 0。",
+    traceSteps: [
+      { line: 4, text: "呼叫 update_score(50)", vars: {} },
+      { line: 2, text: "區域變數 s 增加 10 變 60，函式無 return 結束", vars: {"s": 60} },
+      { line: 4, text: "接收函式隱式傳回值 None", vars: {"res": null} },
+      { line: 5, text: "印出 None", vars: {"output": null} }
+    ]
+  },
+  {
+    id: "mock_65",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "位置引數與關鍵字引數混合傳遞",
+    difficulty: "basic",
+    category: "引數傳遞機制",
+    question: "執行下列關鍵字引數混合呼叫的程式碼，輸出結果為何？",
+    code: `def calc(a, b, c=10):
+    return a * 2 + b - c
+
+print(calc(5, c=4, b=3))`,
+    options: [
+      "A. 9",
+      "B. 10",
+      "C. 7",
+      "D. 11"
+    ],
+    answer: "A",
+    explanation: "a 透過位置引數綁定為 5；b 透過關鍵字引數指定為 3；預設參數 c 透過關鍵字引數覆寫為 4。計算 5 * 2 + 3 - 4 = 10 + 3 - 4 = 9。",
+    traceSteps: [
+      { line: 4, text: "傳入 a=5, b=3, c=4", vars: {"a": 5, "b": 3, "c": 4} },
+      { line: 2, text: "計算 5*2 + 3 - 4 = 9 並回傳", vars: {"return": 9} },
+      { line: 4, text: "印出 9", vars: {"output": 9} }
+    ]
+  },
+  {
+    id: "mock_66",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "預設參數定義順序語法規則",
+    difficulty: "basic",
+    category: "預設參數語法",
+    question: "依據 Python 語法，下列何者是完全合法的函式定義宣告？",
+    code: `def valid_func(a, b=2, c=3):
+    return a + b + c
+print(valid_func(1))`,
+    options: [
+      "A. def f(a=1, b): pass",
+      "B. def f(a, b=2, c): pass",
+      "C. def valid_func(a, b=2, c=3): pass",
+      "D. def f(a=1, b=2, c): pass"
+    ],
+    answer: "C",
+    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError。因此選項 C 合法，輸出 1 + 2 + 3 = 6。",
+    traceSteps: [
+      { line: 1, text: "定義合法的函式參數順序：無預設值 a 在前，具預設值 b=2, c=3 在後", vars: {} },
+      { line: 3, text: "呼叫 valid_func(1)：a=1, b=2, c=3，回傳 6", vars: {"output": 6} }
+    ]
+  },
+  {
+    id: "mock_67",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "函式回傳多值形成元組 (Tuple)",
+    difficulty: "basic",
+    category: "函式回傳值型態",
+    question: "執行下列回傳多個值的函式後，變數 val 的型態與元素個數為何？",
+    code: `def get_stats():
+    return 100, "Pass", True
+
+val = get_stats()
+print(type(val).__name__, len(val))`,
+    options: [
+      "A. tuple 3",
+      "B. list 3",
+      "C. dict 3",
+      "D. set 3"
+    ],
+    answer: "A",
+    explanation: "在 Python 中，return 後方以逗號分隔多個表達式時，直譯器會自動打包（Tuple Packing）為元組（tuple）傳回。因此 val 的型態為 tuple，長度為 3。",
+    traceSteps: [
+      { line: 2, text: "回傳 100, 'Pass', True 自動打包為元組 (100, 'Pass', True)", vars: {"val": "(100, 'Pass', True)"} },
+      { line: 4, text: "val 接收元組", vars: {} },
+      { line: 5, text: "印出型態 'tuple' 與長度 3", vars: {"output": "tuple 3"} }
+    ]
+  },
+  {
+    id: "mock_68",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "全域變數純讀取與作用域向外查找",
+    difficulty: "basic",
+    category: "變數作用域",
+    question: "執行下列存取全域變數的程式碼後，終端機的輸出為何？",
+    code: `target = "Agent"
+def reveal():
+    print(target, end=" ")
+reveal()
+print("Done")`,
+    options: [
+      "A. Agent Done",
+      "B. Done",
+      "C. UnboundLocalError",
+      "D. NameError"
+    ],
+    answer: "A",
+    explanation: "函式內部若僅讀取變數且函式內無任何賦值動作，Python 遵循 LEGB 規則會向外層全域作用域查找，成功讀取 target 的值 'Agent'。",
+    traceSteps: [
+      { line: 1, text: "全域定義 target = 'Agent'", vars: {"target": "'Agent'"} },
+      { line: 4, text: "呼叫 reveal()，函式內無賦值，向外找到全域 target", vars: {} },
+      { line: 3, text: "印出 'Agent '，不換行", vars: {"buffer": "'Agent '"} },
+      { line: 5, text: "印出 'Done'，整體輸出 'Agent Done'", vars: {"output": "'Agent Done'"} }
+    ]
+  },
+  {
+    id: "mock_69",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "字典 get 方法自訂預設值防禦 KeyError",
+    difficulty: "basic",
+    category: "字典操作與防禦",
+    question: "執行下列字典查詢程式碼後，變數 age 的值為何？",
+    code: `profile = {"id": "007", "codename": "Bond"}
+age = profile.get("age", 30)
+print(age)`,
+    options: [
+      "A. KeyError",
+      "B. None",
+      "C. 30",
+      "D. 0"
+    ],
+    answer: "C",
+    explanation: "dict.get(key, default) 在鍵不存在於字典中時，不會拋出 KeyError，而是安全回傳所提供的預設值 30。",
+    traceSteps: [
+      { line: 1, text: "profile 字典只有 'id' 與 'codename'", vars: {"profile": "{'id': '007', 'codename': 'Bond'}"} },
+      { line: 2, text: "查詢 'age' 鍵不存在，get 方法回傳第二個引數 30", vars: {"age": 30} },
+      { line: 3, text: "印出 30", vars: {"output": 30} }
+    ]
+  },
+  {
+    id: "mock_70",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "可變預設參數跨函式呼叫累積陷阱",
+    difficulty: "advanced",
+    category: "可變預設參數陷阱",
+    question: "執行下列使用可變預設參數串列的程式碼，最終印出的 a 為何？",
+    code: `def collect(val, bag=[]):
+    bag.append(val)
+    return bag
+
+a = collect("X")
+b = collect("Y")
+print(a)`,
+    options: [
+      "A. ['X']",
+      "B. ['X', 'Y']",
+      "C. ['Y']",
+      "D. []"
+    ],
+    answer: "B",
+    explanation: "函式的預設參數 bag=[] 僅在函式定義時被建立一次。兩次呼叫皆未傳入 bag，共享同一個串列記憶體物件。第二次呼叫 append('Y') 同時影響了指向該串列的變數 a，因此 a 為 ['X', 'Y']。",
+    traceSteps: [
+      { line: 5, text: "第 1 次呼叫 collect('X')，預設串列加入 'X'，a 接收參照", vars: {"bag": "['X']", "a": "['X']"} },
+      { line: 6, text: "第 2 次呼叫 collect('Y')，同一串列加入 'Y'，b 接收同一參照", vars: {"bag": "['X', 'Y']"} },
+      { line: 7, text: "印出 a 指向的物件 ['X', 'Y']", vars: {"output": "['X', 'Y']"} }
+    ]
+  },
+  {
+    id: "mock_71",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "區域變數賦值提升引發 UnboundLocalError",
+    difficulty: "advanced",
+    category: "作用域與UnboundLocalError",
+    question: "執行下列嘗試修改同名全域變數的程式碼，會印出什麼結果？",
+    code: `count = 50
+def bump():
+    count += 1
+try:
+    bump()
+except UnboundLocalError:
+    print("UnboundLocalError")`,
+    options: [
+      "A. 51",
+      "B. 50",
+      "C. UnboundLocalError",
+      "D. NameError"
+    ],
+    answer: "C",
+    explanation: "count += 1 包含賦值語句 count = count + 1。Python 在編譯函式時檢測到賦值，將 count 標記為區域變數。執行時右側 count + 1 在賦值前嘗試讀取尚未初始化的區域變數，拋出 UnboundLocalError！",
+    traceSteps: [
+      { line: 1, text: "全域 count = 50", vars: {"count": 50} },
+      { line: 3, text: "函式內部有賦值，count 被編譯為區域變數；但在賦值前讀取", vars: {} },
+      { line: 6, text: "直譯器拋出 UnboundLocalError，except 捕獲並印出", vars: {"output": "'UnboundLocalError'"} }
+    ]
+  },
+  {
+    id: "mock_72",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "global 宣告明確修改全域變數",
+    difficulty: "advanced",
+    category: "global 關鍵字",
+    question: "執行下列使用 global 關鍵字的程式碼後，印出的 code 數值為何？",
+    code: `code = 100
+def modify():
+    global code
+    code = 200
+
+modify()
+print(code)`,
+    options: [
+      "A. 100",
+      "B. 200",
+      "C. None",
+      "D. UnboundLocalError"
+    ],
+    answer: "B",
+    explanation: "函式內部使用 global code 宣告，明確指明 code 指向全域作用域。隨後的 code = 200 便成功修改了全域變數，因此最後印出 200。",
+    traceSteps: [
+      { line: 1, text: "全域變數 code = 100", vars: {"code": 100} },
+      { line: 3, text: "宣告 global code，將函式內的 code 綁定至全域", vars: {} },
+      { line: 4, text: "賦值 code = 200 修改全域變數", vars: {"code": 200} },
+      { line: 7, text: "印出全域變數 code 為 200", vars: {"output": 200} }
+    ]
+  },
+  {
+    id: "mock_73",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "Lambda 函式自訂元組多欄位排序",
+    difficulty: "advanced",
+    category: "Lambda 與高階函式",
+    question: "執行下列使用 Lambda 排序元組的程式碼後，pairs 的排列順序為何？",
+    code: `pairs = [(1, "b"), (2, "a"), (1, "a")]
+pairs.sort(key=lambda p: (p[0], p[1]))
+print(pairs)`,
+    options: [
+      "A. [(1, 'a'), (1, 'b'), (2, 'a')]",
+      "B. [(2, 'a'), (1, 'a'), (1, 'b')]",
+      "C. [(1, 'b'), (1, 'a'), (2, 'a')]",
+      "D. [(1, 'a'), (2, 'a'), (1, 'b')]"
+    ],
+    answer: "A",
+    explanation: "排序 key 為 (p[0], p[1])。第一欄位相同時（皆為 1），比較第二欄位字串：'a' 在 'b' 前面，因此 (1, 'a') 排在 (1, 'b') 之前；最後是 (2, 'a')。",
+    traceSteps: [
+      { line: 2, text: "以 (數值, 字母) 雙欄位升序排序", vars: {} },
+      { line: 2, text: "排序結果：(1, 'a') < (1, 'b') < (2, 'a')", vars: {"pairs": "[(1, 'a'), (1, 'b'), (2, 'a')]"} },
+      { line: 3, text: "印出 pairs", vars: {"output": "[(1, 'a'), (1, 'b'), (2, 'a')]"} }
+    ]
+  },
+  {
+    id: "mock_74",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "參數傳遞：不可變整數 vs 可變串列",
+    difficulty: "advanced",
+    category: "物件參照傳遞",
+    question: "執行下列程式碼後，num 與 my_list 的輸出結果為何？",
+    code: `def proc(n, lst):
+    n += 10
+    lst.append(99)
+
+num = 5
+my_list = [1, 2]
+proc(num, my_list)
+print(num, my_list)`,
+    options: [
+      "A. 15 [1, 2, 99]",
+      "B. 5 [1, 2, 99]",
+      "C. 15 [1, 2]",
+      "D. 5 [1, 2]"
+    ],
+    answer: "B",
+    explanation: "整數為不可變型態，n += 10 只是讓函式區域變數 n 指向新整數物件 15，外部 num 保持 5；串列為可變物件，lst.append(99) 在原地修改同一塊記憶體，外部 my_list 變為 [1, 2, 99]。",
+    traceSteps: [
+      { line: 2, text: "區域變數 n 變為 15，不影響外部不可變整數 num", vars: {"num": 5} },
+      { line: 3, text: "lst.append(99) 原地修改外部可變串列", vars: {"my_list": "[1, 2, 99]"} },
+      { line: 8, text: "印出 num 與 my_list", vars: {"output": "5 [1, 2, 99]"} }
+    ]
+  },
+  {
+    id: "mock_75",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式呼叫堆疊展開追蹤",
+    difficulty: "advanced",
+    category: "遞迴函式機制",
+    question: "執行下列遞迴函式程式碼後，終端機印出的數值為何？",
+    code: `def f(n):
+    if n <= 1:
+        return 1
+    return n + f(n - 2)
+
+print(f(6))`,
+    options: [
+      "A. 12",
+      "B. 13",
+      "C. 10",
+      "D. 16"
+    ],
+    answer: "B",
+    explanation: "呼叫堆疊展開：f(6) = 6 + f(4)；f(4) = 4 + f(2)；f(2) = 2 + f(0)；f(0) 滿足 n <= 1 回傳 1。向上回溯計算：f(2) = 2 + 1 = 3；f(4) = 4 + 3 = 7；f(6) = 6 + 7 = 13。",
+    traceSteps: [
+      { line: 4, text: "展開：f(6) = 6 + f(4)", vars: {} },
+      { line: 4, text: "展開：f(4) = 4 + f(2)", vars: {} },
+      { line: 4, text: "展開：f(2) = 2 + f(0)", vars: {} },
+      { line: 3, text: "基準條件：f(0) 回傳 1", vars: {} },
+      { line: 4, text: "回溯計算：f(2)=3, f(4)=7, f(6)=13", vars: {"result": 13} },
+      { line: 6, text: "印出 13", vars: {"output": 13} }
+    ]
+  },
+  {
+    id: "mock_76",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "enumerate 自訂起始索引",
+    difficulty: "basic",
+    category: "enumerate應用",
+    question: "執行下列使用 start=1 的 enumerate 程式碼後，第一個元素 indexed[0] 為何？",
+    code: `teams = ["Red", "Blue", "Gold"]
+indexed = list(enumerate(teams, start=1))
+print(indexed[0])`,
+    options: [
+      "A. (0, 'Red')",
+      "B. (1, 'Red')",
+      "C. [1, 'Red']",
+      "D. ('Red', 1)"
+    ],
+    answer: "B",
+    explanation: "enumerate(iterable, start=1) 將起始計數器設為 1，並產生包含 (index, element) 的元組。因此第 0 個元素為 (1, 'Red')。",
+    traceSteps: [
+      { line: 2, text: "enumerate 指定 start=1，依序產出 (1, 'Red'), (2, 'Blue'), (3, 'Gold')", vars: {"indexed": "[(1, 'Red'), (2, 'Blue'), (3, 'Gold')]"} },
+      { line: 3, text: "印出 indexed[0] 為 (1, 'Red')", vars: {"output": "(1, 'Red')"} }
+    ]
+  },
+  {
+    id: "mock_77",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "zip 依最短迭代長度截斷",
+    difficulty: "basic",
+    category: "zip打包機制",
+    question: "執行下列 zip 打包程式碼後，長度與最後一項為何？",
+    code: `keys = ["a", "b", "c", "d"]
+vals = [10, 20]
+paired = list(zip(keys, vals))
+print(len(paired), paired[-1])`,
+    options: [
+      "A. 4 ('d', None)",
+      "B. 2 ('b', 20)",
+      "C. 2 ('c', 20)",
+      "D. 4 ('b', 20)"
+    ],
+    answer: "B",
+    explanation: "zip() 走訪多個序列時，只要其中最短的一個序列結束便立即停止。vals 只有 2 個元素，因此打包結果為 [('a', 10), ('b', 20)]，長度為 2，末項為 ('b', 20)。",
+    traceSteps: [
+      { line: 3, text: "zip 依據最短長度 vals(2) 截斷，產生 [('a', 10), ('b', 20)]", vars: {"paired": "[('a', 10), ('b', 20)]"} },
+      { line: 4, text: "len(paired) 為 2，paired[-1] 為 ('b', 20)", vars: {"output": "2 ('b', 20)"} }
+    ]
+  },
+  {
+    id: "mock_78",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "單層串列表達式條件過濾與平方",
+    difficulty: "basic",
+    category: "串列表達式",
+    question: "執行下列串列表達式後，變數 squares 的內容為何？",
+    code: `nums = [1, 2, 3, 4, 5, 6]
+squares = [x ** 2 for x in nums if x % 2 == 1]
+print(squares)`,
+    options: [
+      "A. [1, 9, 25]",
+      "B. [4, 16, 36]",
+      "C. [1, 4, 9, 16, 25, 36]",
+      "D. [1, 3, 5]"
+    ],
+    answer: "A",
+    explanation: "後方的 if x % 2 == 1 篩選出奇數 1, 3, 5；前方的運算式 x ** 2 將其分別平方為 1, 9, 25，組成串列 [1, 9, 25]。",
+    traceSteps: [
+      { line: 2, text: "過濾奇數：1, 3, 5", vars: {"odds": "[1, 3, 5]"} },
+      { line: 2, text: "計算平方：1**2=1, 3**2=9, 5**2=25", vars: {"squares": "[1, 9, 25]"} },
+      { line: 3, text: "印出 [1, 9, 25]", vars: {"output": "[1, 9, 25]"} }
+    ]
+  },
+  {
+    id: "mock_79",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "try-except 捕捉 ValueError 異常",
+    difficulty: "basic",
+    category: "例外處理基礎",
+    question: "執行下列包含例外處理的程式碼後，印出的 val 數值為何？",
+    code: `try:
+    val = int("Python")
+except ValueError:
+    val = -1
+except TypeError:
+    val = -2
+print(val)`,
+    options: [
+      "A. Python",
+      "B. -1",
+      "C. -2",
+      "D. 0"
+    ],
+    answer: "B",
+    explanation: "int('Python') 嘗試將英文字串轉換為十進位整數，會拋出 ValueError。該例外被 except ValueError 分支精準捕獲，將 val 設為 -1。",
+    traceSteps: [
+      { line: 2, text: "int('Python') 拋出 ValueError", vars: {} },
+      { line: 3, text: "進入 except ValueError 分支", vars: {} },
+      { line: 4, text: "val 賦值為 -1", vars: {"val": -1} },
+      { line: 7, text: "印出 -1", vars: {"output": -1} }
+    ]
+  },
+  {
+    id: "mock_80",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "dict 與 zip 快速建構字典",
+    difficulty: "basic",
+    category: "zip打包機制",
+    question: "執行下列結合 zip 與 dict 的程式碼後，終端機印出的內容為何？",
+    code: `headers = ["user", "role"]
+data = ["agent007", "spy"]
+info = dict(zip(headers, data))
+print(info["role"])`,
+    options: [
+      "A. spy",
+      "B. agent007",
+      "C. role",
+      "D. KeyError"
+    ],
+    answer: "A",
+    explanation: "zip(headers, data) 將對應項打包成 [('user', 'agent007'), ('role', 'spy')]，dict() 將元組串列轉換為鍵值字典。info['role'] 查得對應值 'spy'。",
+    traceSteps: [
+      { line: 3, text: "zip 配對鍵與值，dict() 轉為 {'user': 'agent007', 'role': 'spy'}", vars: {"info": "{'user': 'agent007', 'role': 'spy'}"} },
+      { line: 4, text: "查詢 info['role']，印出 'spy'", vars: {"output": "'spy'"} }
+    ]
+  },
+  {
+    id: "mock_81",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "串列表達式三元條件運算式位置",
+    difficulty: "basic",
+    category: "串列表達式",
+    question: "執行下列包含 if-else 條件映射的串列表達式後，clamped 的內容為何？",
+    code: `nums = [-2, 3, -5, 4]
+clamped = [x if x > 0 else 0 for x in nums]
+print(clamped)`,
+    options: [
+      "A. [0, 3, 0, 4]",
+      "B. [3, 4]",
+      "C. [-2, 3, -5, 4]",
+      "D. [0, 0, 0, 0]"
+    ],
+    answer: "A",
+    explanation: "在串列表達式中，雙向分支 x if x > 0 else 0 必須寫在 for 前方作為元素映射。負數被替換為 0，正數保持原值，產出 [0, 3, 0, 4]。",
+    traceSteps: [
+      { line: 2, text: "映射：-2->0, 3->3, -5->0, 4->4", vars: {"clamped": "[0, 3, 0, 4]"} },
+      { line: 3, text: "印出 [0, 3, 0, 4]", vars: {"output": "[0, 3, 0, 4]"} }
+    ]
+  },
+  {
+    id: "mock_82",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "雙層巢狀串列表達式攤平順序",
+    difficulty: "advanced",
+    category: "巢狀串列表達式",
+    question: "執行下列攤平二維串列的巢狀表達式後，flattened 的內容為何？",
+    code: `matrix = [[1, 2], [3, 4]]
+flattened = [val for row in matrix for val in row]
+print(flattened)`,
+    options: [
+      "A. [1, 2, 3, 4]",
+      "B. [1, 3, 2, 4]",
+      "C. [[1, 2], [3, 4]]",
+      "D. [4, 3, 2, 1]"
+    ],
+    answer: "A",
+    explanation: "巢狀表達式中的 for 順序與傳統巢狀迴圈完全一致（左邊是外層，右邊是內層）。先外層 for row in matrix 取出 [1, 2]，再內層 for val in row 取出 1, 2；接著下一列取出 3, 4，攤平成 [1, 2, 3, 4]。",
+    traceSteps: [
+      { line: 2, text: "外層 row=[1, 2] -> 取出 1, 2", vars: {"step1": "[1, 2]"} },
+      { line: 2, text: "外層 row=[3, 4] -> 取出 3, 4", vars: {"step2": "[3, 4]"} },
+      { line: 2, text: "合併為 [1, 2, 3, 4]", vars: {"flattened": "[1, 2, 3, 4]"} },
+      { line: 3, text: "印出 [1, 2, 3, 4]", vars: {"output": "[1, 2, 3, 4]"} }
+    ]
+  },
+  {
+    id: "mock_83",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "zip 與星號解包進行矩陣轉置",
+    difficulty: "advanced",
+    category: "zip解包與轉置",
+    question: "執行下列利用 zip(*grid) 轉置矩陣的程式碼後，印出的 transposed[1] 為何？",
+    code: `grid = [[1, 2, 3], [4, 5, 6]]
+transposed = [list(col) for col in zip(*grid)]
+print(transposed[1])`,
+    options: [
+      "A. [2, 5]",
+      "B. [4, 5, 6]",
+      "C. [1, 4]",
+      "D. [3, 6]"
+    ],
+    answer: "A",
+    explanation: "zip(*grid) 等同於 zip([1, 2, 3], [4, 5, 6])，將各列的對應欄打包：第 0 欄為 (1, 4)，第 1 欄為 (2, 5)，第 2 欄為 (3, 6)。轉為串列後，transposed[1] 即為第 1 欄 [2, 5]。",
+    traceSteps: [
+      { line: 2, text: "*grid 解包兩列傳入 zip，轉置為 (1,4), (2,5), (3,6)", vars: {"transposed": "[[1, 4], [2, 5], [3, 6]]"} },
+      { line: 3, text: "印出 transposed[1] 為 [2, 5]", vars: {"output": "[2, 5]"} }
+    ]
+  },
+  {
+    id: "mock_84",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "try-except-else-finally 完整控制流",
+    difficulty: "advanced",
+    category: "例外處理完整架構",
+    question: "執行下列沒有拋出例外的 try-except-else-finally 程式碼後，輸出為何？",
+    code: `log = []
+try:
+    x = 10 // 2
+except ZeroDivisionError:
+    log.append("err")
+else:
+    log.append("ok")
+finally:
+    log.append("fin")
+print("-".join(log))`,
+    options: [
+      "A. ok-fin",
+      "B. err-fin",
+      "C. ok",
+      "D. err-ok-fin"
+    ],
+    answer: "A",
+    explanation: "10 // 2 運算正常未拋出例外，跳過 except；因此進入 else 區塊加入 'ok'；最後 finally 區塊無論如何必定執行，加入 'fin'。最終 join 結果為 'ok-fin'。",
+    traceSteps: [
+      { line: 3, text: "10 // 2 = 5 正常完成，不觸發例外", vars: {"x": 5} },
+      { line: 7, text: "無例外進入 else，加入 'ok'", vars: {"log": "['ok']"} },
+      { line: 9, text: "進入 finally 必定執行，加入 'fin'", vars: {"log": "['ok', 'fin']"} },
+      { line: 10, text: "以 '-' 串接印出 'ok-fin'", vars: {"output": "'ok-fin'"} }
+    ]
+  },
+  {
+    id: "mock_85",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "finally 強制執行覆蓋函式回傳值",
+    difficulty: "advanced",
+    category: "例外處理與finally陷阱",
+    question: "執行下列在 finally 區塊中亦有 return 的程式碼，函式傳回值為何？",
+    code: `def check():
+    try:
+        return "TRY"
+    finally:
+        return "FINALLY"
+
+print(check())`,
+    options: [
+      "A. TRY",
+      "B. FINALLY",
+      "C. TRY FINALLY",
+      "D. None"
+    ],
+    answer: "B",
+    explanation: "當 try 區塊執行 return 'TRY' 時，傳回值會被暫存，Python 接著強制跳轉執行 finally 區塊。若 finally 區塊自身也執行了 return，會直接覆蓋掉原本的暫存值，因此函式最終回傳 'FINALLY'。",
+    traceSteps: [
+      { line: 3, text: "try 區塊遇到 return 'TRY'，暫存傳回值並轉往 finally", vars: {"pending_return": "'TRY'"} },
+      { line: 5, text: "finally 區塊強制執行 return 'FINALLY'，覆蓋暫存值", vars: {"final_return": "'FINALLY'"} },
+      { line: 7, text: "印出 'FINALLY'", vars: {"output": "'FINALLY'"} }
+    ]
+  },
+  {
+    id: "mock_86",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "字串 split 篩選數字並轉型加總",
+    difficulty: "advanced",
+    category: "生成式與字串處理",
+    question: "執行下列結合 split、isdigit 與生成式的加總程式碼後，印出的 total 為何？",
+    code: `raw = "alpha 10 beta 20 gamma 30"
+total = sum(int(item) for item in raw.split() if item.isdigit())
+print(total)`,
+    options: [
+      "A. 60",
+      "B. 50",
+      "C. 30",
+      "D. 0"
+    ],
+    answer: "A",
+    explanation: "raw.split() 切出 ['alpha', '10', 'beta', '20', 'gamma', '30']。條件 item.isdigit() 篩選出純數字字串 '10', '20', '30'，轉型為整數後由 sum() 加總：10 + 20 + 30 = 60。",
+    traceSteps: [
+      { line: 1, text: "raw 字串包含單字與數字", vars: {"raw": "'alpha 10 beta 20 gamma 30'"} },
+      { line: 2, text: "篩選出 isdigit() 為 True 的字元：'10', '20', '30'，轉為整數", vars: {"ints": "[10, 20, 30]"} },
+      { line: 2, text: "sum([10, 20, 30]) = 60", vars: {"total": 60} },
+      { line: 3, text: "印出 60", vars: {"output": 60} }
+    ]
+  },
+  {
+    id: "mock_87",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "except 多重例外型態元組捕捉",
+    difficulty: "advanced",
+    category: "例外捕捉機制",
+    question: "執行下列以元組捕捉多種例外的程式碼後，變數 res 的值為何？",
+    code: `res = 0
+try:
+    items = [10, 20]
+    val = items[5]
+except (KeyError, IndexError):
+    res = 999
+except Exception:
+    res = -1
+print(res)`,
+    options: [
+      "A. 999",
+      "B. -1",
+      "C. IndexError",
+      "D. 0"
+    ],
+    answer: "A",
+    explanation: "items[5] 存取超出串列長度的索引，直譯器拋出 IndexError。在 except (KeyError, IndexError) 中，Python 支援以元組一次監聽多個例外型態，成功捕捉該 IndexError 並將 res 設為 999。",
+    traceSteps: [
+      { line: 4, text: "items[5] 越界存取，引發 IndexError", vars: {} },
+      { line: 5, text: "except (KeyError, IndexError) 成功捕獲 IndexError", vars: {} },
+      { line: 6, text: "res 賦值為 999", vars: {"res": 999} },
+      { line: 9, text: "印出 999", vars: {"output": 999} }
+    ]
   }
 ];
 
-
-// 模組匯出支援（若在瀏覽器全域環境則掛載至 window）
-if (typeof window !== "undefined") {
+// Export for both browser and Node/testing
+if (typeof window !== 'undefined') {
   window.CHAPTERS_DATA = CHAPTERS_DATA;
   window.QUESTIONS_DATABASE = QUESTIONS_DATABASE;
 }
-if (typeof module !== "undefined") {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = { CHAPTERS_DATA, QUESTIONS_DATABASE };
 }
