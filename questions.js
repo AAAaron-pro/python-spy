@@ -1886,7 +1886,7 @@ print(b)`,
       "D. 83"
     ],
     answer: "B",
-    explanation: "字串乘法 a * 2 即 \\"4\\" * 2 得到 \\"44\\"；int(\\"44\\") 轉型為整數 44；最後 44 + 3 = 47。",
+    explanation: "字串乘法 a * 2 即 \'4\' * 2 得到 \'44\'；int(\'44\') 轉型為整數 44；最後 44 + 3 = 47。",
     traceSteps: [
       { line: 1, text: "定義字串變數 a = '4'", vars: {"a": "'4'"} },
       { line: 2, text: "字串乘法 a * 2 得到 '44'，int('44') 轉為 44，加上 3 賦值給 b", vars: {"b": 47} },
@@ -1911,7 +1911,7 @@ print("Line2")`,
       "D. Line1* Line2 (同一行以空格隔開)"
     ],
     answer: "B",
-    explanation: "print(\\"Line1\\", end=\\"*\\") 輸出 \\"Line1*\\" 且未換行；接著無引數的 print() 預設輸出換行字元 \n；最後 print(\\"Line2\\") 在新行印出 \\"Line2\\"。整體輸出在第 1 行為 \\"Line1*\\"，第 2 行為 \\"Line2\\"。",
+    explanation: "print(\'Line1\', end=\'*\') 輸出 \'Line1*\' 且未換行；接著無引數的 print() 預設輸出換行字元 \n；最後 print(\'Line2\') 在新行印出 \'Line2\'。整體輸出在第 1 行為 \'Line1*\'，第 2 行為 \'Line2\'。",
     traceSteps: [
       { line: 1, text: "印出 'Line1*'，不換行", vars: {"buffer": "'Line1*'"} },
       { line: 2, text: "print() 輸出預設換行字元 \n", vars: {} },
@@ -1963,7 +1963,7 @@ print(a, b, c, d)`,
       "D. True True True False"
     ],
     answer: "B",
-    explanation: "非空字串 \\"0\\" 長度大於 0 為 True；空字串 \\"\\" 為 False；包含一個整數 0 的串列 [0] 是非空容器為 True；空串列 [] 為 False。",
+    explanation: "非空字串 \'0\' 長度大於 0 為 True；空字串 \'\' 為 False；包含一個整數 0 的串列 [0] 是非空容器為 True；空串列 [] 為 False。",
     traceSteps: [
       { line: 1, text: "字串 '0' 非空，bool('0') 為 True", vars: {"a": true} },
       { line: 2, text: "字串 '' 為空，bool('') 為 False", vars: {"b": false} },
@@ -2036,7 +2036,7 @@ print(ans)`,
       "D. Falcon"
     ],
     answer: "C",
-    explanation: "and 優先權高於 or。先算 \\"Eagle\\" and 42：因 \\"Eagle\\" 為真值，and 回傳第二個運算元 42。表達式簡化為 [] or 0 or 42 or \\"Falcon\\"。由左至右，[] 與 0 均為假值，遇到 42 為真值，or 短路直接回傳 42！",
+    explanation: "and 優先權高於 or。先算 \'Eagle\' and 42：因 \'Eagle\' 為真值，and 回傳第二個運算元 42。表達式簡化為 [] or 0 or 42 or \'Falcon\'。由左至右，[] 與 0 均為假值，遇到 42 為真值，or 短路直接回傳 42！",
     traceSteps: [
       { line: 1, text: "and 優先於 or：'Eagle' and 42 求值為 42", vars: {"and_sub": 42} },
       { line: 1, text: "[] or 0 or 42：遇到第一個真值 42 即短路返回", vars: {"ans": 42} },
@@ -2160,7 +2160,7 @@ print(f"Agent:{agent}", f"Rank:{rank:02d}", sep=" | ", end=";")`,
       "D. Agent:007 | Rank:01"
     ],
     answer: "B",
-    explanation: "rank:02d 表示整數以兩位數顯示並以 0 補足，rank 1 格式化為 \\"01\\"；sep=\\" | \\" 將兩項字串以垂直線分隔；end=\\";\\" 在末尾加上分號，因此整體輸出為 \\"Agent:007 | Rank:01;\\"。",
+    explanation: "rank:02d 表示整數以兩位數顯示並以 0 補足，rank 1 格式化為 \'01\'；sep=\' | \' 將兩項字串以垂直線分隔；end=\';\' 在末尾加上分號，因此整體輸出為 \'Agent:007 | Rank:01;\'。",
     traceSteps: [
       { line: 1, text: "初始化變數 agent = '007', rank = 1", vars: {"agent": "'007'", "rank": 1} },
       { line: 2, text: "f-string 格式化 rank:02d 得到 '01'，產生兩個字串引數", vars: {"arg1": "'Agent:007'", "arg2": "'Rank:01'"} },
@@ -2184,7 +2184,7 @@ print(msg[1:9:2])`,
       "D. ybrS"
     ],
     answer: "A",
-    explanation: "切片 [1:9:2] 包含索引 1, 3, 5, 7。在 \\"CyberSecurity\\" 中，msg[1]='y', msg[3]='e', msg[5]='S', msg[7]='c'，串聯結果為 \\"yeSc\\"。",
+    explanation: "切片 [1:9:2] 包含索引 1, 3, 5, 7。在 \'CyberSecurity\' 中，msg[1]='y', msg[3]='e', msg[5]='S', msg[7]='c'，串聯結果為 \'yeSc\'。",
     traceSteps: [
       { line: 1, text: "定義字串 msg = 'CyberSecurity'", vars: {"msg": "'CyberSecurity'"} },
       { line: 2, text: "計算切片 [1:9:2]：取得索引 1('y'), 3('e'), 5('S'), 7('c')", vars: {"slice": "'yeSc'"} },
