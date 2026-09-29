@@ -153,13 +153,7 @@
           </div>
         </div>
 
-        <div class="h-6 w-[1px] bg-slate-800"></div>
 
-        <!-- Heart HP -->
-        <div class="flex items-center gap-1 text-rose-500" title="特務生命值 (答錯扣除)">
-          <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
-          <span id="hud-hp" class="font-mono font-bold text-sm text-slate-200">3/3</span>
-        </div>
 
         <div class="h-6 w-[1px] bg-slate-800"></div>
 
@@ -678,36 +672,7 @@
     </div>
   </div>
 
-  <!-- ==================== ALARM & REVIVAL MODAL ==================== -->
-  <div id="alarm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-[#0e0712] border border-rose-500/60 rounded-2xl max-w-md w-full shadow-2xl p-6 space-y-5 relative pop-anim text-center">
-      <div class="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden border-2 border-rose-500 shadow-xl shadow-rose-500/30 neon-pulse">
-        <img src="assets/alarm_drone.jpg" alt="Alarm Sentry Drone" class="w-full h-full object-cover object-center" />
-        <div class="absolute inset-0 bg-rose-500/10 mix-blend-color-dodge"></div>
-      </div>
 
-      <div class="space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 text-xs font-mono font-bold">
-          <i data-lucide="shield-alert" class="w-4 h-4"></i>
-          <span>FIREWALL BREACH // 防火牆入侵</span>
-        </div>
-        <h3 class="text-xl font-extrabold text-white">特務生命值耗盡！</h3>
-        <p class="text-xs text-slate-300 leading-relaxed">
-          哨兵無人機已鎖定漏洞。請立即啟動系統核心重啟協定，修復防護罩並滿血重返戰場！
-        </p>
-      </div>
-
-      <div class="pt-2 flex flex-col gap-2">
-        <button onclick="reviveAgent()" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-extrabold text-sm transition shadow-lg shadow-rose-500/30 flex items-center justify-center gap-2">
-          <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin"></i>
-          <span>重啟核心修復（恢復 3 點生命值）</span>
-        </button>
-        <button onclick="closeAlarmModal()" class="w-full py-2 text-xs text-slate-500 hover:text-slate-300 transition">
-          稍後再修復
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- ==================== STUDENT ID PROFILE MODAL ==================== -->
   <div id="profile-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">

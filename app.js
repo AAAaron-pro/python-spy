@@ -29,12 +29,11 @@ const DEFAULT_STATE = {
   studentId: null,
   level: 1,
   xp: 0,
-  hp: 3,
-  maxHp: 3,
   streak: 0,
   maxStreak: 0,
   totalAnswered: 0,
   totalCorrect: 0,
+  answeredQuestions: [],
   dimensionStats: JSON.parse(JSON.stringify(DEFAULT_DIMENSION_STATS)),
   chapterProgress: {
     1: { basicStars: 0, advancedStars: 0, unlocked: true },
@@ -266,9 +265,8 @@ function addXP(amount) {
   if (appState.xp >= xpNeeded) {
     appState.level += 1;
     appState.xp -= xpNeeded;
-    appState.hp = appState.maxHp; // Level up heals full HP
     window.soundFX.playLevelUp();
-    showToast(`🎉 升級！特務軍階提升至 LV.${appState.level}【${getRank(appState.level).name}】！生命已補滿！`);
+    showToast(`🎉 升級！特務軍階提升至 LV.${appState.level}【${getRank(appState.level).name}】！`);
   }
   saveState();
 }
@@ -282,7 +280,6 @@ function updateHUD() {
   const levelEl = document.getElementById("hud-level");
   const rankEl = document.getElementById("hud-rank");
   const xpBarEl = document.getElementById("hud-xp-bar");
-  const hpEl = document.getElementById("hud-hp");
   const comboEl = document.getElementById("hud-combo");
   const badgeEl = document.getElementById("mistake-badge");
 
@@ -293,7 +290,6 @@ function updateHUD() {
     const pct = Math.min(100, Math.round((appState.xp / xpNeeded) * 100));
     xpBarEl.style.width = `${pct}%`;
   }
-  if (hpEl) hpEl.textContent = `${appState.hp}/${appState.maxHp}`;
   if (comboEl) comboEl.textContent = `${appState.streak} Combo`;
 
   if (badgeEl) {
@@ -442,31 +438,10 @@ function closeBriefingModal() {
   document.getElementById("briefing-modal").classList.add("hidden");
 }
 
-// ==================== ALARM & REVIVAL MODAL ====================
-function openAlarmModal() {
-  const modal = document.getElementById("alarm-modal");
-  if (modal) {
-    modal.classList.remove("hidden");
-    window.soundFX.playWrong();
-    lucide.createIcons();
-  }
-}
-
-function closeAlarmModal() {
-  window.soundFX.playClick();
-  const modal = document.getElementById("alarm-modal");
-  if (modal) {
-    modal.classList.add("hidden");
-  }
-}
-
-function reviveAgent() {
-  window.soundFX.playLevelUp();
-  appState.hp = appState.maxHp;
-  saveState();
-  closeAlarmModal();
-  showToast("🛡️ 核心重啟成功！特務生命值已修復至 3/3！");
-}
+// ==================== ALARM & REVIVAL MODAL (LEGACY STUBS) ====================
+function openAlarmModal() {}
+function closeAlarmModal() {}
+function reviveAgent() {}
 
 /// ==================== RANDOMIZE OPTIONS & CHAPTER QUIZ RUNNER ====================
 function randomizeQuestionOptions(q) {
@@ -506,9 +481,22 @@ function startChapterQuiz(chapterId, difficulty) {
     return;
   }
 
-  const selectedQuestions = shuffle([...pool])
-    .slice(0, Math.min(5, pool.length))
-    .map(q => randomizeQuestionOptions(q));
+  if (!appState.answeredQuestions) appState.answeredQuestions = [];
+
+  // Smart Anti-Repetition: prioritize questions not yet answered
+  const unseen = pool.filter(q => !appState.answeredQuestions.includes(q.id));
+  let candidates = [];
+  if (unseen.length >= 5) {
+    candidates = shuffle([...unseen]).slice(0, 5);
+  } else if (unseen.length > 0) {
+    const seen = pool.filter(q => appState.answeredQuestions.includes(q.id));
+    candidates = [...shuffle([...unseen]), ...shuffle([...seen]).slice(0, 5 - unseen.length)];
+  } else {
+    // If all questions in this category have been answered, shuffle the whole pool
+    candidates = shuffle([...pool]).slice(0, Math.min(5, pool.length));
+  }
+
+  const selectedQuestions = candidates.map(q => randomizeQuestionOptions(q));
 
   currentSession = {
     type: "chapter",
@@ -568,7 +556,7 @@ function renderCurrentQuizQuestion() {
       <span class="w-6 h-6 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 flex items-center justify-center font-mono font-bold text-xs shrink-0 group-hover:border-cyan-500 group-hover:text-cyan-300">
         ${letter}
       </span>
-      <span class="pt-0.5 leading-relaxed">${escapeHtml(opt)}</span>
+      <span class="pt-0.5 leading-relaxed whitespace-pre-wrap font-mono break-all sm:break-normal text-slate-100">${escapeHtml(opt)}</span>
     `;
     btn.onclick = () => selectQuizAnswer(letter);
     optionsContainer.appendChild(btn);
@@ -590,6 +578,12 @@ function selectQuizAnswer(chosenLetter) {
   }
   if (!appState.dimensionStats[dim]) {
     appState.dimensionStats[dim] = { correct: 0, total: 0 };
+  }
+
+  // Record into answeredQuestions for anti-repetition queue
+  if (!appState.answeredQuestions) appState.answeredQuestions = [];
+  if (!appState.answeredQuestions.includes(q.id)) {
+    appState.answeredQuestions.push(q.id);
   }
 
   // Disable all option buttons
@@ -617,6 +611,7 @@ function selectQuizAnswer(chosenLetter) {
     // Eliminate mistake if resolved!
     if (appState.mistakes && appState.mistakes.includes(q.id)) {
       appState.mistakes = appState.mistakes.filter(id => id !== q.id);
+      showToast("🎯 錯題成功消滅！已自錯題情報庫移出！");
     }
 
     if (chosenBtn) {
@@ -626,9 +621,9 @@ function selectQuizAnswer(chosenLetter) {
   } else {
     window.soundFX.playWrong();
     appState.streak = 0;
-    appState.hp = Math.max(0, appState.hp - 1);
 
-    // Save to mistakes
+    // Save to mistakes (deduplicated)
+    if (!appState.mistakes) appState.mistakes = [];
     if (!appState.mistakes.includes(q.id)) {
       appState.mistakes.push(q.id);
     }
@@ -641,18 +636,13 @@ function selectQuizAnswer(chosenLetter) {
       correctBtn.classList.remove("bg-slate-900", "border-slate-700");
       correctBtn.classList.add("bg-emerald-950/80", "border-emerald-500", "text-emerald-200");
     }
-
-    if (appState.hp === 0) {
-      setTimeout(() => {
-        openAlarmModal();
-      }, 700);
-    }
   }
 
   appState.totalAnswered += 1;
   appState.chapterStats[q.chapterId].total += 1;
   appState.dimensionStats[dim].total += 1;
   saveState();
+  updateHUD();
 
   // Show explanation & Python Tutor step tracer
   showQuizFeedback(isCorrect, q);
@@ -910,7 +900,7 @@ function renderExamQuestion() {
             <span class="w-6 h-6 rounded-lg font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
               isSelected ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-400'
             }">${letter}</span>
-            <span class="pt-0.5 leading-relaxed">${escapeHtml(opt)}</span>
+            <span class="pt-0.5 leading-relaxed whitespace-pre-wrap font-mono break-all sm:break-normal text-slate-200">${escapeHtml(opt)}</span>
           </button>
         `;
       }).join("")}
@@ -1144,10 +1134,16 @@ function renderMistakes() {
           <span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">${q.dimension || ''}</span>
           <span class="text-xs text-slate-400 font-mono">${q.category}</span>
         </div>
-        <button onclick="reQuizSingle('${q.id}')" class="px-3 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-          <span>重新挑戰</span>
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="reQuizSingle('${q.id}')" class="px-3 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>重新挑戰</span>
+          </button>
+          <button onclick="dismissMistake('${q.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>消滅情報</span>
+          </button>
+        </div>
       </div>
 
       <h4 class="font-bold text-white text-sm sm:text-base leading-relaxed">${q.question}</h4>
@@ -1166,6 +1162,15 @@ function renderMistakes() {
 
   Prism.highlightAllUnder(container);
   lucide.createIcons();
+}
+
+function dismissMistake(questionId) {
+  if (!appState.mistakes) return;
+  appState.mistakes = appState.mistakes.filter(id => id !== questionId);
+  saveState();
+  updateHUD();
+  renderMistakes();
+  showToast("🗑️ 已成功從錯題情報庫移除！");
 }
 
 function reQuizSingle(questionId) {

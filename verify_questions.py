@@ -209,7 +209,7 @@ def main():
             print(f"    - {eid}: {edetail}")
         sys.exit(1)
     else:
-        print("[OK] 全題庫 147 題之 Python 代碼、結構 Schema 與六維標註 100% PASS 通過驗證！")
+        print(f"[OK] 全題庫 {len(questions)} 題之 Python 代碼、結構 Schema 與六維標註 100% PASS 通過驗證！")
         sys.exit(0)
 
 if __name__ == "__main__":
