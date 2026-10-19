@@ -67,7 +67,7 @@ def extract_database():
         exp_m = re.search(r'explanation:\s*"((?:[^"\\]|\\.)*)"', block)
         code_m = re.search(r'code:\s*`([^`]*)`', block)
 
-        options = re.findall(r'["\']([A-D]\.\s*.*?)["\']', block)
+        options = re.findall(r'"([A-D]\.\s*(?:[^"\\]|\\.)*)"', block)
 
         # TraceSteps extraction
         ts_m = re.search(r'traceSteps:\s*(\[.*?\])\s*\}', block, re.DOTALL)

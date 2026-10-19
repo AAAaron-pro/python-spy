@@ -68,6 +68,8 @@ def build_zip_archive():
         "concept_briefings.js",
         "audio.js",
         "app.js",
+        "google_sheets_cloud_sync.gs",
+        "CODE_REVIEW_REPORT.md",
         "run_game.py",
         "README.md",
         "deploy_to_github.py",

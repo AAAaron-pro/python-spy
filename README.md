@@ -6,87 +6,56 @@
 ## 🎮 遊戲簡介
 本遊戲專為修習台大 **GenEdu5010 程式設計與網路資料搜集** 的同學設計，精準針對 **Week 1 至 Week 5** 範圍（I/O、字串、ASCII 編碼、串列記憶體機制、for/while 迴圈、函式預設參數與作用域、PEP 8 規範等）。
 
-結合 **114-1 與 114-2 兩份考古題（共 128+ 題）** 的核心考點，所有題目均為**原創變形題**，杜絕死背答案，讓你在遊戲闖關與計時模考中徹底消化 Python 直譯器底層邏輯與高頻陷阱！
+結合 **114-1 與 114-2 兩份考古題** 的核心考點，擴充為 **192 道原創題目（每章 16 題基礎 + 16 題進階，6 大作戰能力維度各 32 題）** 與 **36 個深度觀念情報模組**，讓你在遊戲闖關與計時模考中徹底消化 Python 直譯器底層邏輯與高頻陷阱！
 
 ---
 
-## 🚀 啟動與分享方式 (支援方案 A 與方案 C)
+## 🔄 跨裝置進度同步中心 (A + C + D 三合一混合架構)
 
-### 方案 C：單檔離線遊玩 / 壓縮包分享（最快、零門檻）
+點擊頂部導覽列的 **「特務學號」** 徽章，即可開啟【跨裝置進度同步中心】，支援三大免付費跨裝置同步管道與實體檔案備份：
+
+### 1. 【方案 A】特務緊湊壓縮同步碼 (`AGENTv2.<base64url>`) 與 `?sync=` 連結
+* 採用位元遮罩 (Bitmask) 與緊湊索引序列化技術，將全站 192 題作答紀錄、星級與六維度戰力壓縮至 **150~250 字元以內**。
+* 一鍵點擊 **「複製同步碼」** 或 **「複製同步網址 (`?sync=AGENTv2...`)」**，在手機或平板貼上或開啟連結，系統即自動執行 **非破壞性智慧合併（Smart Merge：星級與等級取最高值、錯題與已答題取聯集）**。
+
+### 2. 【方案 C】前端動態生成高對比 QR Code 掃碼轉移
+* 視窗內自動將當前進度渲染為高對比 QR Code，直接拿手機相機掃描即可一秒帶走進度！
+* 若於本機離線環境 (`file://` 或 `localhost`) 開啟，QR Code 會自動指向公開 GitHub Pages 線上版網址並提示連網掃碼同步。
+
+### 3. 【方案 D】Google Sheets (Google Apps Script) 免資料庫免費雲端自動中繼站
+無需架設付費後端伺服器，只需 3 分鐘即可利用你自己的 Google 雲端試算表建立專屬自動同步中繼站：
+1. **步驟 1：建立試算表與開啟 Apps Script**
+   * 前往 [Google Sheets (sheets.new)](https://sheets.new) 新建一份空白試算表，命名為 `Python_Agent_Cloud_Sync`。
+   * 點選頂部選單 **「擴充功能 (Extensions)」 -> 「Apps Script」**。
+2. **步驟 2：貼上後端腳本**
+   * 將專案根目錄下的 [`google_sheets_cloud_sync.gs`](file:///C:/Users/88697/.gemini/antigravity/scratch/python-exam-game/google_sheets_cloud_sync.gs) 內容完整複製並貼入 `Code.gs` 中，按 `Ctrl + S` 儲存。
+3. **步驟 3：部署為網頁應用程式 (Web App)**
+   * 點選右上角 **「部署 (Deploy)」 -> 「新增部署作業 (New deployment)」**。
+   * 選取類型為 **「網頁應用程式 (Web app)」**：
+     * **執行身分 (Execute as)**：選擇 **「我 (Me)」**。
+     * **誰可以存取 (Who has access)**：選擇 **「所有人 (Anyone)」**（前端使用 `text/plain` 免 CORS preflight 跨網域自動讀寫）。
+   * 點擊「部署」，複製產生的 `https://script.google.com/macros/s/.../exec` 網址，貼入遊戲內「特務檔案 -> 方案 D 雲端同步設定」欄位並點擊 **「儲存並上傳雲端」**，此後登入學號、章節結算與模考交卷均會在背景自動雙向同步！
+
+### 4. 實體 `.json` 存檔匯出與匯入
+* 支援一鍵下載 `python_agent_<學號>_backup.json` 備份檔與上傳還原。
+
+---
+
+## 🚀 啟動與分享方式
+
+### 單檔離線遊玩 / 壓縮包分享（零門檻）
 * **真・單一離線 HTML** (`python_agent_score100_standalone.html`)：
-  * 已將題庫、合成音效、核心程式與 4 大機甲視覺圖以 Base64 完整打包。
-  * **只需將該單一檔案傳給同學**，對方只要雙擊即可在任何電腦或手機瀏覽器離線遊玩，完全不需安裝 Python、不需要開伺服器，甚至不用解壓縮！
+  * 已將 192 題題庫、36 模組觀念卡、合成音效、核心程式與 4 大機甲視覺圖以 Base64 完整打包。
+  * 雙擊即可在任何電腦或手機瀏覽器離線遊玩，完全不需安裝 Python 或開啟伺服器。
 * **完整專案 ZIP 包** (`python_agent_score100.zip`)：
-  * 適合直接丟到 Line / Discord / Google 雲端硬碟整包備份。
+  * 適合直接分享或雲端硬碟整包備份。
 * **本機一鍵啟動**：
-  * 執行 `python run_game.py`，會自動啟動本機伺服器並彈出遊戲視窗。
-
----
-
-### 方案 A：GitHub Pages 雲端部署（公開網址、一鍵雲端同步）
-* 專案內已準備好一鍵發布腳本 `deploy_to_github.py`。
-* **操作流程（只需 1 分鐘）**：
-  1. 在 [GitHub 建立新倉庫](https://github.com/new)（例如取名 `python-agent-score100`，設為 Public）。
-  2. 複製該倉庫的網址（如 `https://github.com/你的帳號/python-agent-score100.git`）。
-  3. 在本機執行：
-     ```bash
-     python deploy_to_github.py
-     ```
-     貼上你的倉庫網址，腳本會自動將專案推送到 main 分支。
-  4. 至 GitHub 倉庫頁面 ➔【Settings】➔【Pages】➔ Build and deployment Source 選擇【Deploy from a branch】➔ 選擇【main】與【/ (root)】點擊【Save】。
-  5. 約 1 分鐘後，即可獲得永久公開遊戲網址（例如：`https://你的帳號.github.io/python-agent-score100/`），分享給任何同學都能直接連線遊玩！
-
----
-
-## 🌟 核心特色與功能模組
-
-### 🗺️ 主軸一：主題式章節冒險（Story Campaign）
-* **Chapter 1: 終端訊號基地**（print, sep/end 格式化, input, 型態轉換, PEP 8 風格）
-* **Chapter 2: 字符密碼解析室**（字串切片 start:stop:step, 負索引, ord/chr ASCII 密碼位移）
-* **Chapter 3: 資料矩陣防線**（串列參照別名 vs 淺拷貝, list.sort() vs sorted() 原地修改）
-* **Chapter 4: 循環迴路之謎**（range 邊界, 雙層巢狀迴圈次數, break/continue, while-else）
-* **Chapter 5: 核心指令與領域**（def, 預設引數, 可變預設參數 def f(x=[]) 陷阱, global 與 UnboundLocalError）
-* **Chapter 6: 特務高階工具箱**（enumerate, zip 解包, 串列表達式 List Comprehension, 例外防禦）
-
-> 💡 **每章均配備**：
-> 1. **【觀念情報卡】**：考前 1 分鐘快速複習公式與規則。
-> 2. **【基礎突擊戰】**：單一觀念確認，建立解題信心。
-> 3. **【進階陷阱試煉】**：專攻歷屆最高失分點與代碼魔王題。
-
----
-
-### ⚔️ 主軸二：刷題目與模擬考場（Exam Arena）
-* **50 分鐘急速模考**：仿 114-1 Exam 1 規格（25 題跨章節隨機題，高壓計時）。
-* **全真深度模擬考**：仿 114-2 規格（40 題大題量綜合試煉）。
-* **10 題快速突擊 (Boss Rush)**：利用搭車、課間 5 分鐘隨時刷題練手感。
-* **高頻陷阱突擊**：集中練習所有進階陷阱題。
-
----
-
-### 🔍 亮點功能：Python Tutor 單步代碼追蹤解析
-呼應 Week 2 投影片中的程式追蹤觀念（Tracing Code），每一題的解析均內建 **「單步代碼追蹤器」**：
-* 點擊 **【上一步】/【下一步】**，動態觀察直譯器正在執行的行數。
-* 即時顯示 **「變數記憶體快照 (Variables in Scope)」**，看清迴圈計數器、切片與指標位址的每一步變化！
-
----
-
-### 📕 特務錯題情報庫（Mistake Vault）
-* 歷次章節突擊或模考答錯的題目，系統自動納入錯題庫。
-* 支援依章節篩選錯題。
-* 點擊 **【重新挑戰】** 或 **【集中消滅所有錯題】**，單獨刷錯題，答對後即刻消滅，不再重複踩坑！
-
----
-
-### 🔊 遊戲化回饋系統
-* **特務軍階與升級**：從「見習探員」一路晉升至「系統總架構師」。
-* **Combo 連擊獎勵**：連續答對激活動態音效與火焰計數。
-* **純原生 Web Audio API**：內建合成音效（答對和弦、連擊升調、答錯沉音、升級號角），不依賴外部檔案，零延遲且免網路。
-* **本地自動存檔**：進度與錯題本使用 `localStorage` 自動持久化保存。
+  * 執行 `python run_game.py`，會自動啟動本機伺服器並開啟瀏覽器。
 
 ---
 
 ## 🛠️ 技術規格
-* 前端技術：HTML5、Tailwind CSS、Lucide Icons、Prism.js（代碼語法高亮）
-* 音效架構：Web Audio API
-* 題庫規模：75+ 道原創變形題，經 Python 3.12 直譯器驗證 100% 正確
-* 跨平台相容：Windows / macOS / Linux / 行動裝置瀏覽器
+* 前端技術：HTML5、Tailwind CSS、Lucide Icons、Prism.js（Python 代碼語法高亮）、QRCode-Generator
+* 音效架構：Web Audio API 原生合成音效
+* 題庫規模：192 道原創變形題（每章 16 基礎 + 16 進階），經 Python 3.12 直譯器驗證 100% 正確
+* 無障礙與安全性：符合 WCAG AA 最小觸控熱區 (`>= 44x44px`)、Modal `role="dialog"` 規範與完整 XSS 輸出跳脫防護

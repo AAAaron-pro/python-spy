@@ -12,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lightweight QR Code Generator for Cross-Device Sync (Scheme C) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -124,10 +126,10 @@
         </div>
       </div>
 
-      <!-- Agent HUD Status (XP, Level, HP, Combo) -->
+      <!-- Agent HUD Status (XP, Level, Combo) -->
       <div class="flex items-center gap-4 bg-[#111827] px-4 py-2 rounded-xl border border-agent-border shadow-inner">
         <!-- Student Profile Badge -->
-        <button onclick="openProfileModal()" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/60 transition text-xs font-mono group" title="點擊切換或登記特務學號存檔">
+        <button onclick="openProfileModal()" class="min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/60 transition text-xs font-mono group" title="點擊切換特務學號或開啟跨裝置同步中心">
           <div class="w-5 h-5 rounded bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
             <i data-lucide="shield" class="w-3.5 h-3.5"></i>
           </div>
@@ -153,8 +155,6 @@
           </div>
         </div>
 
-
-
         <div class="h-6 w-[1px] bg-slate-800"></div>
 
         <!-- Streak Combo -->
@@ -163,28 +163,28 @@
           <span id="hud-combo" class="font-mono font-bold text-sm text-amber-300">0 Combo</span>
         </div>
 
-        <!-- Sound Toggle -->
-        <button id="btn-sound-toggle" class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition" title="切換音效">
+        <!-- Sound Toggle (WCAG AA >= 44x44px) -->
+        <button id="btn-sound-toggle" aria-label="切換音效" class="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition" title="切換音效">
           <i data-lucide="volume-2" id="icon-sound" class="w-5 h-5"></i>
         </button>
       </div>
 
       <!-- Main Navigation Tabs -->
       <nav class="flex items-center gap-1 bg-[#111827] p-1 rounded-xl border border-agent-border">
-        <button onclick="switchTab('chapters')" id="tab-btn-chapters" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+        <button onclick="switchTab('chapters')" id="tab-btn-chapters" class="min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
           <i data-lucide="map" class="w-4 h-4"></i>
           <span>章節冒險</span>
         </button>
-        <button onclick="switchTab('arena')" id="tab-btn-arena" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
+        <button onclick="switchTab('arena')" id="tab-btn-arena" class="min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
           <i data-lucide="crosshair" class="w-4 h-4"></i>
           <span>刷題模擬考</span>
         </button>
-        <button onclick="switchTab('mistakes')" id="tab-btn-mistakes" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition relative">
+        <button onclick="switchTab('mistakes')" id="tab-btn-mistakes" class="min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition relative">
           <i data-lucide="book-open" class="w-4 h-4"></i>
           <span>錯題筆記</span>
           <span id="mistake-badge" class="hidden px-1.5 py-0.2 text-[10px] bg-rose-500 text-white rounded-full font-bold">0</span>
         </button>
-        <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
+        <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition">
           <i data-lucide="pie-chart" class="w-4 h-4"></i>
           <span>弱點分析</span>
         </button>
@@ -213,7 +213,7 @@
               針對國立臺灣大學「程式設計與網路資料搜集」期中考研發！機械巨蟒盤踞主控台，帶你徹底攻克 I/O 格式化、ASCII 編碼演算、串列記憶體淺拷貝、巢狀迴圈與可變預設參數陷阱。
             </p>
           </div>
-          <div class="lg:col-span-5 relative h-48 lg:h-64 overflow-hidden rounded-r-2xl">
+          <div class="lg:col-span-5 relative h-48 lg:h-64 overflow-hidden rounded-r-2xl scanline-box">
             <img src="assets/hero_python.jpg" alt="Cyber Python Agent" class="w-full h-full object-cover object-center cyber-float opacity-90 hover:opacity-100 transition duration-500" />
             <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#070b14] via-transparent to-transparent"></div>
           </div>
@@ -231,10 +231,10 @@
       <!-- Arena Hero with Tactical Mecha Droid -->
       <div class="relative overflow-hidden rounded-2xl border border-blue-900/40 shadow-2xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0d1630] p-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6">
-          <div class="lg:col-span-4 relative h-48 sm:h-56 overflow-hidden rounded-xl border border-cyan-500/30 shadow-lg shadow-cyan-500/10">
+          <div class="lg:col-span-4 relative h-48 sm:h-56 overflow-hidden rounded-xl border border-cyan-500/30 shadow-lg shadow-cyan-500/10 scanline-box">
             <img src="assets/arena_droid.jpg" alt="Tactical Mecha Droid" class="w-full h-full object-cover object-center cyber-float" />
             <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/80 to-transparent"></div>
-            <div class="absolute bottom-2 left-3 text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded border border-cyan-500/30">
+            <div class="absolute bottom-2 left-3 text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded border border-cyan-500/30 z-30">
               ARENA OVERSEER // UNIT-7
             </div>
           </div>
@@ -545,11 +545,11 @@
   </main>
 
   <!-- ==================== INTERACTIVE QUIZ MODAL (STORY MODE) ==================== -->
-  <div id="quiz-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div id="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="quiz-question-text" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-[#0f172a] border border-agent-border rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 space-y-6 relative pop-anim">
       
-      <!-- Close Button -->
-      <button onclick="closeQuizModal()" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+      <!-- Close Button (WCAG AA >= 44x44px) -->
+      <button onclick="closeQuizModal()" aria-label="關閉測驗視窗" class="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center absolute top-3 right-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
@@ -560,7 +560,7 @@
         </span>
         <span id="quiz-tag-chapter" class="text-xs text-slate-400 font-mono">CH 1</span>
         <span id="quiz-tag-category" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">print格式化</span>
-        <div class="ml-auto pr-8 text-xs font-mono text-slate-400">
+        <div class="ml-auto pr-10 text-xs font-mono text-slate-400">
           題號：<span id="quiz-current-num" class="text-cyan-400 font-bold">1</span> / <span id="quiz-total-num">5</span>
         </div>
       </div>
@@ -591,17 +591,17 @@
 
         <!-- Python Tutor Step Tracer Viewer -->
         <div class="bg-[#0b101d] border border-slate-800 rounded-xl p-4 space-y-3">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i>
               <span class="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">Python Tutor 單步代碼追蹤</span>
             </div>
-            <div class="flex items-center gap-1">
-              <button onclick="traceStepPrev()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-xs flex items-center gap-1 px-2">
+            <div class="flex items-center gap-1.5">
+              <button onclick="traceStepPrev()" aria-label="單步追蹤上一步" class="min-w-[44px] min-h-[44px] px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-xs flex items-center justify-center gap-1">
                 <i data-lucide="skip-back" class="w-3.5 h-3.5"></i> 上一步
               </button>
               <span id="trace-step-indicator" class="text-xs font-mono px-2 text-slate-400">1 / 3</span>
-              <button onclick="traceStepNext()" class="p-1 rounded bg-cyan-900/50 hover:bg-cyan-800 text-cyan-300 transition text-xs flex items-center gap-1 px-2">
+              <button onclick="traceStepNext()" aria-label="單步追蹤下一步" class="min-w-[44px] min-h-[44px] px-3 py-2 rounded-lg bg-cyan-900/50 hover:bg-cyan-800 text-cyan-300 transition text-xs flex items-center justify-center gap-1">
                 下一步 <i data-lucide="skip-forward" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -628,7 +628,7 @@
 
         <!-- Next Question Action Button -->
         <div class="flex justify-end pt-2">
-          <button id="btn-quiz-next" onclick="nextQuizQuestion()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+          <button id="btn-quiz-next" onclick="nextQuizQuestion()" class="min-h-[44px] px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center gap-2">
             <span>前往下一題</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
@@ -640,14 +640,14 @@
   </div>
 
   <!-- ==================== BRIEFING MODAL (CONCEPTS) ==================== -->
-  <div id="briefing-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div id="briefing-modal" role="dialog" aria-modal="true" aria-labelledby="briefing-title" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-agent-card border border-cyan-500/40 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl p-6 space-y-5 relative pop-anim">
-      <button onclick="closeBriefingModal()" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+      <button onclick="closeBriefingModal()" aria-label="關閉觀念情報視窗" class="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center absolute top-3 right-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <div class="flex items-center gap-4 border-b border-slate-800 pb-4">
-        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-cyan-500/40 flex-shrink-0 shadow-lg shadow-cyan-500/10">
+      <div class="flex items-center gap-4 border-b border-slate-800 pb-4 pr-10">
+        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-cyan-500/40 flex-shrink-0 shadow-lg shadow-cyan-500/10 scanline-box">
           <img src="assets/briefing_owl.jpg" alt="Cyber Owl Tactical Advisor" class="w-full h-full object-cover object-center" />
         </div>
         <div>
@@ -664,7 +664,7 @@
       </div>
 
       <div class="pt-4 border-t border-slate-800 flex justify-end">
-        <button onclick="closeBriefingModal()" class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition flex items-center gap-2">
+        <button onclick="closeBriefingModal()" class="min-h-[44px] px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition flex items-center gap-2">
           <span>收到情報，開始作戰</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -672,22 +672,54 @@
     </div>
   </div>
 
+  <!-- ==================== TACTICAL DRONE ALERT MODAL (alarm_drone.jpg) ==================== -->
+  <div id="tactical-alert-modal" role="dialog" aria-modal="true" aria-labelledby="tactical-alert-title" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#120b18] border border-rose-500/60 rounded-2xl max-w-md w-full shadow-2xl p-6 space-y-4 relative pop-anim">
+      <button onclick="closeAlarmModal()" aria-label="關閉戰術警戒視窗" class="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center absolute top-3 right-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition z-30">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="relative h-40 w-full rounded-xl overflow-hidden border border-rose-500/40 scanline-box">
+        <img src="assets/alarm_drone.jpg" alt="Tactical Recon Drone Alert" class="w-full h-full object-cover object-center cyber-float" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#120b18] via-transparent to-transparent"></div>
+        <div class="absolute bottom-2 left-3 px-2 py-0.5 rounded bg-rose-950/90 border border-rose-500/50 text-[10px] font-mono text-rose-300 z-30">
+          RECON DRONE // TACTICAL ADVISORY
+        </div>
+      </div>
+      <div class="space-y-1.5">
+        <h3 id="tactical-alert-title" class="text-lg font-extrabold text-rose-400 flex items-center gap-2">
+          <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+          <span>戰術無人機偵測通報</span>
+        </h3>
+        <p id="tactical-alert-desc" class="text-xs text-slate-300 leading-relaxed">
+          偵測到高頻語法陷阱失誤，建議立即前往「錯題情報庫」或開啟「觀念情報卡」複習關鍵邊界條件！
+        </p>
+      </div>
+      <div class="pt-3 border-t border-rose-950/60 flex justify-end gap-2">
+        <button onclick="reviveAgent()" class="min-h-[44px] px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>前往錯題特訓</span>
+        </button>
+        <button onclick="closeAlarmModal()" class="min-h-[44px] px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition">
+          繼續作戰
+        </button>
+      </div>
+    </div>
+  </div>
 
-
-  <!-- ==================== STUDENT ID PROFILE MODAL ==================== -->
-  <div id="profile-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-agent-card border border-cyan-500/50 rounded-2xl max-w-md w-full shadow-2xl p-6 space-y-5 relative pop-anim">
-      <button onclick="closeProfileModal()" id="btn-close-profile-modal" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+  <!-- ==================== STUDENT ID PROFILE & A+C+D SYNC MODAL ==================== -->
+  <div id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-agent-card border border-cyan-500/50 rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 space-y-5 relative pop-anim">
+      <button onclick="closeProfileModal()" id="btn-close-profile-modal" aria-label="關閉特務檔案視窗" class="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center absolute top-3 right-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4 pr-10">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30 shrink-0">
           <i data-lucide="user-check" class="w-6 h-6"></i>
         </div>
         <div>
-          <div class="text-xs font-mono text-cyan-400">AGENT AUTHENTICATION</div>
-          <h3 class="text-xl font-bold text-white" id="profile-modal-title">特務學號建檔與登入</h3>
+          <div class="text-xs font-mono text-cyan-400">AGENT AUTHENTICATION &amp; MULTI-DEVICE SYNC</div>
+          <h3 class="text-xl font-bold text-white" id="profile-modal-title">特務學號建檔與跨裝置同步中心</h3>
         </div>
       </div>
 
@@ -696,35 +728,136 @@
         <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-400 mt-0.5"></i>
         <div class="leading-relaxed">
           <span class="font-bold text-amber-300">【特務報到指令】</span>
-          <span>遊戲開始前，請先輸入您的學號以建立專屬個人檔案。建檔後系統將自動為您記錄關卡星級、錯題情報庫與六維戰力雷達！</span>
+          <span>遊戲開始前，請先輸入您的學號以建立專屬個人檔案。若您有舊版紀錄或跨裝置同步碼，建檔後系統將自動無損繼承與合併！</span>
         </div>
       </div>
 
       <p class="text-xs text-slate-300 leading-relaxed" id="profile-modal-desc">
-        請輸入您的臺大學號（如 <code class="text-cyan-300 font-mono">B12345678</code>）或自訂特務代號。系統將完全隔離儲存每位探員的關卡星級、軍階進度、錯題情報庫與六維戰力雷達！
+        請輸入您的臺大學號（如 <code class="text-cyan-300 font-mono">B12345678</code>）或自訂特務代號。系統支援本機多帳號隔離、緊湊同步碼、QR Code 掃碼轉移與 Google 試算表雲端同步！
       </p>
 
       <!-- Input Form -->
-      <form onsubmit="handleProfileSubmit(event)" class="space-y-4">
+      <form onsubmit="handleProfileSubmit(event)" class="space-y-3">
         <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1.5">學號 / 特務代號 (STUDENT ID)</label>
+          <label for="input-student-id" class="block text-xs font-mono text-slate-400 mb-1.5">學號 / 特務代號 (STUDENT ID)</label>
           <div class="relative">
             <input type="text" id="input-student-id" maxlength="20" required placeholder="請輸入學號，例如：B12345678" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 uppercase" />
             <span class="absolute right-3 top-2.5 text-xs text-slate-500 font-mono">NTU</span>
           </div>
         </div>
 
-        <button type="submit" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+        <button type="submit" class="min-h-[44px] w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
           <i data-lucide="log-in" class="w-4 h-4"></i>
           <span>確認登入並載入特務存檔</span>
         </button>
       </form>
 
       <!-- Existing Profiles List -->
-      <div id="profile-history-section" class="pt-4 border-t border-slate-800 space-y-2 hidden">
+      <div id="profile-history-section" class="pt-3 border-t border-slate-800 space-y-2 hidden">
         <div class="text-[11px] font-mono text-slate-400">本機已建檔特務（點擊直接切換）：</div>
         <div id="profile-history-list" class="flex flex-wrap gap-2">
-          <!-- Rendered dynamically -->
+          <!-- Rendered dynamically with XSS protection -->
+        </div>
+      </div>
+
+      <!-- ==================== CROSS-DEVICE SYNC HUB (A + C + D ARCHITECTURE) ==================== -->
+      <div id="cross-device-sync-section" class="pt-4 border-t border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-mono font-bold text-cyan-400 flex items-center gap-1.5">
+            <i data-lucide="refresh-ccw" class="w-4 h-4"></i>
+            <span>跨裝置進度同步中心 (A+C+D 混合架構)</span>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">SMART MERGE</span>
+        </div>
+
+        <!-- Scheme A & C: Compact Sync Token + QR Code -->
+        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <div class="text-xs font-bold text-white flex items-center justify-between">
+            <span>【方案 A + C】特務緊湊同步碼 &amp; 動態 QR Code 掃碼轉移</span>
+            <span id="sync-token-len-badge" class="text-[10px] font-mono text-emerald-400">Compact v2</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+            <!-- QR Code Display (Scheme C) -->
+            <div class="sm:col-span-4 flex flex-col items-center justify-center bg-white p-2.5 rounded-xl border-2 border-cyan-400 shadow-md">
+              <div id="sync-qr-container" class="w-28 h-28 flex items-center justify-center text-slate-900 text-[10px] font-mono text-center">
+                <!-- High-contrast QR SVG/Canvas injected here -->
+              </div>
+              <span class="text-[10px] font-mono font-bold text-slate-800 mt-1">手機相機掃碼同步</span>
+            </div>
+
+            <!-- Sync Code Actions (Scheme A) -->
+            <div class="sm:col-span-8 space-y-2">
+              <label for="sync-token-output" class="block text-[11px] font-mono text-slate-400">當前特務壓縮同步碼 (AGENTv2)：</label>
+              <input type="text" id="sync-token-output" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] font-mono text-cyan-300 select-all" value="" />
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="copySyncToken()" class="min-h-[44px] px-2.5 py-1.5 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 text-xs font-bold transition flex items-center justify-center gap-1">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span>複製同步碼</span>
+                </button>
+                <button type="button" onclick="copySyncUrl()" class="min-h-[44px] px-2.5 py-1.5 rounded-lg bg-blue-950 hover:bg-blue-900 border border-blue-500/40 text-blue-300 text-xs font-bold transition flex items-center justify-center gap-1">
+                  <i data-lucide="link" class="w-3.5 h-3.5"></i>
+                  <span>複製同步網址</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="sync-qr-env-notice" class="hidden p-2 rounded-lg bg-amber-950/50 border border-amber-500/30 text-[11px] text-amber-300 leading-relaxed">
+            📡 偵測到本機/離線環境：QR Code 已自動指向公開線上版網址，手機掃碼並連網即可直接開啟並同步進度；或複製上方「特務同步碼」於目標裝置貼上還原。
+          </div>
+
+          <!-- Paste Sync Code to Restore/Merge -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+            <label for="import-sync-token-input" class="block text-[11px] font-mono text-slate-400">貼上他機同步碼或同步網址進行智慧合併還原：</label>
+            <div class="flex gap-2">
+              <input type="text" id="import-sync-token-input" placeholder="貼上 AGENTv2.... 同步碼或完整網址" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-white placeholder:text-slate-600 focus:outline-none focus:border-cyan-400" />
+              <button type="button" onclick="applySyncTokenFromInput()" class="min-h-[44px] px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shrink-0 flex items-center gap-1">
+                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                <span>還原合併</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scheme D: Google Sheets / Apps Script Cloud Sync -->
+        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">【方案 D】Google Sheets 免資料庫雲端自動中繼站</span>
+            <span id="cloud-sync-status" class="text-[10px] font-mono text-slate-400">未連結雲端</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            可綁定專屬 Google Apps Script Web App 網址（詳見專案 <code class="text-cyan-300">google_sheets_cloud_sync.gs</code>），於登入、闖關與交卷時自動雙向智慧同步。
+          </p>
+          <div class="space-y-2">
+            <input type="url" id="input-cloud-sync-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-cyan-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-400" />
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="saveAndPushCloudSync()" class="min-h-[44px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1">
+                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                <span>儲存並上傳雲端</span>
+              </button>
+              <button type="button" onclick="pullCloudSync()" class="min-h-[44px] px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-bold text-xs transition flex items-center justify-center gap-1">
+                <i data-lucide="cloud-lightning" class="w-3.5 h-3.5"></i>
+                <span>從雲端拉取合併</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- JSON File Backup Export / Import -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <span class="text-[11px] font-mono text-slate-400">實體檔案備份 (.json)：</span>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="exportProfileJson()" class="min-h-[44px] px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-mono transition flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <span>匯出 .json 存檔</span>
+            </button>
+            <label class="min-h-[44px] px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-mono transition flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>匯入 .json 存檔</span>
+              <input type="file" id="import-json-file" accept=".json,application/json" onchange="importProfileJson(event)" class="hidden" />
+            </label>
+          </div>
         </div>
       </div>
     </div>

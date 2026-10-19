@@ -119,7 +119,7 @@ const QUESTIONS_DATABASE = [
       "A. 14",
       "B. 77",
       "C. 7 * 2",
-      "D. TypeError: can"
+      "D. TypeError: can't multiply sequence by non-int of type 'str'"
     ],
     answer: "B",
     explanation: "input() 函式取得的輸入內容其型態永遠是字串（str），即使使用者輸入純數字也是字串 '7'。當字串乘上整數時（'7' * 2），Python 會執行字串重複操作，得到 '77'。",
@@ -214,7 +214,7 @@ const QUESTIONS_DATABASE = [
       "A. 8.4 15",
       "B. 7.5 15",
       "C. 8.5 15",
-      "D. 7.5 "
+      "D. 7.5 '15'"
     ],
     answer: "B",
     explanation: "1. float('4.5') 轉為 4.5；\n2. int(3.9) 是無條件捨去小數部分，得到整數 3（不是四捨五入成4！）；\n3. int('10') + 5 = 15，經 str() 轉為字串 '15'；\n4. val1 + val2 = 4.5 + 3 = 7.5。print(7.5, '15') 輸出 7.5 15。",
@@ -238,13 +238,13 @@ const QUESTIONS_DATABASE = [
       "A. 變數命名以數字開頭，如 2nd_score = 90",
       "B. 串列索引前加空格，如 items[ 0 ]",
       "C. 二元運算子前後空一格，如 total = score_a + score_b",
-      "D. 使用關鍵字當變數名，如 class = "
+      "D. 使用關鍵字當變數名，如 class = 'A'"
     ],
     answer: "C",
     explanation: "根據 PEP 8：\n1. 二元運算子（如 =, +）前後應各留一個空白，變數命名應有語意且以底線分隔（snake_case）。\n2. 變數不可用數字開頭（2nd_score 語法錯誤）。\n3. 中括號、小括號內側緊鄰邊界處不應加空白（應為 items[0]）。\n4. class 是保留關鍵字，不能作為識別字。",
     traceSteps: [
       { line: 1, text: "檢查各選項語法與 PEP 8 風格", vars: {} },
-      { line: 1, text: "C 符合運算子兩側留空格與蛇形命名法規範", vars: { valid: true } }
+      { line: 1, text: "total = score_a + score_b 符合運算子兩側留空格與蛇形命名法規範", vars: { valid: true } }
     ]
   },
   {
@@ -259,7 +259,7 @@ const QUESTIONS_DATABASE = [
     options: [
       "A. PI:3.141:float",
       "B. PI:3.142:float",
-      "C. PI:3.141:<class ",
+      "C. PI:3.141:<class 'float'>",
       "D. PI:3.14:float"
     ],
     answer: "B",
@@ -1083,13 +1083,13 @@ const QUESTIONS_DATABASE = [
     question: "下列哪一個函式宣告語法是合法的 Python 語法？",
     code: ``,
     options: [
-      "A. def build_query(table=",
-      "B. def build_query(table, fields=",
-      "C. def build_query(table, fields == ",
-      "D. def build_query(default table="
+      "A. def build_query(table='users', fields):",
+      "B. def build_query(table, fields='*'):",
+      "C. def build_query(table, fields == '*'):",
+      "D. def build_query(default table='users'):"
     ],
     answer: "B",
-    explanation: "Python 語法規定：具有預設值的參數（default parameters）必須放在所有沒有預設值的「位置參數（positional parameters）」之後。選項 A 的 table 具預設值卻排在 fields 前面，會引發 SyntaxError。只有 B 符合語法規範。",
+    explanation: "Python 語法規定：具有預設值的參數（default parameters）必須放在所有沒有預設值的「位置參數（positional parameters）」之後。若將具預設值的 table='users' 排在無預設值的 fields 前面，會引發 SyntaxError。只有 def build_query(table, fields='*'): 符合語法規範。",
     traceSteps: [
       { line: 1, text: "檢查參數順序：無預設值的 table 在前，具預設值 fields='*' 在後", vars: { isValid: true } }
     ]
@@ -1674,13 +1674,13 @@ const QUESTIONS_DATABASE = [
       "A. True or (1 / 0)",
       "B. False and (1 / 0)",
       "C. 1 == 1 or (5 / 0 == 0)",
-      "D. 以上選項皆不會出錯"
+      "D. 三段短路邏輯表達式（True or ...、False and ...、1 == 1 or ...）皆不會引發錯誤"
     ],
     answer: "D",
-    explanation: "Python 的邏輯運算具備「短路求值（Short-circuit evaluation）」機制：\n1. or 運算中只要左側為 True，就不會再去計算右側（A 與 C 右側皆被略過）；\n2. and 運算中只要左側為 False，也不會去計算右側（B 右側被略過）。\n因此三個表達式中的 1/0 都不會被實際執行，全部都不會報錯！選 D。",
+    explanation: "Python 的邏輯運算具備「短路求值（Short-circuit evaluation）」機制：\n1. or 運算中只要左側為 True（如 True or (1 / 0) 與 1 == 1 or (5 / 0 == 0)），就不會再去計算右側；\n2. and 運算中只要左側為 False（如 False and (1 / 0)），也不會去計算右側。\n因此這三段短路邏輯表達式中的除以零都不會被實際執行，全部都不會報錯！",
     traceSteps: [
       { line: 1, text: "檢查短路求值規則", vars: {} },
-      { line: 1, text: "A, B, C 的右側零除表達式均因短路而被略過", vars: { safe: true } }
+      { line: 1, text: "三段短路邏輯表達式的右側零除運算均因短路機制而被略過", vars: { safe: true } }
     ]
   },
   {
@@ -3191,7 +3191,7 @@ print(valid_func(1))`,
       "D. def f(a=1, b=2, c): pass"
     ],
     answer: "C",
-    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError。因此選項 C 合法，輸出 1 + 2 + 3 = 6。",
+    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError。因此只有 def valid_func(a, b=2, c=3): pass 合法，輸出 1 + 2 + 3 = 6。",
     traceSteps: [
       { line: 1, text: "定義合法的函式參數順序：無預設值 a 在前，具預設值 b=2, c=3 在後", vars: {} },
       { line: 3, text: "呼叫 valid_func(1)：a=1, b=2, c=3，回傳 6", vars: {"output": 6} }

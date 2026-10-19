@@ -6,6 +6,11 @@
 // ==================== GLOBAL APP STATE & PROFILE SYSTEM ====================
 const PROFILES_LIST_KEY = "ntu_python_agent_profiles_v2";
 const ACTIVE_PROFILE_KEY = "ntu_python_agent_active_profile_v2";
+const LEGACY_V1_KEY = "ntu_python_agent_state_v1";
+const LEGACY_V1_MIGRATED_KEY = "ntu_python_agent_v1_migrated";
+const CLOUD_SYNC_URL_KEY = "ntu_python_agent_cloud_sync_url_v2";
+const DEFAULT_CLOUD_SYNC_URL = "";
+const PUBLIC_ONLINE_BASE_URL = "https://aaaaron-pro.github.io/python-spy/";
 
 const DEFAULT_DIMENSION_STATS = {
   syntax_io: { correct: 0, total: 0 },
@@ -15,6 +20,15 @@ const DEFAULT_DIMENSION_STATS = {
   functions_scope: { correct: 0, total: 0 },
   comprehensions_tools: { correct: 0, total: 0 }
 };
+
+const DIMENSION_KEYS = [
+  "syntax_io",
+  "strings_ascii",
+  "containers_memory",
+  "control_flow",
+  "functions_scope",
+  "comprehensions_tools"
+];
 
 const DIMENSION_MAP = {
   1: "syntax_io",
@@ -55,10 +69,165 @@ const DEFAULT_STATE = {
   seenQuestions: [] // Array of question IDs seen in exams
 };
 
+function cloneDefaultState() {
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
+function sanitizeStudentId(rawId) {
+  if (!rawId) return null;
+  const cleaned = String(rawId).replace(/[<>"'&`]/g, "").trim().toUpperCase().slice(0, 20);
+  return cleaned || null;
+}
+
+function getValidQuestionIdsSet() {
+  if (typeof QUESTIONS_DATABASE !== "undefined" && Array.isArray(QUESTIONS_DATABASE)) {
+    return new Set(QUESTIONS_DATABASE.map(q => q.id));
+  }
+  return new Set();
+}
+
+function cleanQuestionIdArray(arr) {
+  if (!Array.isArray(arr)) return [];
+  const validSet = getValidQuestionIdsSet();
+  const deduped = Array.from(new Set(arr.filter(id => typeof id === "string" && id.trim().length > 0)));
+  if (validSet.size === 0) return deduped;
+  return deduped.filter(id => validSet.has(id));
+}
+
+/**
+ * 深度拷貝與 Schema 正規化 (CHK-04 & CHK-09)
+ * 嚴格避免淺拷貝污染 DEFAULT_STATE，自動過濾孤兒題目 ID，並在舊紀錄無 dimensionStats 時由 chapterStats 回填。
+ */
+function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
+  const base = cloneDefaultState();
+  if (!rawObj || typeof rawObj !== "object") {
+    base.studentId = sanitizeStudentId(overrideStudentId);
+    return base;
+  }
+
+  base.studentId = sanitizeStudentId(overrideStudentId || rawObj.studentId);
+  base.level = Math.max(1, Number(rawObj.level) || 1);
+  base.xp = Math.max(0, Number(rawObj.xp) || 0);
+  base.streak = Math.max(0, Number(rawObj.streak) || 0);
+  base.maxStreak = Math.max(base.streak, Number(rawObj.maxStreak) || 0);
+  base.totalAnswered = Math.max(0, Number(rawObj.totalAnswered) || 0);
+  base.totalCorrect = Math.max(0, Number(rawObj.totalCorrect) || 0);
+
+  // 逐層深拷貝合併 chapterProgress (1~6)
+  if (rawObj.chapterProgress && typeof rawObj.chapterProgress === "object") {
+    for (let ch = 1; ch <= 6; ch++) {
+      const src = rawObj.chapterProgress[ch];
+      if (src && typeof src === "object") {
+        base.chapterProgress[ch] = {
+          basicStars: Math.min(3, Math.max(0, Number(src.basicStars) || 0)),
+          advancedStars: Math.min(3, Math.max(0, Number(src.advancedStars) || 0)),
+          unlocked: true
+        };
+      }
+    }
+  }
+
+  // 逐層深拷貝合併 chapterStats (1~6)
+  let totalChStatCount = 0;
+  if (rawObj.chapterStats && typeof rawObj.chapterStats === "object") {
+    for (let ch = 1; ch <= 6; ch++) {
+      const src = rawObj.chapterStats[ch];
+      if (src && typeof src === "object") {
+        const c = Math.max(0, Number(src.correct) || 0);
+        const t = Math.max(c, Number(src.total) || 0);
+        base.chapterStats[ch] = { correct: c, total: t };
+        totalChStatCount += t;
+      }
+    }
+  }
+
+  // 逐層深拷貝合併 dimensionStats (6 大維度)
+  let totalDimStatCount = 0;
+  if (rawObj.dimensionStats && typeof rawObj.dimensionStats === "object") {
+    DIMENSION_KEYS.forEach(dimKey => {
+      const src = rawObj.dimensionStats[dimKey];
+      if (src && typeof src === "object") {
+        const c = Math.max(0, Number(src.correct) || 0);
+        const t = Math.max(c, Number(src.total) || 0);
+        base.dimensionStats[dimKey] = { correct: c, total: t };
+        totalDimStatCount += t;
+      }
+    });
+  }
+
+  // 若舊版紀錄無 dimensionStats 數據但有 chapterStats，自動一次性無損回填至 dimensionStats
+  if (totalDimStatCount === 0 && totalChStatCount > 0) {
+    for (let ch = 1; ch <= 6; ch++) {
+      const dimKey = DIMENSION_MAP[ch];
+      base.dimensionStats[dimKey] = {
+        correct: base.chapterStats[ch].correct,
+        total: base.chapterStats[ch].total
+      };
+    }
+  }
+
+  // 過濾無效孤兒題目 ID 並去重
+  base.mistakes = cleanQuestionIdArray(rawObj.mistakes);
+  base.answeredQuestions = cleanQuestionIdArray(rawObj.answeredQuestions);
+  base.seenQuestions = cleanQuestionIdArray(rawObj.seenQuestions);
+
+  return base;
+}
+
+/**
+ * 非破壞性智慧合併 (Smart Merge)：取最高星級、最高等級經驗值與題目紀錄聯集
+ */
+function smartMergeStates(stateA, stateB, targetStudentId = null) {
+  const a = normalizeAndMigrateState(stateA, targetStudentId);
+  const b = normalizeAndMigrateState(stateB, targetStudentId);
+  const out = cloneDefaultState();
+
+  out.studentId = sanitizeStudentId(targetStudentId || b.studentId || a.studentId);
+
+  // 等級與 XP 智慧取高
+  const scoreA = (a.level - 1) * 200 + a.xp;
+  const scoreB = (b.level - 1) * 200 + b.xp;
+  if (a.level > b.level || (a.level === b.level && a.xp >= b.xp) || scoreA >= scoreB) {
+    out.level = Math.max(a.level, b.level);
+    out.xp = a.level === b.level ? Math.max(a.xp, b.xp) : (a.level > b.level ? a.xp : b.xp);
+  } else {
+    out.level = b.level;
+    out.xp = b.xp;
+  }
+
+  out.streak = Math.max(a.streak, b.streak);
+  out.maxStreak = Math.max(a.maxStreak, b.maxStreak, out.streak);
+  out.totalAnswered = Math.max(a.totalAnswered, b.totalAnswered);
+  out.totalCorrect = Math.max(a.totalCorrect, b.totalCorrect);
+
+  for (let ch = 1; ch <= 6; ch++) {
+    out.chapterProgress[ch] = {
+      basicStars: Math.max(a.chapterProgress[ch].basicStars, b.chapterProgress[ch].basicStars),
+      advancedStars: Math.max(a.chapterProgress[ch].advancedStars, b.chapterProgress[ch].advancedStars),
+      unlocked: true
+    };
+    const total = Math.max(a.chapterStats[ch].total, b.chapterStats[ch].total);
+    const correct = Math.min(total, Math.max(a.chapterStats[ch].correct, b.chapterStats[ch].correct));
+    out.chapterStats[ch] = { correct, total };
+  }
+
+  DIMENSION_KEYS.forEach(dimKey => {
+    const total = Math.max(a.dimensionStats[dimKey].total, b.dimensionStats[dimKey].total);
+    const correct = Math.min(total, Math.max(a.dimensionStats[dimKey].correct, b.dimensionStats[dimKey].correct));
+    out.dimensionStats[dimKey] = { correct, total };
+  });
+
+  out.mistakes = cleanQuestionIdArray([...a.mistakes, ...b.mistakes]);
+  out.answeredQuestions = cleanQuestionIdArray([...a.answeredQuestions, ...b.answeredQuestions]);
+  out.seenQuestions = cleanQuestionIdArray([...a.seenQuestions, ...b.seenQuestions]);
+
+  return normalizeAndMigrateState(out, out.studentId);
+}
+
 // ==================== STATE PERSISTENCE & PROFILES ====================
 function getActiveStudentId() {
   const saved = localStorage.getItem(ACTIVE_PROFILE_KEY);
-  return saved ? saved.trim().toUpperCase() : null;
+  return sanitizeStudentId(saved);
 }
 
 function getAllProfiles() {
@@ -66,7 +235,9 @@ function getAllProfiles() {
     const raw = localStorage.getItem(PROFILES_LIST_KEY);
     if (raw) {
       const list = JSON.parse(raw);
-      if (Array.isArray(list)) return list;
+      if (Array.isArray(list)) {
+        return Array.from(new Set(list.map(id => sanitizeStudentId(id)).filter(Boolean)));
+      }
     }
   } catch (e) {}
   return [];
@@ -74,44 +245,89 @@ function getAllProfiles() {
 
 function saveProfilesList(list) {
   try {
-    localStorage.setItem(PROFILES_LIST_KEY, JSON.stringify(list));
+    const cleaned = Array.from(new Set((list || []).map(id => sanitizeStudentId(id)).filter(Boolean)));
+    localStorage.setItem(PROFILES_LIST_KEY, JSON.stringify(cleaned));
   } catch (e) {}
 }
 
 function getStorageKeyForProfile(id) {
-  return `ntu_python_agent_profile_${id}`;
+  return `ntu_python_agent_profile_${sanitizeStudentId(id)}`;
+}
+
+/**
+ * 自動無損遷移舊版 v1 (`ntu_python_agent_state_v1`) 紀錄至指定特務學號檔案 (CHK-04)
+ */
+function migrateLegacyV1ToProfile(targetStudentId, currentProfileState = null) {
+  const cleanId = sanitizeStudentId(targetStudentId);
+  if (!cleanId) return currentProfileState;
+
+  try {
+    const v1Raw = localStorage.getItem(LEGACY_V1_KEY);
+    const alreadyMigrated = localStorage.getItem(LEGACY_V1_MIGRATED_KEY);
+    if (v1Raw && !alreadyMigrated) {
+      const v1Parsed = JSON.parse(v1Raw);
+      const v1Normalized = normalizeAndMigrateState(v1Parsed, cleanId);
+      const merged = currentProfileState
+        ? smartMergeStates(currentProfileState, v1Normalized, cleanId)
+        : v1Normalized;
+
+      localStorage.setItem(getStorageKeyForProfile(cleanId), JSON.stringify(merged));
+      localStorage.setItem(LEGACY_V1_MIGRATED_KEY, cleanId);
+      return merged;
+    }
+  } catch (e) {
+    console.warn("Legacy v1 migration warning:", e);
+  }
+  return currentProfileState;
 }
 
 function loadState() {
-  const studentId = getActiveStudentId();
+  let studentId = getActiveStudentId();
+
+  // 若尚無 v2 active profile，檢查舊版 v1 是否已存有學號或舊進度
   if (!studentId) {
-    return {
-      ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
-      studentId: null
-    };
+    try {
+      const v1Raw = localStorage.getItem(LEGACY_V1_KEY);
+      if (v1Raw && !localStorage.getItem(LEGACY_V1_MIGRATED_KEY)) {
+        const v1Parsed = JSON.parse(v1Raw);
+        if (v1Parsed && v1Parsed.studentId) {
+          studentId = sanitizeStudentId(v1Parsed.studentId);
+          if (studentId) {
+            localStorage.setItem(ACTIVE_PROFILE_KEY, studentId);
+            const profiles = getAllProfiles();
+            if (!profiles.includes(studentId)) {
+              profiles.push(studentId);
+              saveProfilesList(profiles);
+            }
+            return migrateLegacyV1ToProfile(studentId, null);
+          }
+        }
+      }
+    } catch (e) {}
+    return normalizeAndMigrateState(null, null);
   }
 
+  let loaded = normalizeAndMigrateState(null, studentId);
   try {
     const raw = localStorage.getItem(getStorageKeyForProfile(studentId));
     if (raw) {
       const parsed = JSON.parse(raw);
-      return {
-        ...DEFAULT_STATE,
-        ...parsed,
-        studentId,
-        dimensionStats: { ...DEFAULT_DIMENSION_STATS, ...(parsed.dimensionStats || {}) }
-      };
+      loaded = normalizeAndMigrateState(parsed, studentId);
     }
   } catch (e) {
     console.warn("Failed to load state:", e);
   }
-  return { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), studentId };
+
+  // 若舊版 v1 尚未遷移，自動無損合併至當前啟用之特務學號檔案
+  loaded = migrateLegacyV1ToProfile(studentId, loaded);
+  return loaded;
 }
 
 let appState = loadState();
 
 function saveState() {
   if (!appState || !appState.studentId) return;
+  appState = normalizeAndMigrateState(appState, appState.studentId);
   try {
     localStorage.setItem(getStorageKeyForProfile(appState.studentId), JSON.stringify(appState));
     localStorage.setItem(ACTIVE_PROFILE_KEY, appState.studentId);
@@ -131,6 +347,619 @@ let currentSession = null;
 let currentTraceIndex = 0;
 let examTimerInterval = null;
 let currentMistakeDimensionFilter = "all";
+
+// ==================== A + C + D CROSS-DEVICE SYNC ARCHITECTURE (CHK-05) ====================
+
+function bytesToBase64Url(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function base64UrlToBytes(b64url) {
+  const b64 = String(b64url).replace(/-/g, "+").replace(/_/g, "/");
+  const pad = b64.length % 4 === 0 ? "" : "=".repeat(4 - (b64.length % 4));
+  const binary = atob(b64 + pad);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+function utf8ToBase64Url(str) {
+  const encoder = new TextEncoder();
+  return bytesToBase64Url(encoder.encode(str));
+}
+
+function base64UrlToUtf8(b64url) {
+  const decoder = new TextDecoder();
+  return decoder.decode(base64UrlToBytes(b64url));
+}
+
+/**
+ * 將題目 ID 陣列壓縮為緊湊索引陣列或 24-byte 位元遮罩 (~32 chars)，確保同步碼極致短小 (< 250 chars)
+ */
+function compressQuestionIds(idList) {
+  if (!Array.isArray(idList) || idList.length === 0) return [];
+  if (typeof QUESTIONS_DATABASE === "undefined" || !Array.isArray(QUESTIONS_DATABASE)) return idList;
+
+  const indexMap = new Map();
+  QUESTIONS_DATABASE.forEach((q, idx) => indexMap.set(q.id, idx));
+  const indices = idList.map(id => indexMap.get(id)).filter(idx => idx !== undefined);
+
+  if (indices.length <= 10) {
+    return indices;
+  }
+
+  const byteLen = Math.ceil(QUESTIONS_DATABASE.length / 8);
+  const mask = new Uint8Array(byteLen);
+  indices.forEach(idx => {
+    const byteIdx = idx >> 3;
+    const bitIdx = idx & 7;
+    mask[byteIdx] |= (1 << bitIdx);
+  });
+  return "~" + bytesToBase64Url(mask);
+}
+
+function decompressQuestionIds(compactVal) {
+  if (!compactVal) return [];
+  if (typeof QUESTIONS_DATABASE === "undefined" || !Array.isArray(QUESTIONS_DATABASE)) {
+    return Array.isArray(compactVal) ? compactVal.filter(x => typeof x === "string") : [];
+  }
+
+  if (typeof compactVal === "string" && compactVal.startsWith("~")) {
+    try {
+      const mask = base64UrlToBytes(compactVal.slice(1));
+      const out = [];
+      for (let idx = 0; idx < QUESTIONS_DATABASE.length; idx++) {
+        const byteIdx = idx >> 3;
+        const bitIdx = idx & 7;
+        if (byteIdx < mask.length && (mask[byteIdx] & (1 << bitIdx))) {
+          out.push(QUESTIONS_DATABASE[idx].id);
+        }
+      }
+      return out;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  if (Array.isArray(compactVal)) {
+    return compactVal.map(item => {
+      if (typeof item === "number" && QUESTIONS_DATABASE[item]) {
+        return QUESTIONS_DATABASE[item].id;
+      }
+      return typeof item === "string" ? item : null;
+    }).filter(Boolean);
+  }
+  return [];
+}
+
+/**
+ * 【方案 A】產生位元/緊湊壓縮之特務同步碼 (AGENTv2.<base64url>)，長度控制在 70~190 字元內 (< 250 chars)
+ */
+function encodeCompactSyncToken(stateObj = appState) {
+  const s = normalizeAndMigrateState(stateObj, stateObj ? stateObj.studentId : null);
+  let cpStr = "";
+  const cs = [];
+  for (let ch = 1; ch <= 6; ch++) {
+    const bStar = Math.min(3, Math.max(0, Number(s.chapterProgress[ch].basicStars) || 0));
+    const aStar = Math.min(3, Math.max(0, Number(s.chapterProgress[ch].advancedStars) || 0));
+    cpStr += String(bStar) + String(aStar);
+    cs.push(s.chapterStats[ch].correct, s.chapterStats[ch].total);
+  }
+  cpStr = cpStr.replace(/0+$/, "");
+
+  const ds = [];
+  DIMENSION_KEYS.forEach(k => {
+    ds.push(s.dimensionStats[k].correct, s.dimensionStats[k].total);
+  });
+
+  // 裁切尾部連續 0 以極小化 JSON 長度
+  const trimZeros = (arr) => {
+    const copy = arr.slice();
+    while (copy.length > 0 && copy[copy.length - 1] === 0) copy.pop();
+    return copy;
+  };
+  const csTrim = trimZeros(cs);
+  const dsTrim = trimZeros(ds);
+  const dsOut = JSON.stringify(csTrim) === JSON.stringify(dsTrim) ? 1 : dsTrim;
+
+  const mComp = compressQuestionIds(s.mistakes);
+  const aqComp = compressQuestionIds(s.answeredQuestions);
+  const sqComp = compressQuestionIds(s.seenQuestions);
+  const sqOut = JSON.stringify(aqComp) === JSON.stringify(sqComp) ? 1 : sqComp;
+
+  const compactArray = [
+    s.studentId || "AGENT",
+    s.level,
+    s.xp,
+    s.streak,
+    s.maxStreak,
+    s.totalAnswered,
+    s.totalCorrect,
+    cpStr,
+    csTrim,
+    dsOut,
+    mComp,
+    aqComp,
+    sqOut
+  ];
+
+  return "AGENTv2." + utf8ToBase64Url(JSON.stringify(compactArray));
+}
+
+/**
+ * 【方案 A】解析 AGENTv2.<base64url> 緊湊同步碼或完整同步網址
+ */
+function decodeCompactSyncToken(rawInput) {
+  if (!rawInput) return null;
+  let token = String(rawInput).trim();
+
+  // 若輸入為完整網址，提取 ?sync= 參數
+  if (token.includes("sync=")) {
+    try {
+      const urlObj = new URL(token, window.location.origin);
+      const param = urlObj.searchParams.get("sync");
+      if (param) token = param.trim();
+    } catch (e) {
+      const m = token.match(/[?&]sync=([^&#]+)/);
+      if (m) token = decodeURIComponent(m[1]);
+    }
+  }
+
+  if (token.startsWith("AGENTv2.")) {
+    token = token.slice("AGENTv2.".length);
+  }
+
+  const jsonStr = base64UrlToUtf8(token);
+  const p = JSON.parse(jsonStr);
+
+  // 若是位置陣列緊湊格式 (v2 ultra-compact)
+  if (Array.isArray(p) && p.length >= 10) {
+    const restored = cloneDefaultState();
+    restored.studentId = sanitizeStudentId(p[0] || "AGENT");
+    restored.level = Number(p[1]) || 1;
+    restored.xp = Number(p[2]) || 0;
+    restored.streak = Number(p[3]) || 0;
+    restored.maxStreak = Number(p[4]) || 0;
+    restored.totalAnswered = Number(p[5]) || 0;
+    restored.totalCorrect = Number(p[6]) || 0;
+
+    const cpStr = String(p[7] || "").padEnd(12, "0");
+    for (let ch = 1; ch <= 6; ch++) {
+      restored.chapterProgress[ch] = {
+        basicStars: Number(cpStr[(ch - 1) * 2]) || 0,
+        advancedStars: Number(cpStr[(ch - 1) * 2 + 1]) || 0,
+        unlocked: true
+      };
+    }
+
+    const csArr = Array.isArray(p[8]) ? p[8] : [];
+    for (let ch = 1; ch <= 6; ch++) {
+      restored.chapterStats[ch] = {
+        correct: Number(csArr[(ch - 1) * 2]) || 0,
+        total: Number(csArr[(ch - 1) * 2 + 1]) || 0
+      };
+    }
+
+    const dsArr = p[9] === 1 ? csArr : (Array.isArray(p[9]) ? p[9] : []);
+    DIMENSION_KEYS.forEach((k, idx) => {
+      restored.dimensionStats[k] = {
+        correct: Number(dsArr[idx * 2]) || 0,
+        total: Number(dsArr[idx * 2 + 1]) || 0
+      };
+    });
+
+    restored.mistakes = decompressQuestionIds(p[10]);
+    restored.answeredQuestions = decompressQuestionIds(p[11]);
+    restored.seenQuestions = p[12] === 1 ? restored.answeredQuestions.slice() : decompressQuestionIds(p[12]);
+
+    return normalizeAndMigrateState(restored, restored.studentId);
+  }
+
+  // 若是完整 JSON state 格式亦向下相容
+  if (p && p.chapterProgress && p.chapterStats) {
+    return normalizeAndMigrateState(p, p.studentId);
+  }
+
+  if (!p || typeof p !== "object") return null;
+
+  const restored = cloneDefaultState();
+  restored.studentId = sanitizeStudentId(p.id || p.studentId || "AGENT");
+  restored.level = Number(p.lv) || 1;
+  restored.xp = Number(p.xp) || 0;
+  restored.streak = Number(p.st) || 0;
+  restored.maxStreak = Number(p.mst) || 0;
+  restored.totalAnswered = Number(p.ta) || 0;
+  restored.totalCorrect = Number(p.tc) || 0;
+
+  if (Array.isArray(p.cp) && p.cp.length >= 12) {
+    for (let ch = 1; ch <= 6; ch++) {
+      restored.chapterProgress[ch] = {
+        basicStars: Number(p.cp[(ch - 1) * 2]) || 0,
+        advancedStars: Number(p.cp[(ch - 1) * 2 + 1]) || 0,
+        unlocked: true
+      };
+    }
+  }
+
+  if (Array.isArray(p.cs) && p.cs.length >= 12) {
+    for (let ch = 1; ch <= 6; ch++) {
+      restored.chapterStats[ch] = {
+        correct: Number(p.cs[(ch - 1) * 2]) || 0,
+        total: Number(p.cs[(ch - 1) * 2 + 1]) || 0
+      };
+    }
+  }
+
+  if (Array.isArray(p.ds) && p.ds.length >= 12) {
+    DIMENSION_KEYS.forEach((k, idx) => {
+      restored.dimensionStats[k] = {
+        correct: Number(p.ds[idx * 2]) || 0,
+        total: Number(p.ds[idx * 2 + 1]) || 0
+      };
+    });
+  }
+
+  restored.mistakes = decompressQuestionIds(p.m);
+  restored.answeredQuestions = decompressQuestionIds(p.aq);
+  restored.seenQuestions = decompressQuestionIds(p.sq);
+
+  return normalizeAndMigrateState(restored, restored.studentId);
+}
+
+function isLocalOrFileEnvironment() {
+  const proto = window.location.protocol;
+  const host = window.location.hostname;
+  return proto === "file:" || host === "localhost" || host === "127.0.0.1" || !host;
+}
+
+function getSyncShareUrl(token = null) {
+  const syncToken = token || encodeCompactSyncToken(appState);
+  const baseUrl = isLocalOrFileEnvironment()
+    ? PUBLIC_ONLINE_BASE_URL
+    : `${window.location.origin}${window.location.pathname}`;
+  return `${baseUrl}?sync=${encodeURIComponent(syncToken)}`;
+}
+
+/**
+ * 【方案 C】前端動態生成高對比 QR Code (含 CDN qrcode-generator 與離線 SVG 容錯)
+ */
+function renderSyncQrCode() {
+  const qrContainer = document.getElementById("sync-qr-container");
+  const tokenOutput = document.getElementById("sync-token-output");
+  const lenBadge = document.getElementById("sync-token-len-badge");
+  const envNotice = document.getElementById("sync-qr-env-notice");
+  const cloudInput = document.getElementById("input-cloud-sync-url");
+  const cloudStatus = document.getElementById("cloud-sync-status");
+
+  const token = encodeCompactSyncToken(appState);
+  const shareUrl = getSyncShareUrl(token);
+
+  if (tokenOutput) tokenOutput.value = token;
+  if (lenBadge) lenBadge.textContent = `${token.length} chars (Compact)`;
+
+  if (envNotice) {
+    if (isLocalOrFileEnvironment()) {
+      envNotice.classList.remove("hidden");
+    } else {
+      envNotice.classList.add("hidden");
+    }
+  }
+
+  if (cloudInput) {
+    const savedUrl = getCloudSyncUrl();
+    cloudInput.value = savedUrl;
+    if (cloudStatus) {
+      cloudStatus.textContent = savedUrl ? "已綁定雲端中繼站" : "未連結雲端";
+      cloudStatus.className = savedUrl ? "text-[10px] font-mono text-emerald-400" : "text-[10px] font-mono text-slate-400";
+    }
+  }
+
+  if (!qrContainer) return;
+
+  try {
+    if (typeof window.qrcode === "function") {
+      const qr = window.qrcode(0, "L");
+      qr.addData(shareUrl);
+      qr.make();
+      qrContainer.innerHTML = qr.createSvgTag({ cellSize: 2, margin: 1, scalable: true });
+      const svgEl = qrContainer.querySelector("svg");
+      if (svgEl) {
+        svgEl.setAttribute("width", "104");
+        svgEl.setAttribute("height", "104");
+        svgEl.classList.add("w-full", "h-full");
+      }
+      return;
+    }
+  } catch (e) {
+    console.warn("QR render fallback triggered:", e);
+  }
+
+  // 離線無 CDN 時之決定性高對比矩陣 SVG 容錯圖騰
+  const size = 21;
+  let rects = "";
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const isFinder =
+        (r < 7 && c < 7 && (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4))) ||
+        (r < 7 && c >= size - 7 && (r === 0 || r === 6 || c === size - 7 || c === size - 1 || (r >= 2 && r <= 4 && c >= size - 5 && c <= size - 3))) ||
+        (r >= size - 7 && c < 7 && (r === size - 7 || r === size - 1 || c === 0 || c === 6 || (r >= size - 5 && r <= size - 3 && c >= 2 && c <= 4)));
+      const hashBit = ((token.charCodeAt((r * size + c) % token.length) + r * 7 + c * 13) % 3) === 0;
+      if (isFinder || hashBit) {
+        rects += `<rect x="${c}" y="${r}" width="1" height="1" fill="#0f172a"/>`;
+      }
+    }
+  }
+  qrContainer.innerHTML = `<svg viewBox="0 0 ${size} ${size}" width="104" height="104" class="w-full h-full">${rects}</svg>`;
+}
+
+function copySyncToken() {
+  const token = encodeCompactSyncToken(appState);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(token).then(() => {
+      showToast("📋 已複製特務緊湊同步碼！可跨裝置貼上還原！");
+    }).catch(() => fallbackCopyText(token, "📋 已複製特務緊湊同步碼！"));
+  } else {
+    fallbackCopyText(token, "📋 已複製特務緊湊同步碼！");
+  }
+}
+
+function copySyncUrl() {
+  const url = getSyncShareUrl();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast("🔗 已複製跨裝置同步連結！開啟連結即可自動合併進度！");
+    }).catch(() => fallbackCopyText(url, "🔗 已複製跨裝置同步連結！"));
+  } else {
+    fallbackCopyText(url, "🔗 已複製跨裝置同步連結！");
+  }
+}
+
+function fallbackCopyText(text, toastMsg) {
+  const out = document.getElementById("sync-token-output");
+  if (out) {
+    out.value = text;
+    out.select();
+    try { document.execCommand("copy"); } catch (e) {}
+  }
+  showToast(toastMsg);
+}
+
+function applyIncomingSyncedState(incomingState, sourceLabel = "跨裝置同步") {
+  if (!incomingState) {
+    if (window.soundFX) window.soundFX.playWrong();
+    showToast("⚠️ 同步碼格式無效或已損毀，請確認後重試！");
+    return false;
+  }
+
+  const targetId = sanitizeStudentId(incomingState.studentId || (appState && appState.studentId) || "AGENT01");
+  let existingForTarget = null;
+  try {
+    const raw = localStorage.getItem(getStorageKeyForProfile(targetId));
+    if (raw) existingForTarget = JSON.parse(raw);
+  } catch (e) {}
+
+  if (!existingForTarget && appState && appState.studentId === targetId) {
+    existingForTarget = appState;
+  }
+
+  const merged = existingForTarget
+    ? smartMergeStates(existingForTarget, incomingState, targetId)
+    : normalizeAndMigrateState(incomingState, targetId);
+
+  appState = merged;
+  saveState();
+  renderChapters();
+  renderMistakes();
+  renderAnalytics();
+  renderSyncQrCode();
+
+  if (window.soundFX) window.soundFX.playLevelUp();
+  showToast(`🔄 ${sourceLabel}完成！已智慧合併探員【${targetId}】進度！`);
+  return true;
+}
+
+function applySyncTokenFromInput() {
+  const inputEl = document.getElementById("import-sync-token-input");
+  const raw = inputEl ? inputEl.value.trim() : "";
+  if (!raw) {
+    showToast("⚠️ 請先貼上 AGENTv2 同步碼或同步網址！");
+    return;
+  }
+  try {
+    const decoded = decodeCompactSyncToken(raw);
+    if (applyIncomingSyncedState(decoded, "同步碼還原")) {
+      inputEl.value = "";
+      const inputId = document.getElementById("input-student-id");
+      if (inputId && appState.studentId) inputId.value = appState.studentId;
+    }
+  } catch (e) {
+    if (window.soundFX) window.soundFX.playWrong();
+    showToast("⚠️ 無法解析同步碼，請確認複製內容完整！");
+  }
+}
+
+/**
+ * 【方案 D】Google Sheets (Google Apps Script) 免資料庫免費雲端自動同步
+ */
+function getCloudSyncUrl() {
+  try {
+    return (localStorage.getItem(CLOUD_SYNC_URL_KEY) || DEFAULT_CLOUD_SYNC_URL || "").trim();
+  } catch (e) {
+    return DEFAULT_CLOUD_SYNC_URL;
+  }
+}
+
+function setCloudSyncUrl(url) {
+  try {
+    const clean = String(url || "").trim();
+    if (clean) {
+      localStorage.setItem(CLOUD_SYNC_URL_KEY, clean);
+    } else {
+      localStorage.removeItem(CLOUD_SYNC_URL_KEY);
+    }
+  } catch (e) {}
+}
+
+async function syncToCloud(silent = true) {
+  const url = getCloudSyncUrl();
+  if (!url || !appState || !appState.studentId) return false;
+
+  const statusEl = document.getElementById("cloud-sync-status");
+  if (statusEl) {
+    statusEl.textContent = "雲端同步中...";
+    statusEl.className = "text-[10px] font-mono text-cyan-400 animate-pulse";
+  }
+
+  try {
+    // 關鍵：使用 text/plain;charset=utf-8 避免瀏覽器觸發 CORS OPTIONS preflight 阻擋 Google Apps Script
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        studentId: appState.studentId,
+        state: appState,
+        syncToken: encodeCompactSyncToken(appState),
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    const data = await response.json();
+    if (data && data.ok) {
+      if (data.state) {
+        appState = smartMergeStates(appState, data.state, appState.studentId);
+        saveState();
+      }
+      if (statusEl) {
+        statusEl.textContent = "✓ 雲端已同步";
+        statusEl.className = "text-[10px] font-mono text-emerald-400";
+      }
+      if (!silent) showToast(`☁️ 已成功將探員【${appState.studentId}】進度同步至 Google Sheets 雲端！`);
+      return true;
+    }
+  } catch (err) {
+    console.warn("Cloud sync push warning:", err);
+    if (statusEl) {
+      statusEl.textContent = "雲端連線失敗(離線)";
+      statusEl.className = "text-[10px] font-mono text-rose-400";
+    }
+    if (!silent) showToast("⚠️ 無法連線至 Google Apps Script，請確認網址與部署權限為「所有人」！");
+  }
+  return false;
+}
+
+async function syncFromCloud(studentId = null, silent = false) {
+  const url = getCloudSyncUrl();
+  const targetId = sanitizeStudentId(studentId || (appState && appState.studentId));
+  if (!url || !targetId) {
+    if (!silent) showToast("⚠️ 請先設定 Google Apps Script 網址並登入學號！");
+    return false;
+  }
+
+  const statusEl = document.getElementById("cloud-sync-status");
+  if (statusEl) {
+    statusEl.textContent = "雲端拉取中...";
+    statusEl.className = "text-[10px] font-mono text-cyan-400 animate-pulse";
+  }
+
+  try {
+    const sep = url.includes("?") ? "&" : "?";
+    const response = await fetch(`${url}${sep}studentId=${encodeURIComponent(targetId)}`, {
+      method: "GET"
+    });
+    const data = await response.json();
+    if (data && data.ok && data.found && data.state) {
+      applyIncomingSyncedState(data.state, "Google 雲端試算表同步");
+      if (statusEl) {
+        statusEl.textContent = "✓ 雲端已同步";
+        statusEl.className = "text-[10px] font-mono text-emerald-400";
+      }
+      return true;
+    } else if (data && data.ok && !data.found) {
+      if (!silent) showToast("☁️ 雲端尚無此學號紀錄，將自動為您上傳初始存檔！");
+      return await syncToCloud(silent);
+    }
+  } catch (err) {
+    console.warn("Cloud sync pull warning:", err);
+    if (statusEl) {
+      statusEl.textContent = "雲端拉取失敗";
+      statusEl.className = "text-[10px] font-mono text-rose-400";
+    }
+    if (!silent) showToast("⚠️ 雲端拉取失敗，請檢查網路或 Google Apps Script 部署設定！");
+  }
+  return false;
+}
+
+function saveAndPushCloudSync() {
+  const input = document.getElementById("input-cloud-sync-url");
+  const url = input ? input.value.trim() : "";
+  setCloudSyncUrl(url);
+  if (!url) {
+    showToast("🗑️ 已清除雲端同步網址設定。");
+    renderSyncQrCode();
+    return;
+  }
+  syncToCloud(false);
+}
+
+function pullCloudSync() {
+  const input = document.getElementById("input-cloud-sync-url");
+  if (input && input.value.trim()) {
+    setCloudSyncUrl(input.value.trim());
+  }
+  syncFromCloud(appState ? appState.studentId : null, false);
+}
+
+/**
+ * 實體 .json 存檔匯出與匯入備份 (CHK-05)
+ */
+function exportProfileJson() {
+  if (!appState || !appState.studentId) {
+    showToast("⚠️ 請先輸入特務學號再匯出存檔！");
+    return;
+  }
+  const payload = {
+    exportVersion: "2.0",
+    exportedAt: new Date().toISOString(),
+    syncToken: encodeCompactSyncToken(appState),
+    state: appState
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `python_agent_${appState.studentId}_backup.json`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 200);
+  showToast(`💾 已匯出特務【${appState.studentId}】之 .json 備份檔！`);
+}
+
+function importProfileJson(event) {
+  const file = event && event.target && event.target.files ? event.target.files[0] : null;
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      const stateObj = (parsed && parsed.state) ? parsed.state : parsed;
+      applyIncomingSyncedState(stateObj, "JSON 檔案匯入");
+    } catch (err) {
+      if (window.soundFX) window.soundFX.playWrong();
+      showToast("⚠️ 匯入的 JSON 檔案格式不正確！");
+    }
+    event.target.value = "";
+  };
+  reader.readAsText(file, "utf-8");
+}
 
 // ==================== PROFILE MODAL CONTROLLERS ====================
 function openProfileModal(isMandatory = false) {
@@ -165,22 +994,33 @@ function openProfileModal(isMandatory = false) {
     setTimeout(() => input.focus(), 150);
   }
 
+  // 安全渲染歷史學號清單，徹底防止 XSS 注入 (CHK-09)
   const profiles = getAllProfiles();
   if (historySec && historyContainer) {
+    historyContainer.innerHTML = "";
     if (profiles.length > 0) {
       historySec.classList.remove("hidden");
-      historyContainer.innerHTML = profiles.map(id => `
-        <button type="button" onclick="switchProfile('${id}')" class="px-2.5 py-1 rounded-lg text-xs font-mono transition border ${
-          (appState && id === appState.studentId) ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500'
-        }">
-          ${id} ${(appState && id === appState.studentId) ? '●' : ''}
-        </button>
-      `).join("");
+      profiles.forEach(id => {
+        const cleanId = sanitizeStudentId(id);
+        if (!cleanId) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isCurrent = appState && cleanId === appState.studentId;
+        btn.className = `min-h-[38px] px-3 py-1 rounded-lg text-xs font-mono transition border ${
+          isCurrent
+            ? "bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold"
+            : "bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500"
+        }`;
+        btn.textContent = isCurrent ? `${cleanId} ●` : cleanId;
+        btn.addEventListener("click", () => switchProfile(cleanId));
+        historyContainer.appendChild(btn);
+      });
     } else {
       historySec.classList.add("hidden");
     }
   }
 
+  renderSyncQrCode();
   modal.classList.remove("hidden");
   lucide.createIcons();
 }
@@ -201,7 +1041,7 @@ function closeProfileModal() {
 function handleProfileSubmit(e) {
   if (e) e.preventDefault();
   const input = document.getElementById("input-student-id");
-  const newId = (input ? input.value : "").trim().toUpperCase();
+  const newId = sanitizeStudentId(input ? input.value : "");
   if (!newId || newId.length < 2) {
     if (window.soundFX) window.soundFX.playWrong();
     showToast("⚠️ 請輸入有效的特務學號或代號！");
@@ -211,30 +1051,37 @@ function handleProfileSubmit(e) {
   switchProfile(newId);
   const modal = document.getElementById("profile-modal");
   if (modal) modal.classList.add("hidden");
-  showToast(`🎖️ 特務檔案已啟動：探員【${newId}】！`);
+  showToast(`🎖️ 特務檔案已啟動：探員【${escapeHtml(newId)}】！`);
 }
 
 function switchProfile(targetId) {
-  if (!targetId) return;
-  targetId = targetId.trim().toUpperCase();
+  const cleanId = sanitizeStudentId(targetId);
+  if (!cleanId) return;
 
   // Save existing state first if there was a student
   if (appState && appState.studentId) {
     saveState();
   }
 
-  localStorage.setItem(ACTIVE_PROFILE_KEY, targetId);
+  localStorage.setItem(ACTIVE_PROFILE_KEY, cleanId);
   const profiles = getAllProfiles();
-  if (!profiles.includes(targetId)) {
-    profiles.push(targetId);
+  if (!profiles.includes(cleanId)) {
+    profiles.push(cleanId);
     saveProfilesList(profiles);
   }
 
   appState = loadState();
+  saveState();
   updateHUD();
   renderChapters();
   renderMistakes();
   renderAnalytics();
+  renderSyncQrCode();
+
+  // 若已設定 Google Sheets 雲端中繼站，背景自動雙向同步
+  if (getCloudSyncUrl()) {
+    syncFromCloud(cleanId, true);
+  }
 
   const modal = document.getElementById("profile-modal");
   if (modal) modal.classList.add("hidden");
@@ -293,7 +1140,10 @@ function updateHUD() {
   if (comboEl) comboEl.textContent = `${appState.streak} Combo`;
 
   if (badgeEl) {
-    const count = appState.mistakes.length;
+    // 僅統計存在於題庫中之有效錯題 ID (CHK-09)
+    const validMistakes = cleanQuestionIdArray(appState.mistakes);
+    appState.mistakes = validMistakes;
+    const count = validMistakes.length;
     if (count > 0) {
       badgeEl.textContent = count;
       badgeEl.classList.remove("hidden");
@@ -306,7 +1156,7 @@ function updateHUD() {
 function showToast(msg) {
   const toast = document.createElement("div");
   toast.className = "fixed bottom-5 right-5 z-50 bg-cyan-950 border border-cyan-500 text-cyan-200 px-4 py-3 rounded-xl shadow-2xl pop-anim text-sm font-medium flex items-center gap-2";
-  toast.innerHTML = `<i data-lucide="bell" class="w-4 h-4 text-cyan-400"></i> <span>${msg}</span>`;
+  toast.innerHTML = `<i data-lucide="bell" class="w-4 h-4 text-cyan-400"></i> <span>${escapeHtml(msg)}</span>`;
   document.body.appendChild(toast);
   lucide.createIcons();
   setTimeout(() => {
@@ -325,10 +1175,10 @@ function switchTab(tabId) {
     const btn = document.getElementById(`tab-btn-${t}`);
     if (t === tabId) {
       view.classList.remove("hidden");
-      btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/30";
+      btn.className = "min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/30";
     } else {
       view.classList.add("hidden");
-      btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition";
+      btn.className = "min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition";
     }
   });
 
@@ -381,18 +1231,18 @@ function renderChapters() {
       </div>
 
       <div class="mt-6 pt-4 border-t border-slate-800/80 space-y-2">
-        <button onclick="openBriefingModal(${ch.id})" class="w-full py-1.5 px-3 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium transition flex items-center justify-center gap-1.5">
+        <button onclick="openBriefingModal(${ch.id})" class="min-h-[44px] w-full py-2 px-3 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium transition flex items-center justify-center gap-1.5">
           <i data-lucide="file-text" class="w-3.5 h-3.5 text-cyan-400"></i>
           <span>觀念情報卡 (重點統整)</span>
         </button>
 
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="startChapterQuiz(${ch.id}, 'basic')" class="py-2 px-3 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/50 text-xs font-bold transition flex items-center justify-center gap-1">
+          <button onclick="startChapterQuiz(${ch.id}, 'basic')" class="min-h-[44px] py-2 px-3 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/50 text-xs font-bold transition flex items-center justify-center gap-1">
             <i data-lucide="shield" class="w-3.5 h-3.5"></i>
             <span>基礎突擊 (${prog.basicStars}/3⭐)</span>
           </button>
           
-          <button onclick="startChapterQuiz(${ch.id}, 'advanced')" class="py-2 px-3 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 text-xs font-bold transition flex items-center justify-center gap-1">
+          <button onclick="startChapterQuiz(${ch.id}, 'advanced')" class="min-h-[44px] py-2 px-3 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 text-xs font-bold transition flex items-center justify-center gap-1">
             <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
             <span>進階陷阱 (${prog.advancedStars}/3⭐)</span>
           </button>
@@ -438,12 +1288,37 @@ function closeBriefingModal() {
   document.getElementById("briefing-modal").classList.add("hidden");
 }
 
-// ==================== ALARM & REVIVAL MODAL (LEGACY STUBS) ====================
-function openAlarmModal() {}
-function closeAlarmModal() {}
-function reviveAgent() {}
+// ==================== TACTICAL DRONE ALERT MODAL (CHK-07: alarm_drone.jpg) ====================
+function openAlarmModal(customTitle = null, customDesc = null) {
+  if (window.soundFX) window.soundFX.playWrong();
+  const modal = document.getElementById("tactical-alert-modal");
+  const titleEl = document.getElementById("tactical-alert-title");
+  const descEl = document.getElementById("tactical-alert-desc");
 
-/// ==================== RANDOMIZE OPTIONS & CHAPTER QUIZ RUNNER ====================
+  if (titleEl && customTitle) {
+    titleEl.innerHTML = `<i data-lucide="alert-octagon" class="w-5 h-5"></i><span>${escapeHtml(customTitle)}</span>`;
+  }
+  if (descEl && customDesc) {
+    descEl.textContent = customDesc;
+  }
+  if (modal) {
+    modal.classList.remove("hidden");
+    lucide.createIcons();
+  }
+}
+
+function closeAlarmModal() {
+  if (window.soundFX) window.soundFX.playClick();
+  const modal = document.getElementById("tactical-alert-modal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function reviveAgent() {
+  closeAlarmModal();
+  switchTab("mistakes");
+}
+
+// ==================== RANDOMIZE OPTIONS & CHAPTER QUIZ RUNNER (CHK-02) ====================
 function randomizeQuestionOptions(q) {
   if (!q || !Array.isArray(q.options) || q.options.length !== 4) return q;
   const letters = ["A", "B", "C", "D"];
@@ -455,7 +1330,15 @@ function randomizeQuestionOptions(q) {
     isCorrect: idx === origAnsIdx
   }));
 
-  const shuffled = shuffle([...items]);
+  // 防呆保護：若最後一個選項為「皆不會引發錯誤 / 以上皆...」之綜合描述選項，固定第 4 選項位置，僅洗牌前 3 個選項
+  const lastText = items[3].text;
+  let shuffled;
+  if (lastText.includes("皆不會") || lastText.includes("以上") || lastText.includes("皆是") || lastText.includes("皆非")) {
+    shuffled = [...shuffle(items.slice(0, 3)), items[3]];
+  } else {
+    shuffled = shuffle([...items]);
+  }
+
   const newAnsIdx = shuffled.findIndex(item => item.isCorrect);
   const newOptions = shuffled.map((item, idx) => `${letters[idx]}. ${item.text}`);
   const newAnswer = letters[newAnsIdx];
@@ -492,7 +1375,6 @@ function startChapterQuiz(chapterId, difficulty) {
     const seen = pool.filter(q => appState.answeredQuestions.includes(q.id));
     candidates = [...shuffle([...unseen]), ...shuffle([...seen]).slice(0, 5 - unseen.length)];
   } else {
-    // If all questions in this category have been answered, shuffle the whole pool
     candidates = shuffle([...pool]).slice(0, Math.min(5, pool.length));
   }
 
@@ -604,7 +1486,9 @@ function selectQuizAnswer(chosenLetter) {
     addXP(xpEarned);
     currentSession.correctCount += 1;
 
-    appState.chapterStats[q.chapterId].correct += 1;
+    if (appState.chapterStats[q.chapterId]) {
+      appState.chapterStats[q.chapterId].correct += 1;
+    }
     appState.totalCorrect += 1;
     appState.dimensionStats[dim].correct += 1;
 
@@ -639,7 +1523,9 @@ function selectQuizAnswer(chosenLetter) {
   }
 
   appState.totalAnswered += 1;
-  appState.chapterStats[q.chapterId].total += 1;
+  if (appState.chapterStats[q.chapterId]) {
+    appState.chapterStats[q.chapterId].total += 1;
+  }
   appState.dimensionStats[dim].total += 1;
   saveState();
   updateHUD();
@@ -732,16 +1618,29 @@ function nextQuizQuestion() {
   if (currentSession.currentIndex < currentSession.questions.length) {
     renderCurrentQuizQuestion();
   } else {
-    // Finished Chapter Drill!
     finishChapterQuiz();
   }
 }
 
+/**
+ * 結算單章突擊或錯題重練 (CHK-03)
+ * 若為錯題重練 (`mistake_single` / `mistake_all`) 或 `chapterId` 無效，絕不污染章節星級亦不拋出 TypeError！
+ */
 function finishChapterQuiz() {
-  const { chapterId, difficulty, correctCount, questions } = currentSession;
+  const { type, chapterId, difficulty, correctCount, questions } = currentSession;
   const total = questions.length;
-  const starsEarned = correctCount >= 4 ? 3 : correctCount >= 3 ? 2 : correctCount >= 2 ? 1 : 0;
 
+  if (type !== "chapter" || !appState.chapterProgress[chapterId]) {
+    saveState();
+    if (getCloudSyncUrl()) syncToCloud(true);
+    closeQuizModal();
+    showToast(`🎯 錯題特訓完成！成功擊破 ${correctCount}/${total} 道錯題！`);
+    renderMistakes();
+    renderAnalytics();
+    return;
+  }
+
+  const starsEarned = correctCount >= 4 ? 3 : correctCount >= 3 ? 2 : correctCount >= 2 ? 1 : 0;
   const prog = appState.chapterProgress[chapterId];
   if (difficulty === "basic") {
     if (starsEarned > prog.basicStars) prog.basicStars = starsEarned;
@@ -749,6 +1648,7 @@ function finishChapterQuiz() {
     if (starsEarned > prog.advancedStars) prog.advancedStars = starsEarned;
   }
   saveState();
+  if (getCloudSyncUrl()) syncToCloud(true);
 
   closeQuizModal();
   showToast(`🎯 本輪突擊結束！答對 ${correctCount}/${total} 題，獲得 ${starsEarned} 顆星！`);
@@ -769,10 +1669,6 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     pool = pool.filter(q => q.difficulty === filterDifficulty);
   }
 
-  // Smart Anti-Repetition Prioritization:
-  // 1. Unseen questions first (never appeared in exam)
-  // 2. Mistake questions second (reinforced practice)
-  // 3. Seen questions third (cycled review)
   const seenSet = new Set(appState.seenQuestions || []);
   const mistakeSet = new Set(appState.mistakes || []);
 
@@ -785,7 +1681,6 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     prioritized = [...prioritized, ...shuffle(pool)];
   }
 
-  // Select questions and randomize ABCD option order
   const selectedQuestions = prioritized
     .slice(0, Math.min(questionCount, pool.length))
     .map(q => randomizeQuestionOptions(q));
@@ -800,11 +1695,9 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     startTime: Date.now()
   };
 
-  // Switch UI to active exam view
   document.getElementById("exam-active-container").classList.remove("hidden");
   document.getElementById("exam-result-container").classList.add("hidden");
 
-  // Setup Timer
   if (examTimerInterval) clearInterval(examTimerInterval);
   updateTimerDisplay();
   examTimerInterval = setInterval(() => {
@@ -813,7 +1706,7 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     if (currentSession.secondsLeft <= 0) {
       clearInterval(examTimerInterval);
       showToast("⏰ 考試時間到！系統自動交卷！");
-      submitExam();
+      submitExam(true);
     }
   }, 1000);
 
@@ -909,7 +1802,6 @@ function renderExamQuestion() {
 
   Prism.highlightAllUnder(body);
 
-  // Prev / Next button states
   document.getElementById("btn-exam-prev").disabled = currentSession.currentIndex === 0;
   document.getElementById("btn-exam-next").disabled = currentSession.currentIndex === total - 1;
 }
@@ -935,11 +1827,11 @@ function confirmSubmitExam() {
   const answered = currentSession.userAnswers.filter(a => a !== null).length;
   const total = currentSession.questions.length;
   if (confirm(`您目前已完成 ${answered} / ${total} 題，確定要現在交卷結算嗎？`)) {
-    submitExam();
+    submitExam(false);
   }
 }
 
-function submitExam() {
+function submitExam(isTimeout = false) {
   if (examTimerInterval) clearInterval(examTimerInterval);
   window.soundFX.playLevelUp();
 
@@ -959,10 +1851,11 @@ function submitExam() {
       appState.dimensionStats[dim] = { correct: 0, total: 0 };
     }
     appState.dimensionStats[dim].total += 1;
-    appState.chapterStats[q.chapterId].total += 1;
+    if (appState.chapterStats[q.chapterId]) {
+      appState.chapterStats[q.chapterId].total += 1;
+    }
     appState.totalAnswered += 1;
 
-    // Track seen questions for smart anti-repetition exam distribution
     if (!appState.seenQuestions.includes(q.id)) {
       appState.seenQuestions.push(q.id);
     }
@@ -970,9 +1863,10 @@ function submitExam() {
     if (isRight) {
       correct += 1;
       appState.totalCorrect += 1;
-      appState.chapterStats[q.chapterId].correct += 1;
+      if (appState.chapterStats[q.chapterId]) {
+        appState.chapterStats[q.chapterId].correct += 1;
+      }
       appState.dimensionStats[dim].correct += 1;
-      // If was a mistake, eliminate it upon correct answer
       if (appState.mistakes && appState.mistakes.includes(q.id)) {
         appState.mistakes = appState.mistakes.filter(id => id !== q.id);
       }
@@ -985,8 +1879,8 @@ function submitExam() {
   const score = Math.round((correct / total) * 100);
   addXP(correct * 30);
   saveState();
+  if (getCloudSyncUrl()) syncToCloud(true);
 
-  // Hide active exam, show result screen
   document.getElementById("exam-active-container").classList.add("hidden");
   const resContainer = document.getElementById("exam-result-container");
   resContainer.classList.remove("hidden");
@@ -997,6 +1891,28 @@ function submitExam() {
   else if (score >= 80) { grade = "A"; gradeColor = "text-cyan-400"; }
   else if (score >= 70) { grade = "B"; gradeColor = "text-blue-400"; }
   else if (score >= 60) { grade = "C"; gradeColor = "text-emerald-400"; }
+
+  // 掛載戰術警戒無人機視覺資產 (assets/alarm_drone.jpg - CHK-07)
+  const showDroneWarning = score < 60 || isTimeout;
+  const droneWarningHtml = showDroneWarning ? `
+    <div class="p-4 rounded-2xl bg-rose-950/30 border border-rose-500/40 flex flex-col sm:flex-row items-center gap-4">
+      <div class="relative w-full sm:w-36 h-24 rounded-xl overflow-hidden border border-rose-500/50 shrink-0 scanline-box">
+        <img src="assets/alarm_drone.jpg" alt="Tactical Recon Drone Alert" class="w-full h-full object-cover object-center cyber-float" />
+      </div>
+      <div class="space-y-1 text-left flex-1">
+        <div class="text-xs font-mono font-bold text-rose-400 flex items-center gap-1.5">
+          <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+          <span>RECON DRONE ALERT // ${isTimeout ? "作答時間屆滿警戒" : "戰術防線失分警戒"}</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          戰術偵察機已將本次答錯題目同步收錄至「特務錯題情報庫」。建議立即檢視下方單步詳解或啟動錯題重練，修補高頻陷阱漏洞！
+        </p>
+      </div>
+      <button onclick="openAlarmModal('戰術無人機深度診斷', '系統已鎖定本次模考失分題型，點擊「前往錯題特訓」即可逐一擊破！')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-rose-600/80 hover:bg-rose-500 text-white text-xs font-bold transition shrink-0">
+        戰術通報
+      </button>
+    </div>
+  ` : "";
 
   resContainer.innerHTML = `
     <div class="text-center space-y-3 pb-6 border-b border-slate-800">
@@ -1021,6 +1937,8 @@ function submitExam() {
         </div>
       </div>
     </div>
+
+    ${droneWarningHtml}
 
     <!-- Review questions list -->
     <div class="space-y-4">
@@ -1054,10 +1972,10 @@ function submitExam() {
     </div>
 
     <div class="pt-4 border-t border-slate-800 flex justify-end gap-3">
-      <button onclick="switchTab('mistakes')" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition">
+      <button onclick="switchTab('mistakes')" class="min-h-[44px] px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition">
         查看錯題情報庫
       </button>
-      <button onclick="switchTab('arena')" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition">
+      <button onclick="switchTab('arena')" class="min-h-[44px] px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition">
         返回考場大廳
       </button>
     </div>
@@ -1067,7 +1985,7 @@ function submitExam() {
   lucide.createIcons();
 }
 
-// ==================== VIEW 3: MISTAKES VAULT ====================
+// ==================== VIEW 3: MISTAKES VAULT (CHK-03 & CHK-09) ====================
 let currentMistakeFilter = 0;
 
 function filterMistakes(chId) {
@@ -1105,6 +2023,7 @@ function renderMistakes() {
   const container = document.getElementById("mistake-list");
   if (!container) return;
 
+  appState.mistakes = cleanQuestionIdArray(appState.mistakes);
   const mistakeQuestions = QUESTIONS_DATABASE.filter(q => appState.mistakes.includes(q.id));
   let filtered = currentMistakeFilter === 0
     ? mistakeQuestions
@@ -1128,18 +2047,18 @@ function renderMistakes() {
 
   container.innerHTML = filtered.map(q => `
     <div class="bg-agent-card border border-rose-950/60 hover:border-rose-500/40 rounded-xl p-5 space-y-3 transition">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           <span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-950 text-rose-400 border border-rose-800">CH ${q.chapterId}</span>
           <span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">${q.dimension || ''}</span>
           <span class="text-xs text-slate-400 font-mono">${q.category}</span>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="reQuizSingle('${q.id}')" class="px-3 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
+          <button onclick="reQuizSingle('${q.id}')" class="min-h-[40px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
             <span>重新挑戰</span>
           </button>
-          <button onclick="dismissMistake('${q.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
+          <button onclick="dismissMistake('${q.id}')" class="min-h-[40px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>消滅情報</span>
           </button>
@@ -1178,10 +2097,10 @@ function reQuizSingle(questionId) {
   if (!q) return;
 
   currentSession = {
-    type: "chapter",
+    type: "mistake_single",
     chapterId: q.chapterId,
     difficulty: q.difficulty,
-    questions: [q],
+    questions: [randomizeQuestionOptions(q)],
     currentIndex: 0,
     correctCount: 0,
     userAnswers: []
@@ -1192,16 +2111,17 @@ function reQuizSingle(questionId) {
 }
 
 function reQuizAllMistakes() {
+  appState.mistakes = cleanQuestionIdArray(appState.mistakes);
   if (appState.mistakes.length === 0) {
     showToast("目前沒有錯題需要練習！");
     return;
   }
   const questions = QUESTIONS_DATABASE.filter(q => appState.mistakes.includes(q.id));
   currentSession = {
-    type: "chapter",
+    type: "mistake_all",
     chapterId: 0,
     difficulty: "all",
-    questions: shuffle([...questions]),
+    questions: shuffle([...questions]).map(q => randomizeQuestionOptions(q)),
     currentIndex: 0,
     correctCount: 0,
     userAnswers: []
@@ -1219,7 +2139,7 @@ function clearAllMistakes() {
   }
 }
 
-// ==================== VIEW 4: ANALYTICS & RADAR CHART ====================
+// ==================== VIEW 4: ANALYTICS & RADAR CHART (CHK-06) ====================
 function renderRadarChart() {
   const container = document.getElementById("radar-chart-container");
   if (!container) return;
@@ -1233,12 +2153,11 @@ function renderRadarChart() {
     { key: "comprehensions_tools", label: "高效工具解析", ch: 6 }
   ];
 
-  // Calculate mastery rate for each dimension
+  // 單一真實來源計算掌握度，絕不將 dStat 與 chStat 重複相加 (CHK-06)
   const scores = dims.map(d => {
     const dStat = (appState.dimensionStats && appState.dimensionStats[d.key]) || { correct: 0, total: 0 };
-    const chStat = (appState.chapterStats && appState.chapterStats[d.ch]) || { correct: 0, total: 0 };
-    const total = dStat.total + chStat.total;
-    const correct = dStat.correct + chStat.correct;
+    const total = dStat.total;
+    const correct = dStat.correct;
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return { ...d, total, correct, pct, hasData: total > 0 };
   });
@@ -1255,7 +2174,6 @@ function renderRadarChart() {
     y: cy + radius * Math.sin(angle)
   });
 
-  // Calculate polygon points for concentric grid webs
   const gridPolygons = levels.map(lvl => {
     const pts = dims.map((_, i) => {
       const angle = -Math.PI / 2 + (i * 2 * Math.PI) / 6;
@@ -1265,14 +2183,12 @@ function renderRadarChart() {
     return `<polygon points="${pts}" fill="none" stroke="${lvl === 1.0 ? 'rgba(6, 182, 212, 0.45)' : 'rgba(71, 85, 105, 0.3)'}" stroke-width="${lvl === 1.0 ? '1.5' : '1'}" stroke-dasharray="${lvl === 1.0 ? 'none' : '3 3'}" />`;
   }).join("");
 
-  // Radial axes lines
   const axisLines = dims.map((_, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / 6;
     const c = getCoord(angle, maxR);
     return `<line x1="${cx}" y1="${cy}" x2="${c.x.toFixed(1)}" y2="${c.y.toFixed(1)}" stroke="rgba(100, 116, 139, 0.35)" stroke-width="1" />`;
   }).join("");
 
-  // User ability polygon
   const userPoints = scores.map((s, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / 6;
     const val = s.hasData ? Math.max(0.15, Math.min(1.0, s.pct / 100)) : 0.35;
@@ -1280,7 +2196,6 @@ function renderRadarChart() {
     return `${c.x.toFixed(1)},${c.y.toFixed(1)}`;
   }).join(" ");
 
-  // Vertices dots & Labels
   const vertexElements = scores.map((s, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / 6;
     const val = s.hasData ? Math.max(0.15, Math.min(1.0, s.pct / 100)) : 0.35;
@@ -1322,7 +2237,6 @@ function renderRadarChart() {
     </svg>
   `;
 
-  // Update Tactical Diagnosis Cards
   const sorted = [...scores].sort((a, b) => b.pct - a.pct);
   const dataPresent = scores.some(s => s.hasData);
 
@@ -1397,7 +2311,7 @@ function shuffle(arr) {
 
 function escapeHtml(text) {
   if (!text) return "";
-  return text
+  return String(text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -1407,10 +2321,27 @@ function escapeHtml(text) {
 
 // ==================== APP BOOTSTRAP ====================
 document.addEventListener("DOMContentLoaded", () => {
+  // 檢查網址是否帶有 ?sync=AGENTv2... 跨裝置同步參數 (CHK-05 Scheme A)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const syncParam = params.get("sync");
+    if (syncParam) {
+      const incoming = decodeCompactSyncToken(syncParam);
+      if (incoming) {
+        applyIncomingSyncedState(incoming, "網址連結跨裝置同步");
+      }
+    }
+  } catch (e) {
+    console.warn("URL sync parameter parse warning:", e);
+  }
+
   const currentId = getActiveStudentId();
   if (!currentId) {
     // 未登入特務：遊戲開始前強制彈出不可關閉之學號建檔視窗
     openProfileModal(true);
+  } else if (getCloudSyncUrl()) {
+    // 若已設定雲端中繼站，啟動時自動背景拉取合併
+    syncFromCloud(currentId, true);
   }
 
   updateHUD();

@@ -1210,7 +1210,7 @@ function renderConceptCardsHTML(chapterId) {
             </span>
             <span class="text-slate-500">Python 3.x</span>
           </div>
-          <pre class="p-3 rounded-lg bg-slate-950/95 border border-slate-800/80 font-mono text-[11px] sm:text-xs text-slate-200 overflow-x-auto whitespace-pre leading-relaxed shadow-inner"><code>${escapedCode}</code></pre>
+          <pre class="language-python p-3 rounded-lg bg-slate-950/95 border border-slate-800/80 font-mono text-[11px] sm:text-xs text-slate-200 overflow-x-auto whitespace-pre leading-relaxed shadow-inner"><code class="language-python">${escapedCode}</code></pre>
         </div>
 
         <!-- 考前 10 秒解題錦囊 -->
