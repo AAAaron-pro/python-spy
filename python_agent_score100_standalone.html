@@ -12,8 +12,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Lightweight QR Code Generator for Cross-Device Sync (Scheme C) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <!-- Lightweight QR Code Generator for Cross-Device Sync (Scheme C - Local Embedded) -->
+  <script>
+// --- INLINED qrcode.min.js ---
+/**
+ * Minified by jsDelivr using Terser v5.37.0.
+ * Original file: /npm/qrcode-generator@1.4.4/qrcode.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,(function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1}))},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}((function(){return qrcode}));
+//# sourceMappingURL=/sm/26b4b0d0b1e283d6b3ec9857ac597d7a60c76ac17be1ef4c965f03086de426bb.map
+</script>
   <script>
     tailwind.config = {
       theme: {
@@ -253,83 +263,83 @@
       <!-- Exam Mode Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        <!-- Mode 1: 50min Exam 1 (114-1) -->
-        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
+        <!-- Mode 1: 50min / 60Q Exam 1 (114-1 Authentic Spec) -->
+        <div id="arena-exam-114-1" class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30 group-hover:scale-105 transition">
               <i data-lucide="timer" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">50 分鐘急速模考</h3>
-              <p class="text-xs text-cyan-400 font-mono">仿 114-1 期中試卷規格</p>
+              <h3 class="font-bold text-white text-lg">114-1 實戰模考</h3>
+              <p class="text-xs text-cyan-400 font-mono">對齊 114-1 真實期中試卷（50 分鐘 60 題高密度速決）</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              隨機抽取 25 題跨章節題目，嚴格計時 50 分鐘，考驗第一時間破題與敏銳度。
+              隨機抽取 60 題跨章節單選題，嚴格計時 50 分鐘（每題 1 分共 60 分），100% 還原 114-1 期中考高壓節奏！
             </p>
           </div>
-          <button onclick="startExam('quick50', 25, 50)" class="mt-5 w-full py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('exam114_1', 60, 50)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>開始測驗</span>
+            <span>開始 114-1 模考 (60題)</span>
           </button>
         </div>
 
-        <!-- Mode 2: 120min Exam 1 (114-2) -->
-        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-blue-500/50 transition flex flex-col justify-between group shadow-lg">
+        <!-- Mode 2: 120min / 68Q Exam 1 (114-2 Authentic Spec) -->
+        <div id="arena-exam-114-2" class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-blue-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-105 transition">
               <i data-lucide="award" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">全真深度模擬考</h3>
-              <p class="text-xs text-blue-400 font-mono">仿 114-2 (120分/大題量)</p>
+              <h3 class="font-bold text-white text-lg">114-2 實戰模考</h3>
+              <p class="text-xs text-blue-400 font-mono">對齊 114-2 真實期中試卷（120 分鐘 68 題，含基礎與進階配分題）</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              抽取 40 題全方位混合題庫，計時 120 分鐘。全面涵蓋巢狀迴圈與記憶體參照魔王題。
+              抽取 68 題全方位題庫（Q1–31 每題 1 分、Q32–68 每題 2 分，原始滿分 105 分），計時 120 分鐘深度實戰。
             </p>
           </div>
-          <button onclick="startExam('full120', 40, 120)" class="mt-5 w-full py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('exam114_2', 68, 120)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>進入考場</span>
+            <span>開始 114-2 模考 (68題)</span>
           </button>
         </div>
 
-        <!-- Mode 3: 10 Q Sprint -->
+        <!-- Mode 3: 25 Q Standard Drill -->
         <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-emerald-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-105 transition">
               <i data-lucide="zap" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">10 題快速突擊</h3>
-              <p class="text-xs text-emerald-400 font-mono">5 分鐘碎片化刷題</p>
+              <h3 class="font-bold text-white text-lg">全題庫隨機刷題</h3>
+              <p class="text-xs text-emerald-400 font-mono">30 分鐘 / 25 題標準練習</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              隨機抽取 10 題快節奏速刷，適合搭車、課間或考前 10 分鐘迅速喚醒題感。
+              隨機抽取 25 題快節奏綜合演練，適合課間、通勤或考前 30 分鐘迅速檢視六大維度熟練度。
             </p>
           </div>
-          <button onclick="startExam('sprint10', 10, 15)" class="mt-5 w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('standard', 25, 30)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>立即開打</span>
+            <span>立即開打 (25題)</span>
           </button>
         </div>
 
-        <!-- Mode 4: Weakness Drill -->
+        <!-- Mode 4: Devil Traps Drill -->
         <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-rose-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/30 group-hover:scale-105 transition">
               <i data-lucide="target" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">高頻陷阱突擊</h3>
-              <p class="text-xs text-rose-400 font-mono">專攻最高失分率題目</p>
+              <h3 class="font-bold text-white text-lg">魔鬼陷阱特訓</h3>
+              <p class="text-xs text-rose-400 font-mono">25 分鐘 / 15 題高失分率專案</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              匯總所有進階難度的陷阱題（可變引數、切片賦值、Scope 遮蔽），正面擊破難點！
+              匯總所有進階難度的陷阱題（可變預設參數、淺拷貝連坐、Scope 遮蔽、游標耗盡），正面擊破難點！
             </p>
           </div>
-          <button onclick="startExam('traps', 15, 25, 'advanced')" class="mt-5 w-full py-2.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('traps', 15, 25, 'advanced')" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>直面陷阱</span>
+            <span>直面陷阱 (15題)</span>
           </button>
         </div>
 
@@ -341,9 +351,9 @@
         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div class="flex items-center gap-3">
             <span id="exam-title-badge" class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold rounded border border-cyan-500/30">
-              50 分鐘模考
+              114-1 實戰模考 (50m/60題)
             </span>
-            <span class="text-slate-400 text-sm">進度：<strong id="exam-progress-text" class="text-white">1 / 25</strong></span>
+            <span class="text-slate-400 text-sm">進度：<strong id="exam-progress-text" class="text-white">1 / 60</strong></span>
           </div>
 
           <div class="flex items-center gap-4">
@@ -354,7 +364,7 @@
             </div>
 
             <!-- Hand in exam button -->
-            <button onclick="confirmSubmitExam()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition">
+            <button onclick="confirmSubmitExam()" class="min-h-[44px] px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition">
               提前交卷結算
             </button>
           </div>
@@ -372,7 +382,7 @@
 
         <!-- Exam Navigation Buttons -->
         <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-          <button id="btn-exam-prev" onclick="navigateExamQuestion(-1)" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition flex items-center gap-2">
+          <button id="btn-exam-prev" onclick="navigateExamQuestion(-1)" class="min-h-[44px] px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition flex items-center gap-2">
             <i data-lucide="chevron-left" class="w-4 h-4"></i>
             <span>上一題</span>
           </button>
@@ -382,7 +392,7 @@
             <!-- Question jump dots -->
           </div>
 
-          <button id="btn-exam-next" onclick="navigateExamQuestion(1)" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition flex items-center gap-2">
+          <button id="btn-exam-next" onclick="navigateExamQuestion(1)" class="min-h-[44px] px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition flex items-center gap-2">
             <span>下一題</span>
             <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
@@ -407,11 +417,11 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <button onclick="reQuizAllMistakes()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-rose-600/20">
+          <button onclick="reQuizAllMistakes()" class="min-h-[44px] px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-rose-600/20">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             <span>集中消滅所有錯題</span>
           </button>
-          <button onclick="clearAllMistakes()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-sm transition">
+          <button onclick="clearAllMistakes()" class="min-h-[44px] px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-sm transition">
             清空錯題
           </button>
         </div>
@@ -424,13 +434,13 @@
           <span>依六大特務作戰能力維度篩選：</span>
         </div>
         <div class="flex flex-wrap gap-2" id="mistake-dimension-filter-bar">
-          <button onclick="filterMistakesByDimension('all')" id="mdf-all" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">全部維度</button>
-          <button onclick="filterMistakesByDimension('syntax_io')" id="mdf-syntax_io" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">語法與I/O</button>
-          <button onclick="filterMistakesByDimension('strings_ascii')" id="mdf-strings_ascii" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">字串與ASCII</button>
-          <button onclick="filterMistakesByDimension('containers_memory')" id="mdf-containers_memory" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">容器與記憶體</button>
-          <button onclick="filterMistakesByDimension('control_flow')" id="mdf-control_flow" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">流程與迴圈</button>
-          <button onclick="filterMistakesByDimension('functions_scope')" id="mdf-functions_scope" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">函式與作用域</button>
-          <button onclick="filterMistakesByDimension('comprehensions_tools')" id="mdf-comprehensions_tools" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">高效工具與解析</button>
+          <button onclick="filterMistakesByDimension('all')" id="mdf-all" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">全部維度</button>
+          <button onclick="filterMistakesByDimension('syntax_io')" id="mdf-syntax_io" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">語法與I/O</button>
+          <button onclick="filterMistakesByDimension('strings_ascii')" id="mdf-strings_ascii" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">字串與ASCII</button>
+          <button onclick="filterMistakesByDimension('containers_memory')" id="mdf-containers_memory" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">容器與記憶體</button>
+          <button onclick="filterMistakesByDimension('control_flow')" id="mdf-control_flow" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">流程與迴圈</button>
+          <button onclick="filterMistakesByDimension('functions_scope')" id="mdf-functions_scope" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">函式與作用域</button>
+          <button onclick="filterMistakesByDimension('comprehensions_tools')" id="mdf-comprehensions_tools" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">高效工具與解析</button>
         </div>
       </div>
 
@@ -867,7 +877,7 @@
   <script>
 // --- INLINED questions.js ---
 /**
- * Python 爬蟲特務：代碼覺醒 - 題庫與章節資料庫
+ * Python 特務：滿分計畫 - 題庫與章節資料庫
  * 對齊台大「程式設計與網路資料搜集」(GenEdu5010) Exam 1 (W1-W5)
  * 全部題目皆為原創變形題，緊扣考古題核心觀念與易錯陷阱
  */
@@ -2972,8 +2982,7 @@ print(res)`,
     difficulty: "advanced",
     category: "PEP 8 規範檢驗",
     question: "依據 PEP 8 官方風格指南，下列變數定義敘述何者完全符合規範？",
-    code: `valid_pep8 = "max_score = 100"
-print(valid_pep8)`,
+    code: ``,
     options: [
       "A. max_score = 100 (前後各空一格，標準 PEP 8)",
       "B. max_score=100 (運算子兩側無空格)",
@@ -2981,10 +2990,10 @@ print(valid_pep8)`,
       "D. max_score  =  100 (運算子兩側有多個多餘空格)"
     ],
     answer: "A",
-    explanation: "PEP 8 規範明訂：一般變數應使用全小寫字母加底線（snake_case），不可用 CamelCase；二元賦值運算子 = 兩側應恰好各保留一個空格，不可緊貼或留多個空格。",
+    explanation: "【Week 2 投影片與 PEP 8 核心考點】PEP 8 規範明訂：一般變數應使用全小寫字母加底線（snake_case），不可用 CamelCase；二元賦值運算子 = 兩側應恰好各保留一個空格，不可緊貼或留多個空格。",
     traceSteps: [
-      { line: 1, text: "檢查 PEP 8 規範：小寫底線命名且二元運算子前後各空一格", vars: {"valid_pep8": "'max_score = 100'"} },
-      { line: 2, text: "印出符合規範之字串", vars: {"output": "'max_score = 100'"} }
+      { line: 1, text: "檢查變數命名規範：應採用全小寫底線 snake_case (max_score)", vars: {"naming": "'snake_case'"} },
+      { line: 1, text: "檢查二元運算子空白規範：= 前後應恰好各空一格", vars: {"spacing": "'single space'"} }
     ]
   },
   {
@@ -3241,25 +3250,27 @@ print(repr(part1), part2)`,
     id: "mock_36",
     chapterId: 2,
     dimension: "strings_ascii",
-    title: "ASCII 位元 XOR 大小寫互換",
+    title: "114-1 考古題 Q44：ASCII 差值大小寫平移",
     difficulty: "advanced",
-    category: "ASCII與位元運算",
-    question: "執行下列利用 XOR 32 進行字元轉換的程式碼後，輸出為何？",
-    code: `word = "NtU"
-converted = "".join(chr(ord(c) ^ 32) if c.isalpha() else c for c in word)
-print(converted)`,
+    category: "ASCII與ord/chr",
+    question: "執行下列利用 ord() 與 chr() 計算 ASCII 差值並平移字元的程式碼後，輸出為何？",
+    code: `s = "hello"
+diff = ord(s[0]) - ord(s[0].upper())
+new_char = chr(ord("Z") + diff)
+print(new_char)`,
     options: [
-      "A. NTU",
-      "B. ntu",
-      "C. nTu",
-      "D. NtU"
+      "A. Z",
+      "B. z",
+      "C. a",
+      "D. ValueError"
     ],
-    answer: "C",
-    explanation: "英文字母大寫與小寫 ASCII 碼差恰為 32（二進位第 5 位為 1）。對字母的 ASCII 碼進行 ^ 32 可以翻轉大小寫：'N'(大寫) 變 'n'，'t'(小寫) 變 'T'，'U'(大寫) 變 'u'，合併為 'nTu'。",
+    answer: "B",
+    explanation: "【114-1 考古題核心考點 (Q44)】s[0] 為小寫 'h' (ASCII 104)，s[0].upper() 為大寫 'H' (ASCII 72)，兩者相減 diff = 104 - 72 = 32（即小寫與大寫字母的固定 ASCII 差距）。接著將大寫 'Z' (ASCII 90) 加上 32 得到 122，經 chr(122) 轉換即為小寫 'z'。",
     traceSteps: [
-      { line: 1, text: "word = 'NtU'", vars: {"word": "'NtU'"} },
-      { line: 2, text: "ord('N')^32 -> 'n', ord('t')^32 -> 'T', ord('U')^32 -> 'u'", vars: {"converted": "'nTu'"} },
-      { line: 3, text: "印出 'nTu'", vars: {"output": "'nTu'"} }
+      { line: 1, text: "s = 'hello'，s[0] 為 'h'，s[0].upper() 為 'H'", vars: {"s": "'hello'"} },
+      { line: 2, text: "計算 ord('h') - ord('H') = 104 - 72 = 32", vars: {"diff": 32} },
+      { line: 3, text: "chr(ord('Z') + 32) = chr(90 + 32) = chr(122) = 'z'", vars: {"new_char": "'z'"} },
+      { line: 4, text: "印出 'z'", vars: {"output": "'z'"} }
     ]
   },
   {
@@ -4049,20 +4060,18 @@ print(calc(5, c=4, b=3))`,
     difficulty: "basic",
     category: "預設參數語法",
     question: "依據 Python 語法，下列何者是完全合法的函式定義宣告？",
-    code: `def valid_func(a, b=2, c=3):
-    return a + b + c
-print(valid_func(1))`,
+    code: ``,
     options: [
       "A. def f(a=1, b): pass",
       "B. def f(a, b=2, c): pass",
-      "C. def valid_func(a, b=2, c=3): pass",
+      "C. def f(a, b=2, c=3): pass",
       "D. def f(a=1, b=2, c): pass"
     ],
     answer: "C",
-    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError。因此只有 def valid_func(a, b=2, c=3): pass 合法，輸出 1 + 2 + 3 = 6。",
+    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError: non-default argument follows default argument。因此只有 def f(a, b=2, c=3): pass 完全合法。",
     traceSteps: [
-      { line: 1, text: "定義合法的函式參數順序：無預設值 a 在前，具預設值 b=2, c=3 在後", vars: {} },
-      { line: 3, text: "呼叫 valid_func(1)：a=1, b=2, c=3，回傳 6", vars: {"output": 6} }
+      { line: 1, text: "檢查參數順序規則：無預設值的必要參數 a 必須排在最前面", vars: {"required": "'a'"} },
+      { line: 1, text: "具預設值的參數 b=2, c=3 排在後方，符合 Python 語法規範", vars: {"defaults": "'b=2, c=3'"} }
     ]
   },
   {
@@ -4669,25 +4678,22 @@ print(type(val) == float, val)`,
     id: "ch1_b13",
     chapterId: 1,
     dimension: "syntax_io",
-    title: "二進制與十六進制常數表示法",
+    title: "終端機標準輸入輸出重導向 (< 與 >)",
     difficulty: "basic",
-    category: "數字進制常數",
-    question: "執行下列進制常數程式碼後，印出的十進制結果為何？",
-    code: `a = 0b1010
-b = 0x1F
-print(a, b)`,
+    category: "終端機 I/O 重導向",
+    question: "【Week 2 投影片考點】在終端機執行 python3 taxi.py < testcase.txt > out.txt（且原本已存在舊的 out.txt）時，下列敘述何者正確？",
+    code: ``,
     options: [
-      "A. 10 15",
-      "B. 10 31",
-      "C. 1010 31",
-      "D. 12 31"
+      "A. 程式必須先刪除內部的 input() 呼叫，否則 < testcase.txt 會引發語法錯誤",
+      "B. 程式的 input() 會讀取 testcase.txt，且 print() 輸出會直接覆蓋 out.txt，螢幕上不印出任何內容",
+      "C. print() 的輸出會同時顯示在終端機螢幕上，並附加（append）在舊 out.txt 末尾",
+      "D. 在 Windows 預設的 PowerShell 中不需切換 cmd 即可直接使用 < 進行輸入重導向"
     ],
     answer: "B",
-    explanation: "在 Python 中，以 0b 開頭為二進制常數，0b1010 對應十進制 1*8 + 0*4 + 1*2 + 0*1 = 10；以 0x 開頭為十六進制常數，0x1F 對應 1*16 + 15 = 31。print 預設以十進制印出數值，因此輸出 10 31。",
+    explanation: "【Week 2 投影片核心考點 (Slides 19-22)】1. 標準輸入重導向 `< testcase.txt` 會將檔案內容逐行餵給 `input()`，完全不需修改 `.py` 原始碼；2. 標準輸出重導向 `> out.txt` 會將 `print()` 的所有輸出寫入檔案，螢幕上不會印出任何東西，且若 `out.txt` 已存在會直接覆蓋（Overwrite）舊內容；3. Windows PowerShell 不支援 `<`，必須先輸入 `cmd` 切換至 Command Prompt 才能使用。",
     traceSteps: [
-      { line: 1, text: "0b1010 解析為十進制整數 10", vars: {"a": 10} },
-      { line: 2, text: "0x1F 解析為十進制整數 31", vars: {"b": 31} },
-      { line: 3, text: "印出十進制數值 10 31", vars: {"output": "10 31"} }
+      { line: 1, text: "< testcase.txt 將測資檔案導入標準輸入 (stdin)，供 input() 讀取", vars: {"stdin": "'testcase.txt'"} },
+      { line: 1, text: "> out.txt 將標準輸出 (stdout) 導向檔案並直接覆蓋舊檔，螢幕無輸出", vars: {"stdout": "'out.txt (Overwrite)'"} }
     ]
   },
   {
@@ -4766,26 +4772,22 @@ print(f"Total: {x}")`,
     id: "ch1_a15",
     chapterId: 1,
     dimension: "syntax_io",
-    title: "位元 XOR 與位移運算求值",
+    title: "命令列測資比對指令 diff 與 fc 判讀",
     difficulty: "advanced",
-    category: "位元運算子",
-    question: "執行下列位元互斥或（XOR）與左移運算程式碼後，印出的結果為何？",
-    code: `x = 5
-y = 3
-z = (x ^ y) << 1
-print(z)`,
+    category: "終端機測資比對",
+    question: "【Week 2 投影片考點】在 macOS/Linux 終端機執行 diff out.txt ans.txt（或於 Windows cmd 執行 fc out.txt ans.txt）比對輸出與標準答案時，下列敘述何者正確？",
+    code: ``,
     options: [
-      "A. 6",
-      "B. 12",
-      "C. 16",
-      "D. 8"
+      "A. 當 diff out.txt ans.txt 完全沒有印出任何訊息時，代表兩個檔案內容完全一致（通過測資）",
+      "B. 當 diff out.txt ans.txt 沒有印出任何訊息時，代表比對指令執行失敗或檔案為空",
+      "C. 若 diff 印出 2c2 以及 < 85 與 > 80，其中 < 85 代表右邊檔案 ans.txt 的內容",
+      "D. Windows 終端機內建只能使用 diff 指令，而 macOS 只能使用 fc 指令"
     ],
-    answer: "B",
-    explanation: "x = 5（二進制 0101），y = 3（二進制 0011）。x ^ y 進行位元互斥或運算：0101 ^ 0011 = 0110（十進制 6）。接著 << 1 進行左移一位運算，相當於乘以 2 的 1 次方，6 * 2 = 12。故印出 12。",
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slide 23)】macOS/Linux 使用 `diff out.txt ans.txt`，Windows (`cmd`) 使用 `fc out.txt ans.txt`。當 `diff` 完全沒有印出任何訊息時，代表兩檔案一模一樣！若印出 `2c2` 與 `< 85`、`> 80`，代表第 2 行需修改（change），`<` 代表左邊檔案（`out.txt`）的內容，`>` 代表右邊目標檔案（`ans.txt`）的內容。",
     traceSteps: [
-      { line: 1, text: "x = 5 (0b0101), y = 3 (0b0011)", vars: {"x": 5, "y": 3} },
-      { line: 3, text: "計算 5 ^ 3 = 6 (0b0110)，接著左移 1 位 6 << 1 = 12", vars: {"z": 12} },
-      { line: 4, text: "印出 z 之值 12", vars: {"output": 12} }
+      { line: 1, text: "執行 diff out.txt ans.txt 比對左側輸出檔與右側解答檔", vars: {"left": "'out.txt'", "right": "'ans.txt'"} },
+      { line: 1, text: "無任何訊息輸出代表兩檔案完全相同；若有差異則 < 指左檔、> 指右檔", vars: {"identical": true} }
     ]
   },
   {
@@ -5801,6 +5803,634 @@ print(res)`,
       { line: 1, text: "x 為 3, 4 時，條件滿足映射為 x 本身", vars: {"res": "[-1, -1, -1, 3, 4]"} },
       { line: 2, text: "輸出 [-1, -1, -1, 3, 4]", vars: {"output": "[-1, -1, -1, 3, 4]"} }
     ]
+  },
+  // ==================== ROUND 2 ADDITIONS (INDEX >= 192: W2 SLIDES, FILE I/O, MODULES, RECURSION, 114-1/114-2 ARCHETYPES) ====================
+  {
+    id: "ch1_b17",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "114-2 考古題 Q5：變數識別字 vs 字串字面量",
+    difficulty: "basic",
+    category: "基礎輸出與識別字",
+    question: "【114-2 考古題 Q5 考點】執行下列 Python 程式碼後，終端機印出的結果為何？",
+    code: `x = 10
+y = 25
+print("x", y)`,
+    options: [
+      "A. 10 25",
+      "B. x 25",
+      "C. x y",
+      "D. NameError"
+    ],
+    answer: "B",
+    explanation: "【114-2 考古題核心考點 (Q5)】被雙引號包住的 \"x\" 是字串字面量（string literal），print 會直接印出字元 x 本身；而未加引號的 y 則是變數識別字（identifier），print 會印出變數 y 儲存的數值 25。因此輸出為 x 25。",
+    traceSteps: [
+      { line: 1, text: "變數初始化：x = 10, y = 25", vars: {"x": 10, "y": 25} },
+      { line: 3, text: "'x' 加了雙引號視為字串字面量，y 視為變數取出值 25", vars: {"output": "'x 25'"} }
+    ]
+  },
+  {
+    id: "ch1_b18",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "Week 2 投影片：Python 之禪 (import this) 與語意化命名",
+    difficulty: "basic",
+    category: "PEP 8 與 Python 哲學",
+    question: "【Week 2 投影片考點】關於 Python 內建彩蛋指令與投影片第 27–28 頁強調的變數命名原則，下列敘述何者正確？",
+    code: ``,
+    options: [
+      "A. 執行 import this 會印出 Tim Peters 撰寫的《The Zen of Python》，且變數命名應具清楚語意（如 student_age 優於 sa 或 a）",
+      "B. 為了打字快速，應盡量將長變數名稱如 coding_and_coworking_club 縮寫為單一縮寫 ccc",
+      "C. 執行 import zen 才會印出 Python 設計哲學，import this 會引發 ModuleNotFoundError",
+      "D. PEP 8 建議一般區域變數一律使用全大寫（如 STUDENT_NAME）以利辨識"
+    ],
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slides 27-28)】1. 在程式中執行 `import this` 會印出 Tim Peters 撰寫的 *The Zen of Python*（Python 之禪，如 Readability counts）；2. 變數命名應使用具清楚語意的英文單字並以底線連接（`snake_case`），避免使用無意義單字母或讓人看不懂的過度縮寫（如投影片舉例勿將社團名稱縮寫為 `ccc`）。",
+    traceSteps: [
+      { line: 1, text: "import this 載入內建彩蛋模組，輸出 The Zen of Python 19 條設計哲學", vars: {"module": "'this'"} },
+      { line: 1, text: "檢視命名原則：Readability counts，使用具語意之 snake_case 變數名", vars: {"style": "'semantic snake_case'"} }
+    ]
+  },
+  {
+    id: "ch1_a17",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "Week 2 投影片：PEP 8 切片冒號不空格例外",
+    difficulty: "advanced",
+    category: "PEP 8 規範檢驗",
+    question: "【Week 2 投影片 Slide 30 考點】投影片特別強調 PEP 8 中冒號「:」與逗號「,」的空白規範與「例外情況」。下列哪一行程式碼完全符合 PEP 8 標準？",
+    code: ``,
+    options: [
+      "A. part = data[1:5] (用於切片 Slicing 時，冒號前後皆不加空格)",
+      "B. part = data[1: 5] (切片冒號比照字典冒號，後面應空一格)",
+      "C. items = [1,2,3] (串列逗號後面不加空格)",
+      "D. info = {'id' : 101} (字典冒號前後都必須空一格)"
+    ],
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slide 30)】投影片第 30 頁特別框出例外：雖然逗號 `,` 與一般冒號 `:` 的規則是「前面不空格、後面空一格」（例如 `[1, 2, 3]`、`{'id': 101}`），但**當冒號 `:` 用於串列或字串切片（Slicing）時屬於例外，冒號前後都不加空格**（應寫為 `data[1:5]`，寫成 `data[1: 5]` 違反 PEP 8）！",
+    traceSteps: [
+      { line: 1, text: "一般規則：逗號與字典冒號為『前不空格、後空一格』", vars: {"general": "'[1, 2], {k: v}'"} },
+      { line: 1, text: "Slide 30 例外規則：切片 (Slicing) 冒號前後皆不加空格 -> data[1:5]", vars: {"slicing_pep8": "'data[1:5]'"} }
+    ]
+  },
+  {
+    id: "ch1_a18",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "標準函式庫 math 模組：ceil、floor 與 sqrt",
+    difficulty: "advanced",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列匯入標準函式庫 math 模組的程式碼後，印出的結果為何？",
+    code: `import math
+a = math.ceil(4.1)
+b = math.floor(4.9)
+c = math.sqrt(16)
+print(a, b, c)`,
+    options: [
+      "A. 5 4 4.0",
+      "B. 4 5 4",
+      "C. 5 4 4",
+      "D. 4 4 4.0"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】1. `math.ceil(4.1)` 為無條件進位（天花板函式），回傳整數 `5`；2. `math.floor(4.9)` 為無條件捨去（地板函式），回傳整數 `4`；3. **高頻陷阱**：`math.sqrt(16)` 開根號永遠回傳浮點數（`float`），即 `4.0` 而非整數 `4`！故輸出 `5 4 4.0`。",
+    traceSteps: [
+      { line: 2, text: "math.ceil(4.1) 向上取整數得 5", vars: {"a": 5} },
+      { line: 3, text: "math.floor(4.9) 向下取整數得 4", vars: {"b": 4} },
+      { line: 4, text: "math.sqrt(16) 回傳浮點數 4.0", vars: {"c": 4.0} },
+      { line: 5, text: "印出 5 4 4.0", vars: {"output": "'5 4 4.0'"} }
+    ]
+  },
+  {
+    id: "ch2_b17",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-1 考古題 Q27：字串步長切片傳奇彩蛋題",
+    difficulty: "basic",
+    category: "字串切片運算",
+    question: "【114-1 考古題 Q27 原題】執行下列字串切片程式碼後，終端機的正確輸出為何？",
+    code: `s = "programming"
+print(s[2:8:2])`,
+    options: [
+      "A. orm",
+      "B. ormg",
+      "C. rga",
+      "D. org"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q27 傳奇送分題彩蛋)】字串 `s = 'programming'` 各字元索引為：0:'p', 1:'r', 2:'o', 3:'g', 4:'r', 5:'a', 6:'m', 7:'m', 8:'i'。切片 `s[2:8:2]` 從索引 2 開始，每次步長 +2，取索引 2 ('o')、4 ('r')、6 ('m')，因為終止索引 8 不包含在內，所以正確答案為 `'orm'`！（考古題彩蛋：114-1 實戰考卷當年印成 ormg、rga、org、ram 四個選項，因漏印 `'orm'` 而成為全班送分題！）",
+    traceSteps: [
+      { line: 1, text: "s = 'programming'，索引 2='o', 4='r', 6='m', 8='i'(不含)", vars: {"s": "'programming'"} },
+      { line: 2, text: "s[2:8:2] 取出索引 2, 4, 6 字元組合為 'orm'", vars: {"output": "'orm'"} }
+    ]
+  },
+  {
+    id: "ch2_b18",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-2 考古題原型：字串走訪與母音計數",
+    difficulty: "basic",
+    category: "字串走訪與方法",
+    question: "【114-2 考古題原型】執行下列結合 lower() 與 in 運算子的字串統計程式碼後，印出的結果為何？",
+    code: `text = "Education"
+count = 0
+for ch in text.lower():
+    if ch in "aeiou":
+        count += 1
+print(count)`,
+    options: [
+      "A. 4",
+      "B. 5",
+      "C. 3",
+      "D. 6"
+    ],
+    answer: "B",
+    explanation: "【114-2 考古題核心考點】`text.lower()` 先將 `'Education'` 全轉為小寫 `'education'`（使得原本大寫的 `'E'` 也能被匹配）。逐字檢查是否屬於母音 `'aeiou'`：`'e'`, `'u'`, `'a'`, `'i'`, `'o'` 共 5 個母音字母，故 `count` 為 `5`。",
+    traceSteps: [
+      { line: 3, text: "text.lower() 轉為 'education'", vars: {"lower_text": "'education'"} },
+      { line: 4, text: "依序匹配到母音 'e', 'u', 'a', 'i', 'o' 共 5 次", vars: {"count": 5} },
+      { line: 6, text: "印出 5", vars: {"output": 5} }
+    ]
+  },
+  {
+    id: "ch2_a17",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "檔案讀寫字串清理：strip() 去除換行符與 split()",
+    difficulty: "advanced",
+    category: "檔案字串解析",
+    question: "【NTU COOL 檔案單元考點】讀取檔案時每行末尾常帶有換行符號 '\\n'。執行下列模擬逐行清理與切割的程式碼後，印出的結果為何？",
+    code: `raw_lines = ["Alice,90\\n", "Bob,85\\n"]
+total = 0
+for line in raw_lines:
+    parts = line.strip().split(",")
+    total += int(parts[1])
+print(parts[0], total)`,
+    options: [
+      "A. Bob 175",
+      "B. Alice 175",
+      "C. Bob 9085",
+      "D. ValueError"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案與字串核心考點】從檔案逐行讀取時，每行結尾預設帶有 `'\\n'`。透過 `line.strip()` 可先乾淨移除首尾空白與 `'\\n'`，再用 `.split(',')` 切分為 `['Alice', '90']` 與 `['Bob', '85']`。`int(parts[1])` 將分數轉為整數累加 `90 + 85 = 175`，迴圈結束時 `parts[0]` 為最後一行的 `'Bob'`，印出 `Bob 175`。",
+    traceSteps: [
+      { line: 4, text: "第一輪：'Alice,90\\n' strip 後 split 得 ['Alice', '90']，total = 90", vars: {"parts": "['Alice', '90']", "total": 90} },
+      { line: 4, text: "第二輪：'Bob,85\\n' strip 後 split 得 ['Bob', '85']，total = 175", vars: {"parts": "['Bob', '85']", "total": 175} },
+      { line: 6, text: "印出 Bob 175", vars: {"output": "'Bob 175'"} }
+    ]
+  },
+  {
+    id: "ch2_a18",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-1 考古題變形：負步長反向切片與索引邊界",
+    difficulty: "advanced",
+    category: "字串切片運算",
+    question: "【114-1 考古題切片考點】執行下列包含負步長（Negative Step）的字串切片程式碼後，輸出為何？",
+    code: `s = "algorithm"
+print(s[7:2:-2])`,
+    options: [
+      "A. hio",
+      "B. hro",
+      "C. mtr",
+      "D. hrg"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點】在 `'algorithm'` 中，索引為 0:'a', 1:'l', 2:'g', 3:'o', 4:'r', 5:'i', 6:'t', 7:'h', 8:'m'。切片 `s[7:2:-2]` 從索引 7 ('h') 開始往左走，每次步長 -2，依序取出索引 7 ('h')、索引 5 ('i')、索引 3 ('o')，終止索引 2 ('g') 不包含，故輸出 `hio`。",
+    traceSteps: [
+      { line: 1, text: "s = 'algorithm' (0:a, 1:l, 2:g, 3:o, 4:r, 5:i, 6:t, 7:h, 8:m)", vars: {"s": "'algorithm'"} },
+      { line: 2, text: "s[7:2:-2] 依序取索引 7('h'), 5('i'), 3('o')，索引 2 不含", vars: {"output": "'hio'"} }
+    ]
+  },
+  {
+    id: "ch3_b17",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-1 考古題 Q54：建立空串列 [] / list() 與 {} 陷阱",
+    difficulty: "basic",
+    category: "容器初始化語法",
+    question: "【114-1 考古題 Q54 考點】執行下列容器初始化程式碼後，印出的結果為何？",
+    code: `a = []
+b = list()
+c = {}
+print(a == b, type(a).__name__, type(c).__name__)`,
+    options: [
+      "A. True list dict",
+      "B. True list set",
+      "C. False list dict",
+      "D. True tuple dict"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q54)】在 Python 中，`a = []` 與 `b = list()` 都是建立「空串列（empty list）」的合法方式，因此 `a == b` 為 `True`（114-1 考卷 Q54 選 `[]` 或 `list()` 皆給分）。**最大陷阱**：單獨寫 `c = {}` 建立的是「空字典（`dict`）」，而不是空集合（空集合必須寫 `set()`）！",
+    traceSteps: [
+      { line: 1, text: "a = [] 與 b = list() 皆建立空串列 []", vars: {"a": "[]", "b": "[]"} },
+      { line: 3, text: "c = {} 建立空字典 (dict)", vars: {"c": "{}"} },
+      { line: 4, text: "印出 True list dict", vars: {"output": "'True list dict'"} }
+    ]
+  },
+  {
+    id: "ch3_b18",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-2 考古題 Q68：二維串列（Matrix）雙重索引存取",
+    difficulty: "basic",
+    category: "二維串列索引",
+    question: "【114-2 考古題 Q68 考點】執行下列二維串列（2D List）存取程式碼後，印出的結果為何？",
+    code: `matrix = [
+    [10, 20, 30],
+    [40, 50, 60],
+    [70, 80, 90]
+]
+print(matrix[1][2], matrix[-1][0])`,
+    options: [
+      "A. 60 70",
+      "B. 20 70",
+      "C. 60 90",
+      "D. 50 40"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q68)】在二維串列 `matrix[row][col]` 中，第一個索引代表「列（row，由 0 算起）」，第二個索引代表該列中的「欄（column，由 0 算起）」。`matrix[1][2]` 取第 1 列 `[40, 50, 60]` 的索引 2 元素，即 `60`；`matrix[-1][0]` 取最後一列 `[70, 80, 90]` 的索引 0 元素，即 `70`。",
+    traceSteps: [
+      { line: 6, text: "matrix[1] 為 [40, 50, 60]，其索引 2 為 60", vars: {"val1": 60} },
+      { line: 6, text: "matrix[-1] 為 [70, 80, 90]，其索引 0 為 70", vars: {"val2": 70, "output": "'60 70'"} }
+    ]
+  },
+  {
+    id: "ch3_a17",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-2 考古題 Q67/Q68：二維矩陣雙層迴圈元素加總",
+    difficulty: "advanced",
+    category: "二維串列走訪",
+    question: "【114-2 考古題 Q67/Q68 考點】執行下列走訪二維串列（Matrix）並篩選累加的程式碼後，印出的 total 為何？",
+    code: `matrix = [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+total = 0
+for row in matrix:
+    for val in row:
+        if val > 5:
+            total += val
+print(total)`,
+    options: [
+      "A. 30",
+      "B. 35",
+      "C. 45",
+      "D. 24"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q67/Q68)】外層迴圈 `for row in matrix:` 依序取出每一列子串列，內層迴圈 `for val in row:` 取出該列中的每個數字。滿足 `val > 5` 的數字有：第一列的 `7`、第二列的 `8`、第三列的 `6` 與 `9`，總和 `total = 7 + 8 + 6 + 9 = 30`。",
+    traceSteps: [
+      { line: 3, text: "走訪三列子串列，篩選大於 5 的元素：7, 8, 6, 9", vars: {"matched": "[7, 8, 6, 9]"} },
+      { line: 7, text: "累加 7 + 8 + 6 + 9 = 30 並印出", vars: {"total": 30, "output": 30} }
+    ]
+  },
+  {
+    id: "ch3_a18",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "檔案 readlines() 回傳串列容器與換行字元長度陷阱",
+    difficulty: "advanced",
+    category: "檔案與串列容器",
+    question: "【NTU COOL 檔案單元考點】使用 io.StringIO 模擬檔案物件並呼叫 readlines() 後，執行下列程式碼的輸出為何？",
+    code: `import io
+fake_file = io.StringIO("cat\\ndog\\nfox")
+lines = fake_file.readlines()
+print(len(lines), len(lines[0]), lines[2])`,
+    options: [
+      "A. 3 4 fox",
+      "B. 3 3 fox",
+      "C. 3 5 fox",
+      "D. 1 11 fox"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案與容器核心考點】`readlines()` 會將檔案所有行讀取為一個串列（`list`），此處共有 3 行故 `len(lines)` 為 `3`。**高頻陷阱**：`lines[0]` 是 `'cat\\n'`，因為末尾包含一個換行字元 `'\\n'`（算 1 個字元），所以 `len('cat\\n')` 是 `4` 而不是 `3`！最後一行 `'fox'` 末尾沒有換行符，印出 `3 4 fox`。",
+    traceSteps: [
+      { line: 3, text: "readlines() 回傳 ['cat\\n', 'dog\\n', 'fox']，串列長度為 3", vars: {"lines": "['cat\\n', 'dog\\n', 'fox']"} },
+      { line: 4, text: "len('cat\\n') 包含換行字元共 4 個字元，lines[2] 為 'fox'", vars: {"output": "'3 4 fox'"} }
+    ]
+  },
+  {
+    id: "ch4_b17",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-1 考古題 Q45：連續獨立 if 與 elif 控制流差異",
+    difficulty: "basic",
+    category: "條件判斷分支",
+    question: "【114-1 考古題 Q45 考點】執行下列包含兩個獨立 if 敘述的程式碼後，印出的結果為何？",
+    code: `x = 10
+res = ""
+if x > 5:
+    res += "A"
+else:
+    res += "B"
+if x > 8:
+    res += "C"
+else:
+    res += "D"
+print(res)`,
+    options: [
+      "A. AC",
+      "B. A",
+      "C. AD",
+      "D. BC"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q45)】這題是期中考極高頻陷阱！請注意第 7 行是獨立的 `if x > 8:` 而不是 `elif x > 8:`。當 `x = 10` 時，第一組 `if x > 5:` 成立，將 `'A'` 加入 `res`；接著程式繼續執行第二組獨立的 `if x > 8:`，同樣成立並將 `'C'` 加入 `res`，故最終印出 `AC`。",
+    traceSteps: [
+      { line: 3, text: "第一組 if：x = 10 > 5 成立，res 變為 'A'", vars: {"res": "'A'"} },
+      { line: 7, text: "第二組獨立 if：x = 10 > 8 亦成立，res 加上 'C' 變為 'AC'", vars: {"res": "'AC'", "output": "'AC'"} }
+    ]
+  },
+  {
+    id: "ch4_b18",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q60：手刻迴圈尋找串列最大值與索引",
+    difficulty: "basic",
+    category: "迴圈極值搜尋",
+    question: "【114-2 考古題 Q60 考點】在不呼叫內建 max() 的情況下，執行下列手刻最大值搜尋迴圈後，印出的結果為何？",
+    code: `numbers = [15, 42, 8, 42, 23]
+biggest = numbers[0]
+best_idx = 0
+for i in range(len(numbers)):
+    if numbers[i] > biggest:
+        biggest = numbers[i]
+        best_idx = i
+print(biggest, best_idx)`,
+    options: [
+      "A. 42 1",
+      "B. 42 3",
+      "C. 23 4",
+      "D. 15 0"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q60)】標準手刻最大值模式：先將 `biggest` 初始化為首項 `numbers[0]` (15)。當 `i = 1` 時，`numbers[1]` 為 `42 > 15`，更新 `biggest = 42`、`best_idx = 1`；當 `i = 3` 時，雖然 `numbers[3]` 也是 `42`，但條件為嚴格大於 `>`（`42 > 42` 為 `False`），因此不會覆蓋 `best_idx`，最終印出 `42 1`。",
+    traceSteps: [
+      { line: 2, text: "初始化 biggest = 15, best_idx = 0", vars: {"biggest": 15, "best_idx": 0} },
+      { line: 5, text: "i=1 時 42 > 15 成立，更新 biggest=42, best_idx=1；i=3 時 42 > 42 不成立", vars: {"biggest": 42, "best_idx": 1} },
+      { line: 8, text: "印出 42 1", vars: {"output": "'42 1'"} }
+    ]
+  },
+  {
+    id: "ch4_a17",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q63/Q65：雙層巢狀迴圈列印星號矩陣",
+    difficulty: "advanced",
+    category: "雙層巢狀迴圈",
+    question: "【114-2 考古題 Q63/Q65 考點】執行下列雙層巢狀迴圈搭配 end=\"\" 與外層 print() 的程式碼後，終端機的輸出排版為何？",
+    code: `for i in range(2):
+    for j in range(3):
+        print("*", end="")
+    print()`,
+    options: [
+      "A. ***\n***",
+      "B. **\n**\n**",
+      "C. ******",
+      "D. *\n*\n*\n*\n*\n*"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q63/Q65)】外層迴圈 `for i in range(2):` 控制總共印出 **2 列（rows）**；內層迴圈 `for j in range(3):` 搭配 `print('*', end='')` 不換行，在同一列連續印出 **3 顆星號 `***`**。每次內層迴圈跑完後，外層的 `print()` 負責換行，因此形成 2 列 × 3 欄的 `***\\n***` 星號矩陣。",
+    traceSteps: [
+      { line: 1, text: "外層 i=0：內層連印 3 顆星 '***' 後由外層 print() 換行", vars: {"row0": "'***'"} },
+      { line: 1, text: "外層 i=1：內層連印 3 顆星 '***' 後由外層 print() 換行", vars: {"output": "'***\\n***'"} }
+    ]
+  },
+  {
+    id: "ch4_a18",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q65 變形：雙層巢狀迴圈列印直角座標索引",
+    difficulty: "advanced",
+    category: "雙層巢狀迴圈",
+    question: "【114-2 考古題 Q65 考點】執行下列外層變數影響內層 range 邊界的雙層迴圈後，輸出的結果為何？",
+    code: `for i in range(1, 4):
+    for j in range(1, i + 1):
+        print(j, end="")
+    print("-", end="")`,
+    options: [
+      "A. 1-12-123-",
+      "B. 1-22-333-",
+      "C. 123-123-123-",
+      "D. 1-12-123"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q65)】1. 當 `i = 1`：內層 `range(1, 2)` 印出 `1`，接著外層印出 `-`；2. 當 `i = 2`：內層 `range(1, 3)` 印出 `12`，接著外層印出 `-`；3. 當 `i = 3`：內層 `range(1, 4)` 印出 `123`，接著外層印出 `-`。因為全程都設定了 `end=''` 不換行，故串接為 `1-12-123-`。",
+    traceSteps: [
+      { line: 1, text: "i=1 印出 '1-'；i=2 印出 '12-'；i=3 印出 '123-'", vars: {"output": "'1-12-123-'"} }
+    ]
+  },
+  {
+    id: "ch5_b17",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：基底條件與回傳順序追蹤",
+    difficulty: "basic",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列包含基底條件（Base Case）的遞迴函式後，印出的字串為何？",
+    code: `def count_down(n):
+    if n <= 0:
+        return "GO"
+    return f"{n}-" + count_down(n - 2)
+
+print(count_down(4))`,
+    options: [
+      "A. 4-2-GO",
+      "B. 4-3-2-1-GO",
+      "C. 4-2-0-GO",
+      "D. GO-2-4"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】遞迴呼叫必須逐步收斂至基底條件（Base Case: `if n <= 0: return 'GO'`）。展開過程：`count_down(4)` 回傳 `'4-' + count_down(2)` ➔ `'4-' + ('2-' + count_down(0))` ➔ 當 `n = 0` 時觸發 `n <= 0` 直接回傳 `'GO'`（不再印出 0），合併結果為 `'4-2-GO'`。",
+    traceSteps: [
+      { line: 4, text: "count_down(4) 呼叫 count_down(2)，再呼叫 count_down(0)", vars: {"stack": "[4, 2, 0]"} },
+      { line: 2, text: "n=0 觸發 Base Case 回傳 'GO'，逐層拼回 '4-2-GO'", vars: {"output": "'4-2-GO'"} }
+    ]
+  },
+  {
+    id: "ch5_b18",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "標準模組匯入語法：from math import 與別名 as",
+    difficulty: "basic",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列使用 from ... import ... as 別名匯入的程式碼後，印出的結果為何？",
+    code: `from math import factorial as fact, gcd
+print(fact(4), gcd(12, 18))`,
+    options: [
+      "A. 24 6",
+      "B. 16 6",
+      "C. 24 3",
+      "D. NameError"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】`from math import factorial as fact, gcd` 將階乘函式 `factorial` 匯入並取別名為 `fact`，同時直接匯入最大公因數函式 `gcd`。`fact(4)` 計算 `4! = 4 * 3 * 2 * 1 = 24`；`gcd(12, 18)` 計算 12 與 18 的最大公因數為 `6`，故印出 `24 6`。",
+    traceSteps: [
+      { line: 1, text: "匯入 math.factorial 並命名為 fact，匯入 math.gcd", vars: {} },
+      { line: 2, text: "fact(4) = 24，gcd(12, 18) = 6，印出 24 6", vars: {"output": "'24 6'"} }
+    ]
+  },
+  {
+    id: "ch5_a17",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：串列切片遞迴加總與呼叫堆疊次數",
+    difficulty: "advanced",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列透過串列切片 lst[1:] 進行遞迴加總的程式碼後，印出的總和與函式總呼叫次數 calls 為何？",
+    code: `calls = 0
+def rec_sum(lst):
+    global calls
+    calls += 1
+    if len(lst) == 0:
+        return 0
+    return lst[0] + rec_sum(lst[1:])
+
+print(rec_sum([10, 20, 30]), calls)`,
+    options: [
+      "A. 60 4",
+      "B. 60 3",
+      "C. 30 3",
+      "D. 60 1"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】計算呼叫次數時，**千萬別漏掉最後觸發 Base Case（空串列 `[]`）的那一次呼叫**！呼叫順序為：第 1 次 `rec_sum([10, 20, 30])` ➔ 第 2 次 `rec_sum([20, 30])` ➔ 第 3 次 `rec_sum([30])` ➔ 第 4 次 `rec_sum([])`（此時 `len(lst) == 0` 回傳 `0`）。因此總和為 `60`，`calls` 為 `4`。",
+    traceSteps: [
+      { line: 2, text: "依序呼叫 rec_sum([10,20,30]), [20,30], [30], [] 共 4 次", vars: {"calls": 4} },
+      { line: 7, text: "回傳 10 + 20 + 30 + 0 = 60，印出 60 4", vars: {"output": "'60 4'"} }
+    ]
+  },
+  {
+    id: "ch5_a18",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：雙分支遞迴樹呼叫次數追蹤",
+    difficulty: "advanced",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列雙分支遞迴函式 f(3) 後，印出的回傳值與全域計數器 count 分別為何？",
+    code: `count = 0
+def f(n):
+    global count
+    count += 1
+    if n <= 1:
+        return n
+    return f(n - 1) + f(n - 2)
+
+print(f(3), count)`,
+    options: [
+      "A. 2 5",
+      "B. 2 3",
+      "C. 3 5",
+      "D. 2 4"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】追蹤費氏數列遞迴樹 `f(3)`：\n1. 呼叫 `f(3)` (第1次) 展開為 `f(2) + f(1)`；\n2. 左分支呼叫 `f(2)` (第2次) 展開為 `f(1)` (第3次，回傳1) + `f(0)` (第4次，回傳0)，故 `f(2)` 得 `1`；\n3. 右分支呼叫 `f(1)` (第5次，回傳1)。\n最終回傳值為 `1 + 1 = 2`，總共呼叫了 `f` 函式 `5` 次！",
+    traceSteps: [
+      { line: 7, text: "f(3) 展開呼叫 f(2)[再呼叫 f(1), f(0)] 與 f(1)，共計 5 次呼叫", vars: {"count": 5} },
+      { line: 9, text: "f(3) = 2，印出 2 5", vars: {"output": "'2 5'"} }
+    ]
+  },
+  {
+    id: "ch6_b17",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：'w' 覆寫模式 vs 'a' 附加模式",
+    difficulty: "basic",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】關於 Python 內建 open(filename, mode) 的寫入模式 'w' (write) 與 'a' (append)，下列敘述何者正確？",
+    code: ``,
+    options: [
+      "A. 'w' 模式若檔案已存在會直接清空並覆蓋原內容；'a' 模式則會保留原內容並將新資料寫在檔案末尾",
+      "B. 'w' 模式會在檔案不存在時拋出 FileNotFoundError，只有 'a' 模式會自動建立新檔",
+      "C. 'a' 模式會將新資料插入在檔案的最開頭（第一行之前）",
+      "D. 使用 open() 寫入檔案後即使不呼叫 close() 或不使用 with，資料也保證立即寫入硬碟絕不遺失"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `'w'` (Write) 與 `'a'` (Append) 在檔案不存在時都會自動建立新檔案；2. 兩者最大差異在於檔案已存在時：`'w'` 會**清空並覆蓋（Overwrite）**原有內容，而 `'a'` 會將游標移至檔案尾端**附加（Append）**新內容；3. 實務上應優先使用 `with open(...) as f:` 確保自動關閉檔案並將緩衝區寫入磁碟。",
+    traceSteps: [
+      { line: 1, text: "比較 mode='w' (清空覆寫) 與 mode='a' (尾端附加)", vars: {"w_mode": "'overwrite'", "a_mode": "'append'"} }
+    ]
+  },
+  {
+    id: "ch6_b18",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "標準模組 random：randint(a, b) 閉區間特性 vs range(a, b)",
+    difficulty: "basic",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列設定亂數種子與呼叫 random.randint(1, 1) 的程式碼後，輸出為何？（注意 randint 與 range 的右邊界差異！）",
+    code: `import random
+val = random.randint(5, 5)
+r_len = len(range(5, 5))
+print(val, r_len)`,
+    options: [
+      "A. 5 0",
+      "B. 5 1",
+      "C. ValueError",
+      "D. None 0"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】這是極常考的邊界比較陷阱！`range(start, stop)` 是「左閉右開 `[start, stop)`」（不包含 `stop`），所以 `range(5, 5)` 為空，長度為 `0`；但 **`random.randint(a, b)` 是「左閉右閉 `[a, b]`」（包含終點 `b`！）**，因此 `random.randint(5, 5)` 必定回傳 `5`。輸出為 `5 0`。",
+    traceSteps: [
+      { line: 2, text: "random.randint(5, 5) 包含上下界 [5, 5]，必定回傳 5", vars: {"val": 5} },
+      { line: 3, text: "range(5, 5) 不包含右邊界，為空序列，長度為 0", vars: {"r_len": 0, "output": "'5 0'"} }
+    ]
+  },
+  {
+    id: "ch6_a17",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：read() vs readlines() vs 逐行迭代",
+    difficulty: "advanced",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】執行下列模擬檔案讀取游標（File Cursor）移動與 read() / readlines() 的程式碼後，印出的結果為何？",
+    code: `import io
+with io.StringIO("Line1\\nLine2\\n") as f:
+    first_read = f.read()
+    second_read = f.readlines()
+print(len(first_read), second_read)`,
+    options: [
+      "A. 12 []",
+      "B. 2 ['Line1\\n', 'Line2\\n']",
+      "C. 12 ['Line1\\n', 'Line2\\n']",
+      "D. 10 []"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `f.read()` 會一次讀出整個檔案的所有字元成為單一字串 `'Line1\\nLine2\\n'`（共 6 + 6 = 12 個字元），且此時**檔案讀取游標（Cursor）已經停在檔案最末端（EOF）**！2. 緊接著再呼叫 `f.readlines()` 時，因為游標已在檔尾無剩餘內容可讀，故回傳空串列 `[]`！",
+    traceSteps: [
+      { line: 3, text: "f.read() 讀完所有 12 個字元，檔案游標移至檔尾 (EOF)", vars: {"first_read": "'Line1\\nLine2\\n'"} },
+      { line: 4, text: "游標已在 EOF，再次呼叫 f.readlines() 回傳空串列 []", vars: {"second_read": "[]", "output": "'12 []'"} }
+    ]
+  },
+  {
+    id: "ch6_a18",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：with open 上下文管理與逐行過濾",
+    difficulty: "advanced",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】執行下列使用 with 上下文管理器逐行讀取並過濾註解行的程式碼後，印出的結果為何？",
+    code: `import io
+content = "# Header\\n10\\n# Comment\\n25\\n"
+total = 0
+with io.StringIO(content) as f:
+    for line in f:
+        clean = line.strip()
+        if not clean.startswith("#"):
+            total += int(clean)
+print(total, f.closed)`,
+    options: [
+      "A. 35 True",
+      "B. 35 False",
+      "C. ValueError",
+      "D. 1025 True"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `for line in f:` 可直接逐行迭代檔案物件，搭配 `line.strip()` 移除換行符並以 `not clean.startswith('#')` 略過 `#` 開頭的註解行，將 `'10'` 與 `'25'` 轉整數相加得 `35`；2. 當離開 `with ... as f:` 縮排區塊時，Python 會**自動關閉檔案**，因此 `f.closed` 必為 `True`。",
+    traceSteps: [
+      { line: 5, text: "逐行迭代過濾 '#' 開頭註解行，累加 10 + 25 = 35", vars: {"total": 35} },
+      { line: 9, text: "離開 with 區塊自動關閉檔案，f.closed 為 True，印出 35 True", vars: {"output": "'35 True'"} }
+    ]
   }
 ];
 
@@ -6003,6 +6633,40 @@ def calculate_rank(points, level=1):  # 預設參數的等號兩邊不空格
 # ❌ agent-score = 100            (💥 SyntaxError: 減號被判定為減法運算)
 # ❌ pass = "Secret"              (💥 SyntaxError: pass 為關鍵保留字)`,
         tip: "考前 10 秒錦囊：短路運算「or 找第一個真值，and 找第一個假值（找不到就傳最後一個）」；PEP 8「逗號後面空一格，等號前後各一格，縮排用四格空格，變數全小寫加底線」。"
+      },
+      {
+        id: "ch1_c7",
+        title: "終端機 I/O 重導向 (<, >)、測資比對 (diff/fc) 與 PEP 8 切片例外",
+        keyPoints: [
+          "標準輸入重導向 `<`（Week 2 投影片 Slides 19–20）：在終端機執行 `python3 taxi.py < testcase.txt`（Windows cmd 為 `python taxi.py < testcase.txt`），會自動將 `testcase.txt` 的內容逐行餵給程式中的 `input()`，完全不需要修改 `.py` 原始碼！",
+          "Windows PowerShell 陷阱（Slide 19）：Windows 預設開啟的 PowerShell 不支援 `<` 輸入重導向，必須在終端機先輸入 `cmd` 切換至 Command Prompt 才能使用 `<`。",
+          "標準輸出重導向 `>` 與覆寫陷阱（Slides 21–22）：執行 `python3 taxi.py < testcase.txt > out.txt` 會將 `print()` 的所有輸出寫入 `out.txt`，螢幕上不會印出任何內容；且若 `out.txt` 原本已存在，`>` 會直接覆蓋（Overwrite）舊檔內容！",
+          "命令列檔案比對 `diff` 與 `fc`（Slide 23）：macOS/Linux 使用 `diff out.txt ans.txt`，Windows (`cmd`) 使用 `fc out.txt ans.txt`。當 `diff` 完全沒有印出任何訊息時，代表兩檔案內容完全一致（通過測資）！若印出 `2c2` 與 `< 85`、`> 80`，代表第 2 行需修改（change），`<` 為左邊檔案（`out.txt`），`>` 為右邊檔案（`ans.txt`）。",
+          "PEP 8 切片冒號不空格例外與 Python 之禪（Slides 27–30）：逗號 `,` 與一般冒號 `:` 是「前不空格、後空一格」，但用於切片（Slicing）時冒號前後皆不加空格（如 `s[1:4]`、`nums[1:8:2]`，寫成 `s[1: 4]` 違反 PEP 8）！變數命名應具語意（避免縮寫成 `ccc`），且執行 `import this` 會印出 Tim Peters 的《The Zen of Python》。"
+        ],
+        codeExample: `# ✅ 終端機 I/O 重導向與測資比對流程 (Week 2 Slides 19-23)
+# 1. 在 macOS/Linux 終端機（或 Windows 先輸入 cmd 切換後）：
+#    $ python3 taxi.py < testcase.txt > out.txt
+#    (input() 自動讀取 testcase.txt；print() 直接覆寫入 out.txt，螢幕不顯示)
+#
+# 2. 比對程式輸出 out.txt 與標準答案 ans.txt：
+#    $ diff out.txt ans.txt       # (Windows cmd 使用: fc out.txt ans.txt)
+#    -> 若終端機「完全無任何輸出」，代表兩檔案 100% 相同！
+#    -> 若輸出：
+#       2c2
+#       < 85                      # '<' 代表左邊檔案 (out.txt) 第 2 行內容
+#       ---
+#       > 80                      # '>' 代表右邊檔案 (ans.txt) 第 2 行內容
+
+# ✅ PEP 8 切片冒號例外 vs 一般冒號/逗號 (Slide 30) & Python 之禪 (Slide 28)
+import this                       # 印出 Tim Peters《The Zen of Python》設計哲學
+student_scores = [70, 80, 90, 100]  # ✅ 具清楚語意的 snake_case，逗號後空一格
+top_slice = student_scores[1:3]   # ✅ 切片冒號「前後都不加空格」！
+
+# ⚠️ 高頻地雷：把切片冒號當成字典冒號加空格、或過度縮寫變數名
+# ❌ bad_slice = student_scores[1: 3]  (違反 Slide 30 PEP 8 切片例外！)
+# ❌ ccc = [70,80,90]                  (違反 Slide 27：過度縮寫 ccc 且逗號後未空格)`,
+        tip: "考前 10 秒錦囊：`<` 餵給 input、`>` 覆寫存檔螢幕不印、PowerShell 要先打 `cmd`；`diff` 沒訊息就是全對，`<` 左檔 `>` 右檔；PEP 8 切片冒號 `s[1:4]` 前後都不准加空格！"
       }
     ]
   },
@@ -6754,6 +7418,38 @@ def pure_increment(val):
     return val + 1
 counter = pure_increment(counter)                 # 12`,
         tip: "考前 10 秒錦囊：函式裡只要後面有 x = ... 或 x += 1，前面只要想偷看偷印 print(x)，100% 當場暴斃噴 UnboundLocalError！因為看到賦值就認定是區域變數，前面沒給值就讀直接崩潰！"
+      },
+      {
+        id: "ch5_c7",
+        title: "遞迴函式（Recursion）：基底條件（Base Case）與呼叫堆疊追蹤",
+        keyPoints: [
+          "遞迴定義（NTU COOL 遞迴單元）：函式在自身內部呼叫自己，將大問題拆解為結構相同但規模更小的子問題。",
+          "兩大必備核心要件：1. 基底條件（Base Case / 終止條件）：不再遞迴、直接回傳明確值的邊界條件（如 `if n <= 1: return 1`）；2. 遞迴步驟（Recursive Step）：每次呼叫必須讓參數朝基底條件收斂（如 `n - 1` 或切片 `lst[1:]`）。",
+          "無限遞迴崩潰陷阱：若缺少 Base Case 或參數未收斂，呼叫堆疊（Call Stack）會不斷累積直到拋出 `RecursionError: maximum recursion depth exceeded`。",
+          "呼叫次數計算秘訣：追蹤遞迴總呼叫次數時，務必把「最後觸發 Base Case 的那一次呼叫」也算進去！若為雙分支遞迴（如 `f(n-1) + f(n-2)`），請畫出遞迴樹逐節點加總。"
+        ],
+        codeExample: `# ✅ 正確寫法 1：單分支遞迴（階乘與串列切片加總）
+def factorial(n):
+    if n <= 1:                        # 1. 基底條件 (Base Case)
+        return 1
+    return n * factorial(n - 1)       # 2. 遞迴步驟 (規模向 Base Case 收斂)
+
+print(factorial(4))                   # 4 * 3 * 2 * 1 = 24 (共呼叫 4 次：n=4, 3, 2, 1)
+
+# ✅ 正確寫法 2：雙分支遞迴樹與呼叫次數追蹤
+calls = 0
+def fib(n):
+    global calls
+    calls += 1
+    if n <= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(fib(3), calls)                  # 輸出: 2 5 (呼叫了 fib(3), fib(2), fib(1), fib(0), fib(1) 共 5 次！)
+
+# ⚠️ 高頻地雷：算呼叫次數時忘記算最後觸發 Base Case 的那一次
+# 例如 rec_sum([10, 20]) -> 呼叫 [10, 20]、[20]、[]，包含空串列 Base Case 共呼叫 3 次！`,
+        tip: "考前 10 秒錦囊：算遞迴先找 Base Case 停在哪！算「總共呼叫幾次」時，千萬記得把最後撞到 Base Case（例如 n=0 或空串列 []）的那一次也加進去！"
       }
     ]
   },
@@ -6761,8 +7457,8 @@ counter = pure_increment(counter)                 # 12`,
   6: {
     chapterId: 6,
     chapterTitle: "第六章：特務高階工具箱",
-    chapterSubtitle: "zip、enumerate、串列表達式與例外處理",
-    description: "裝備最優雅的 Pythonic 武器！精通 zip/enumerate 的解包遍歷、單雙層 List Comprehension 及例外防禦。",
+    chapterSubtitle: "zip、enumerate、串列表達式、例外處理、檔案與模組",
+    description: "裝備最優雅的 Pythonic 武器！精通 zip/enumerate、List Comprehension、例外防禦、with open 檔案讀寫與標準模組匯入。",
     concepts: [
       {
         id: "ch6_c1",
@@ -6957,6 +7653,58 @@ role = user.get("role", "Guest")  # ✅ 正確安全做法：使用 .get() 附�
 # 6. AttributeError：物件無此方法
 # [1, 2].join("-")                # 💥 AttributeError: 'list' object has no attribute 'join'`,
         tip: "考前 10 秒錦囊：搞懂三大常客：TypeError 是「型態對不上」（如字串加整數）、ValueError 是「型態對但內容不合理」（如 int(\"abc\")）、IndexError 是「編號越界」！"
+      },
+      {
+        id: "ch6_c7",
+        title: "檔案讀寫（File I/O）：with open 上下文管理、read/readlines 與 'r'/'w'/'a' 模式",
+        keyPoints: [
+          "開啟模式三大天王（NTU COOL 檔案單元）：`'r'`（預設唯讀，檔案不存在拋 `FileNotFoundError`）、`'w'`（寫入模式，檔案不存在會新建，**若已存在會直接清空覆蓋 Overwrite！**）、`'a'`（附加模式 Append，保留原內容並將新資料寫在檔案末尾）。",
+          "`with open(...) as f:` 上下文管理器：離開 `with` 縮排區塊時，無論是否發生例外，Python 都會**自動呼叫 `f.close()` 關閉檔案**（離開後 `f.closed` 為 `True`）。",
+          "三種讀取方式與游標耗盡陷阱：`f.read()` 一次讀完回傳「單一長字串」；`f.readlines()` 一次讀完回傳「每行字串組成的 `list`」；`for line in f:` 逐行迭代最省記憶體。讀完一次後游標（Cursor）停在檔尾（EOF），若不重開檔案再讀只會拿到空字串或空串列！",
+          "行尾換行符 `\\n` 清理：從檔案讀出的每一行末尾通常帶有 `'\\n'`（例如 `'cat\\n'` 長度為 4），解析欄位前務必先用 `line.strip()` 去除首尾空白與換行符號！"
+        ],
+        codeExample: `# ✅ 正確寫法 1：使用 with open 自動管理檔案關閉與逐行清洗
+# with open("scores.csv", "r", encoding="utf-8") as f:
+#     for line in f:
+#         name, score = line.strip().split(",")   # 先 strip() 除掉 '\\n' 再 split()
+
+# ✅ 正確寫法 2：'w' 覆寫 vs 'a' 附加模式差異
+# with open("log.txt", "w") as f:
+#     f.write("First\\n")                         # 清空舊檔並寫入 First
+# with open("log.txt", "a") as f:
+#     f.write("Second\\n")                        # 附加在末尾，檔案現有兩行
+
+# ⚠️ 高頻地雷 1：檔案讀取游標 (Cursor) 耗盡陷阱
+import io
+with io.StringIO("Line1\\nLine2\\n") as f:
+    all_text = f.read()                           # 讀完 12 個字元，游標已停在檔尾 (EOF)
+    rest_lines = f.readlines()                    # 陷阱！游標已在檔尾，回傳空串列 []！
+print(len(all_text), rest_lines, f.closed)        # 輸出: 12 [] True`,
+        tip: "考前 10 秒錦囊：`'r'` 沒檔報錯、`'w'` 砍掉重練（覆蓋）、`'a'` 接在屁股後面！讀出來的行尾巴都有隱形 `'\\n'`（記得算進 len 或用 `.strip()` 拔掉），且 `read()` 讀過一次游標就到底了！"
+      },
+      {
+        id: "ch6_c8",
+        title: "標準函式庫與模組匯入（import math, random, from ... import, as 別名）",
+        keyPoints: [
+          "三種匯入語法（NTU COOL 模組單元）：1. `import math`（呼叫時須加前綴 `math.sqrt(16)`）；2. `from math import sqrt, ceil`（直接呼叫 `sqrt(16)`，不加 `math.`）；3. `import math as m` 或 `from math import factorial as fact`（使用 `as` 別名呼叫）。",
+          "`math` 模組必考函式：`math.sqrt(x)` 開根號**永遠回傳 `float` 浮點數**（如 `math.sqrt(16)` 為 `4.0`！）；`math.ceil(x)` 無條件進位回傳 `int`；`math.floor(x)` 無條件捨去回傳 `int`；`math.gcd(a, b)` 最大公因數。",
+          "`random` 模組閉區間大陷阱：雖然 `range(a, b)` 與切片 `s[a:b]` 都是「左閉右開 `[a, b)`」（不含 `b`），但 **`random.randint(a, b)` 是「左閉右閉 `[a, b]`」（包含 `b`！）**，所以 `random.randint(5, 5)` 合法且必定回傳 `5`！"
+        ],
+        codeExample: `# ✅ 正確寫法 1：import math 常用數值函式與回傳型態
+import math
+print(math.ceil(4.1))                             # 5   (無條件進位 -> int)
+print(math.floor(4.9))                            # 4   (無條件捨去 -> int)
+print(math.sqrt(16))                              # 4.0 (⚠️ 開根號永遠回傳 float！)
+
+# ✅ 正確寫法 2：from ... import ... as 別名匯入
+from math import factorial as fact, gcd
+print(fact(4), gcd(12, 18))                       # 24 6
+
+# ⚠️ 高頻地雷：random.randint(a, b) 包含右邊界 b（與 range 不同！）
+import random
+print(random.randint(5, 5))                       # 5  (包含上界 5！)
+print(len(range(5, 5)))                           # 0  (range 不含上界 5，為空序列)`,
+        tip: "考前 10 秒錦囊：`math.sqrt(16)` 出來是浮點數 `4.0` 不是 `4`！`range(a, b)` 不含 `b`，但 `random.randint(a, b)` 頭尾都包含（連 `b` 也抽得到）！"
       }
     ]
   }
@@ -7073,7 +7821,7 @@ if (typeof window !== 'undefined') {
   <script>
 // --- INLINED audio.js ---
 /**
- * Python 爬蟲特務：代碼覺醒 - 內建 Web Audio API 音效合成器
+ * Python 特務：滿分計畫 - 內建 Web Audio API 音效合成器
  * 100% 本地即時音頻合成，不依賴任何外部音效檔，零延遲且可離線遊玩
  */
 
@@ -7200,7 +7948,7 @@ window.soundFX = new SoundEffects();
   <script>
 // --- INLINED app.js ---
 /**
- * Python 爬蟲特務：代碼覺醒 - 核心遊戲引擎與控制器
+ * Python 特務：滿分計畫 - 核心遊戲引擎與控制器
  * 對應台大「程式設計與網路資料搜集」(GenEdu5010) Exam 1
  */
 
@@ -7266,8 +8014,10 @@ const DEFAULT_STATE = {
     5: { correct: 0, total: 0 },
     6: { correct: 0, total: 0 }
   },
-  mistakes: [], // Array of question IDs
-  seenQuestions: [] // Array of question IDs seen in exams
+  mistakes: [], // Array of active mistake question IDs
+  resolvedMistakes: [], // Tombstone array of resolved/dismissed mistake IDs (FIX-07)
+  seenQuestions: [], // Array of question IDs seen in exams
+  lastUpdated: 0
 };
 
 function cloneDefaultState() {
@@ -7296,7 +8046,7 @@ function cleanQuestionIdArray(arr) {
 }
 
 /**
- * 深度拷貝與 Schema 正規化 (CHK-04 & CHK-09)
+ * 深度拷貝與 Schema 正規化 (CHK-04, CHK-09, FIX-07, FIX-08)
  * 嚴格避免淺拷貝污染 DEFAULT_STATE，自動過濾孤兒題目 ID，並在舊紀錄無 dimensionStats 時由 chapterStats 回填。
  */
 function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
@@ -7313,6 +8063,7 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
   base.maxStreak = Math.max(base.streak, Number(rawObj.maxStreak) || 0);
   base.totalAnswered = Math.max(0, Number(rawObj.totalAnswered) || 0);
   base.totalCorrect = Math.max(0, Number(rawObj.totalCorrect) || 0);
+  base.lastUpdated = Math.max(0, Number(rawObj.lastUpdated) || 0);
 
   // 逐層深拷貝合併 chapterProgress (1~6)
   if (rawObj.chapterProgress && typeof rawObj.chapterProgress === "object") {
@@ -7330,6 +8081,7 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
 
   // 逐層深拷貝合併 chapterStats (1~6)
   let totalChStatCount = 0;
+  let totalChCorrectCount = 0;
   if (rawObj.chapterStats && typeof rawObj.chapterStats === "object") {
     for (let ch = 1; ch <= 6; ch++) {
       const src = rawObj.chapterStats[ch];
@@ -7338,9 +8090,14 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
         const t = Math.max(c, Number(src.total) || 0);
         base.chapterStats[ch] = { correct: c, total: t };
         totalChStatCount += t;
+        totalChCorrectCount += c;
       }
     }
   }
+
+  // 確保 totalAnswered / totalCorrect 不小於各章節統計總和 (FIX-08)
+  base.totalAnswered = Math.max(base.totalAnswered, totalChStatCount);
+  base.totalCorrect = Math.min(base.totalAnswered, Math.max(base.totalCorrect, totalChCorrectCount));
 
   // 逐層深拷貝合併 dimensionStats (6 大維度)
   let totalDimStatCount = 0;
@@ -7367,8 +8124,11 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
     }
   }
 
-  // 過濾無效孤兒題目 ID 並去重
+  // 過濾無效孤兒題目 ID 並去重 (FIX-07)
   base.mistakes = cleanQuestionIdArray(rawObj.mistakes);
+  base.resolvedMistakes = cleanQuestionIdArray(rawObj.resolvedMistakes).filter(
+    id => !base.mistakes.includes(id)
+  );
   base.answeredQuestions = cleanQuestionIdArray(rawObj.answeredQuestions);
   base.seenQuestions = cleanQuestionIdArray(rawObj.seenQuestions);
 
@@ -7376,7 +8136,10 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
 }
 
 /**
- * 非破壞性智慧合併 (Smart Merge)：取最高星級、最高等級經驗值與題目紀錄聯集
+ * 非破壞性智慧合併 (Smart Merge - FIX-07 & FIX-08)：
+ * 1. 等級與 XP 以總累積經驗值 (level - 1) * 100 + xp 綁定取高，絕不混搭不同來源之 level 與 xp
+ * 2. 確保 totalAnswered / totalCorrect 與 chapterStats 總和滿足數學不變量
+ * 3. 支援 resolvedMistakes 墓碑機制 (Tombstone)，防止已消滅之錯題在跨裝置同步時「死灰復燃」
  */
 function smartMergeStates(stateA, stateB, targetStudentId = null) {
   const a = normalizeAndMigrateState(stateA, targetStudentId);
@@ -7385,12 +8148,12 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
 
   out.studentId = sanitizeStudentId(targetStudentId || b.studentId || a.studentId);
 
-  // 等級與 XP 智慧取高
-  const scoreA = (a.level - 1) * 200 + a.xp;
-  const scoreB = (b.level - 1) * 200 + b.xp;
-  if (a.level > b.level || (a.level === b.level && a.xp >= b.xp) || scoreA >= scoreB) {
-    out.level = Math.max(a.level, b.level);
-    out.xp = a.level === b.level ? Math.max(a.xp, b.xp) : (a.level > b.level ? a.xp : b.xp);
+  // 等級與 XP 智慧取高 (FIX-08: 統一以 100 XP 基底計算總經驗值並成對取用)
+  const totalXpA = (a.level - 1) * 100 + a.xp;
+  const totalXpB = (b.level - 1) * 100 + b.xp;
+  if (totalXpA >= totalXpB) {
+    out.level = a.level;
+    out.xp = a.xp;
   } else {
     out.level = b.level;
     out.xp = b.xp;
@@ -7398,9 +8161,9 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
 
   out.streak = Math.max(a.streak, b.streak);
   out.maxStreak = Math.max(a.maxStreak, b.maxStreak, out.streak);
-  out.totalAnswered = Math.max(a.totalAnswered, b.totalAnswered);
-  out.totalCorrect = Math.max(a.totalCorrect, b.totalCorrect);
 
+  let sumChapterTotal = 0;
+  let sumChapterCorrect = 0;
   for (let ch = 1; ch <= 6; ch++) {
     out.chapterProgress[ch] = {
       basicStars: Math.max(a.chapterProgress[ch].basicStars, b.chapterProgress[ch].basicStars),
@@ -7410,7 +8173,16 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
     const total = Math.max(a.chapterStats[ch].total, b.chapterStats[ch].total);
     const correct = Math.min(total, Math.max(a.chapterStats[ch].correct, b.chapterStats[ch].correct));
     out.chapterStats[ch] = { correct, total };
+    sumChapterTotal += total;
+    sumChapterCorrect += correct;
   }
+
+  // 確保總答題數與總答對數不低於各章節加總，且總答對數不超過總答題數 (FIX-08)
+  out.totalAnswered = Math.max(a.totalAnswered, b.totalAnswered, sumChapterTotal);
+  out.totalCorrect = Math.min(
+    out.totalAnswered,
+    Math.max(a.totalCorrect, b.totalCorrect, sumChapterCorrect)
+  );
 
   DIMENSION_KEYS.forEach(dimKey => {
     const total = Math.max(a.dimensionStats[dimKey].total, b.dimensionStats[dimKey].total);
@@ -7418,7 +8190,24 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
     out.dimensionStats[dimKey] = { correct, total };
   });
 
-  out.mistakes = cleanQuestionIdArray([...a.mistakes, ...b.mistakes]);
+  // 錯題墓碑合併機制 (FIX-07: Zombie Mistake Resurrection Prevention)
+  const aTime = Number(a.lastUpdated) || 0;
+  const bTime = Number(b.lastUpdated) || 0;
+  out.lastUpdated = Math.max(aTime, bTime, Date.now());
+
+  const mergedResolved = new Set([...(a.resolvedMistakes || []), ...(b.resolvedMistakes || [])]);
+  if (bTime > aTime) {
+    (b.mistakes || []).forEach(id => mergedResolved.delete(id));
+  } else if (aTime > bTime) {
+    (a.mistakes || []).forEach(id => mergedResolved.delete(id));
+  }
+
+  const rawMistakes = cleanQuestionIdArray([...(a.mistakes || []), ...(b.mistakes || [])]);
+  out.mistakes = rawMistakes.filter(id => !mergedResolved.has(id));
+  out.resolvedMistakes = cleanQuestionIdArray(Array.from(mergedResolved)).filter(
+    id => !out.mistakes.includes(id)
+  );
+
   out.answeredQuestions = cleanQuestionIdArray([...a.answeredQuestions, ...b.answeredQuestions]);
   out.seenQuestions = cleanQuestionIdArray([...a.seenQuestions, ...b.seenQuestions]);
 
@@ -7528,6 +8317,7 @@ let appState = loadState();
 
 function saveState() {
   if (!appState || !appState.studentId) return;
+  appState.lastUpdated = Date.now();
   appState = normalizeAndMigrateState(appState, appState.studentId);
   try {
     localStorage.setItem(getStorageKeyForProfile(appState.studentId), JSON.stringify(appState));
@@ -7549,7 +8339,7 @@ let currentTraceIndex = 0;
 let examTimerInterval = null;
 let currentMistakeDimensionFilter = "all";
 
-// ==================== A + C + D CROSS-DEVICE SYNC ARCHITECTURE (CHK-05) ====================
+// ==================== A + C + D CROSS-DEVICE SYNC ARCHITECTURE (CHK-05, FIX-06, FIX-07, FIX-09) ====================
 
 function bytesToBase64Url(bytes) {
   let binary = "";
@@ -7581,7 +8371,10 @@ function base64UrlToUtf8(b64url) {
 }
 
 /**
- * 將題目 ID 陣列壓縮為緊湊索引陣列或 24-byte 位元遮罩 (~32 chars)，確保同步碼極致短小 (< 250 chars)
+ * 將題目 ID 陣列壓縮為緊湊索引陣列或 27-byte 位元遮罩 (~36 chars)，確保同步碼極致短小 (< 250 chars)。
+ * 【FIX-09 Canonical Order Guarantee】：
+ * QUESTIONS_DATABASE 前 192 題 (index 0..191) 之 ID 順序嚴格鎖定不可插入或重排；
+ * 新增擴充題一律以 append-only 方式追加於末端 (index 192..215)，確保新舊版本位元遮罩 100% 向下相容。
  */
 function compressQuestionIds(idList) {
   if (!Array.isArray(idList) || idList.length === 0) return [];
@@ -7640,7 +8433,8 @@ function decompressQuestionIds(compactVal) {
 }
 
 /**
- * 【方案 A】產生位元/緊湊壓縮之特務同步碼 (AGENTv2.<base64url>)，長度控制在 70~190 字元內 (< 250 chars)
+ * 【方案 A】產生位元/緊湊壓縮之特務同步碼 (AGENTv2.<base64url>)，長度控制在 70~210 字元內 (< 250 chars)
+ * 內含 resolvedMistakes 墓碑欄位 (FIX-07)，確保跨裝置同步時已消滅錯題不會復活。
  */
 function encodeCompactSyncToken(stateObj = appState) {
   const s = normalizeAndMigrateState(stateObj, stateObj ? stateObj.studentId : null);
@@ -7673,6 +8467,7 @@ function encodeCompactSyncToken(stateObj = appState) {
   const aqComp = compressQuestionIds(s.answeredQuestions);
   const sqComp = compressQuestionIds(s.seenQuestions);
   const sqOut = JSON.stringify(aqComp) === JSON.stringify(sqComp) ? 1 : sqComp;
+  const rmComp = compressQuestionIds(s.resolvedMistakes);
 
   const compactArray = [
     s.studentId || "AGENT",
@@ -7689,6 +8484,9 @@ function encodeCompactSyncToken(stateObj = appState) {
     aqComp,
     sqOut
   ];
+  if (Array.isArray(rmComp) ? rmComp.length > 0 : Boolean(rmComp)) {
+    compactArray.push(rmComp);
+  }
 
   return "AGENTv2." + utf8ToBase64Url(JSON.stringify(compactArray));
 }
@@ -7758,6 +8556,7 @@ function decodeCompactSyncToken(rawInput) {
     restored.mistakes = decompressQuestionIds(p[10]);
     restored.answeredQuestions = decompressQuestionIds(p[11]);
     restored.seenQuestions = p[12] === 1 ? restored.answeredQuestions.slice() : decompressQuestionIds(p[12]);
+    restored.resolvedMistakes = p.length >= 14 ? decompressQuestionIds(p[13]) : [];
 
     return normalizeAndMigrateState(restored, restored.studentId);
   }
@@ -7809,6 +8608,7 @@ function decodeCompactSyncToken(rawInput) {
   restored.mistakes = decompressQuestionIds(p.m);
   restored.answeredQuestions = decompressQuestionIds(p.aq);
   restored.seenQuestions = decompressQuestionIds(p.sq);
+  restored.resolvedMistakes = decompressQuestionIds(p.rm);
 
   return normalizeAndMigrateState(restored, restored.studentId);
 }
@@ -7828,7 +8628,7 @@ function getSyncShareUrl(token = null) {
 }
 
 /**
- * 【方案 C】前端動態生成高對比 QR Code (含 CDN qrcode-generator 與離線 SVG 容錯)
+ * 【方案 C】前端動態生成真實可掃描之 ISO/IEC 18004 QR Code (本機載入 qrcode.min.js - FIX-06)
  */
 function renderSyncQrCode() {
   const qrContainer = document.getElementById("sync-qr-container");
@@ -7878,25 +8678,10 @@ function renderSyncQrCode() {
       return;
     }
   } catch (e) {
-    console.warn("QR render fallback triggered:", e);
+    console.warn("QR render error:", e);
   }
 
-  // 離線無 CDN 時之決定性高對比矩陣 SVG 容錯圖騰
-  const size = 21;
-  let rects = "";
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      const isFinder =
-        (r < 7 && c < 7 && (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4))) ||
-        (r < 7 && c >= size - 7 && (r === 0 || r === 6 || c === size - 7 || c === size - 1 || (r >= 2 && r <= 4 && c >= size - 5 && c <= size - 3))) ||
-        (r >= size - 7 && c < 7 && (r === size - 7 || r === size - 1 || c === 0 || c === 6 || (r >= size - 5 && r <= size - 3 && c >= 2 && c <= 4)));
-      const hashBit = ((token.charCodeAt((r * size + c) % token.length) + r * 7 + c * 13) % 3) === 0;
-      if (isFinder || hashBit) {
-        rects += `<rect x="${c}" y="${r}" width="1" height="1" fill="#0f172a"/>`;
-      }
-    }
-  }
-  qrContainer.innerHTML = `<svg viewBox="0 0 ${size} ${size}" width="104" height="104" class="w-full h-full">${rects}</svg>`;
+  qrContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center text-center text-[10px] font-mono text-rose-500 p-2">QR 模組未載入，請使用下方同步碼複製</div>`;
 }
 
 function copySyncToken() {
@@ -8195,7 +8980,7 @@ function openProfileModal(isMandatory = false) {
     setTimeout(() => input.focus(), 150);
   }
 
-  // 安全渲染歷史學號清單，徹底防止 XSS 注入 (CHK-09)
+  // 安全渲染歷史學號清單，徹底防止 XSS 注入 (CHK-09, FIX-10)
   const profiles = getAllProfiles();
   if (historySec && historyContainer) {
     historyContainer.innerHTML = "";
@@ -8207,7 +8992,7 @@ function openProfileModal(isMandatory = false) {
         const btn = document.createElement("button");
         btn.type = "button";
         const isCurrent = appState && cleanId === appState.studentId;
-        btn.className = `min-h-[38px] px-3 py-1 rounded-lg text-xs font-mono transition border ${
+        btn.className = `min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono transition border ${
           isCurrent
             ? "bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold"
             : "bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500"
@@ -8693,9 +9478,13 @@ function selectQuizAnswer(chosenLetter) {
     appState.totalCorrect += 1;
     appState.dimensionStats[dim].correct += 1;
 
-    // Eliminate mistake if resolved!
+    // Eliminate mistake if resolved & record tombstone (FIX-07)!
+    if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
     if (appState.mistakes && appState.mistakes.includes(q.id)) {
       appState.mistakes = appState.mistakes.filter(id => id !== q.id);
+      if (!appState.resolvedMistakes.includes(q.id)) {
+        appState.resolvedMistakes.push(q.id);
+      }
       showToast("🎯 錯題成功消滅！已自錯題情報庫移出！");
     }
 
@@ -8707,10 +9496,13 @@ function selectQuizAnswer(chosenLetter) {
     window.soundFX.playWrong();
     appState.streak = 0;
 
-    // Save to mistakes (deduplicated)
+    // Save to mistakes (deduplicated) & remove from resolvedMistakes if re-failed (FIX-07)
     if (!appState.mistakes) appState.mistakes = [];
     if (!appState.mistakes.includes(q.id)) {
       appState.mistakes.push(q.id);
+    }
+    if (appState.resolvedMistakes && appState.resolvedMistakes.includes(q.id)) {
+      appState.resolvedMistakes = appState.resolvedMistakes.filter(id => id !== q.id);
     }
 
     if (chosenBtn) {
@@ -8896,6 +9688,20 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     startTime: Date.now()
   };
 
+  // 動態更新考場頂部規格徽章 (FIX-05)
+  const titleBadge = document.getElementById("exam-title-badge");
+  if (titleBadge) {
+    const modeLabels = {
+      exam114_1: `114-1 期中考規格 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      exam114_2: `114-2 期中考規格 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      speed: `極速衝刺模式 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      standard: `標準期中模考 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      full: `全真高壓模考 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      traps: `高頻陷阱特訓 (${durationMinutes}m / ${selectedQuestions.length}Q)`
+    };
+    titleBadge.textContent = modeLabels[modeKey] || `模擬試煉 (${durationMinutes}m / ${selectedQuestions.length}Q)`;
+  }
+
   document.getElementById("exam-active-container").classList.remove("hidden");
   document.getElementById("exam-result-container").classList.add("hidden");
 
@@ -8939,7 +9745,7 @@ function renderExamDots() {
     const isAnswered = currentSession.userAnswers[idx] !== null;
     const isCurrent = currentSession.currentIndex === idx;
 
-    dot.className = `w-7 h-7 rounded text-xs font-mono font-bold transition flex items-center justify-center ${
+    dot.className = `min-w-[44px] min-h-[44px] px-2 rounded text-xs font-mono font-bold transition flex items-center justify-center ${
       isCurrent
         ? "ring-2 ring-cyan-400 bg-cyan-500 text-slate-950"
         : isAnswered
@@ -9041,6 +9847,7 @@ function submitExam(isTimeout = false) {
   const reviewList = [];
 
   if (!appState.seenQuestions) appState.seenQuestions = [];
+  if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
   if (!appState.dimensionStats) appState.dimensionStats = JSON.parse(JSON.stringify(DEFAULT_DIMENSION_STATS));
 
   currentSession.questions.forEach((q, idx) => {
@@ -9070,9 +9877,15 @@ function submitExam(isTimeout = false) {
       appState.dimensionStats[dim].correct += 1;
       if (appState.mistakes && appState.mistakes.includes(q.id)) {
         appState.mistakes = appState.mistakes.filter(id => id !== q.id);
+        if (!appState.resolvedMistakes.includes(q.id)) {
+          appState.resolvedMistakes.push(q.id);
+        }
       }
     } else {
       if (!appState.mistakes.includes(q.id)) appState.mistakes.push(q.id);
+      if (appState.resolvedMistakes && appState.resolvedMistakes.includes(q.id)) {
+        appState.resolvedMistakes = appState.resolvedMistakes.filter(id => id !== q.id);
+      }
     }
     reviewList.push({ q, userAns, isRight });
   });
@@ -9186,7 +9999,7 @@ function submitExam(isTimeout = false) {
   lucide.createIcons();
 }
 
-// ==================== VIEW 3: MISTAKES VAULT (CHK-03 & CHK-09) ====================
+// ==================== VIEW 3: MISTAKES VAULT (CHK-03, CHK-09, FIX-07, FIX-10) ====================
 let currentMistakeFilter = 0;
 
 function filterMistakes(chId) {
@@ -9195,9 +10008,9 @@ function filterMistakes(chId) {
   const btns = document.querySelectorAll("#mistake-filter-bar button");
   btns.forEach((btn, idx) => {
     if (idx === chId) {
-      btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
+      btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
     } else {
-      btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
+      btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
     }
   });
   renderMistakes();
@@ -9211,9 +10024,9 @@ function filterMistakesByDimension(dim) {
     const btn = document.getElementById(`mdf-${d}`);
     if (btn) {
       if (d === dim) {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
+        btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
       } else {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
+        btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
       }
     }
   });
@@ -9255,11 +10068,11 @@ function renderMistakes() {
           <span class="text-xs text-slate-400 font-mono">${q.category}</span>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="reQuizSingle('${q.id}')" class="min-h-[40px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
+          <button onclick="reQuizSingle('${q.id}')" class="min-h-[44px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
             <span>重新挑戰</span>
           </button>
-          <button onclick="dismissMistake('${q.id}')" class="min-h-[40px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
+          <button onclick="dismissMistake('${q.id}')" class="min-h-[44px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>消滅情報</span>
           </button>
@@ -9286,8 +10099,13 @@ function renderMistakes() {
 
 function dismissMistake(questionId) {
   if (!appState.mistakes) return;
+  if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
+  if (!appState.resolvedMistakes.includes(questionId)) {
+    appState.resolvedMistakes.push(questionId);
+  }
   appState.mistakes = appState.mistakes.filter(id => id !== questionId);
   saveState();
+  if (getCloudSyncUrl()) syncToCloud(true);
   updateHUD();
   renderMistakes();
   showToast("🗑️ 已成功從錯題情報庫移除！");
@@ -9333,8 +10151,15 @@ function reQuizAllMistakes() {
 
 function clearAllMistakes() {
   if (confirm("確定要清空所有錯題記錄嗎？")) {
+    if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
+    (appState.mistakes || []).forEach(id => {
+      if (!appState.resolvedMistakes.includes(id)) {
+        appState.resolvedMistakes.push(id);
+      }
+    });
     appState.mistakes = [];
     saveState();
+    if (getCloudSyncUrl()) syncToCloud(true);
     renderMistakes();
     showToast("錯題庫已清空！");
   }
@@ -9522,7 +10347,7 @@ function escapeHtml(text) {
 
 // ==================== APP BOOTSTRAP ====================
 document.addEventListener("DOMContentLoaded", () => {
-  // 檢查網址是否帶有 ?sync=AGENTv2... 跨裝置同步參數 (CHK-05 Scheme A)
+  // 檢查網址是否帶有 ?sync=AGENTv2... 或 ?preview= 參數 (CHK-05, FIX-11)
   try {
     const params = new URLSearchParams(window.location.search);
     const syncParam = params.get("sync");
@@ -9532,8 +10357,12 @@ document.addEventListener("DOMContentLoaded", () => {
         applyIncomingSyncedState(incoming, "網址連結跨裝置同步");
       }
     }
+    const previewParam = params.get("preview");
+    if (previewParam && !getActiveStudentId()) {
+      switchProfile("PREVIEW_AGENT");
+    }
   } catch (e) {
-    console.warn("URL sync parameter parse warning:", e);
+    console.warn("URL parameter parse warning:", e);
   }
 
   const currentId = getActiveStudentId();
@@ -9563,9 +10392,30 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Prevent Escape key from closing mandatory modal if unauthenticated
+  // 全域 Escape 鍵無障礙關閉彈窗支援 (FIX-10)：依優先順序關閉頂層彈窗，並保護強制學號建檔視窗
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
+      const alarmModal = document.getElementById("tactical-alert-modal");
+      if (alarmModal && !alarmModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeAlarmModal();
+        return;
+      }
+
+      const briefingModal = document.getElementById("briefing-modal");
+      if (briefingModal && !briefingModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeBriefingModal();
+        return;
+      }
+
+      const quizModal = document.getElementById("quiz-modal");
+      if (quizModal && !quizModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeQuizModal();
+        return;
+      }
+
       const pModal = document.getElementById("profile-modal");
       if (pModal && !pModal.classList.contains("hidden")) {
         if (!appState || !appState.studentId) {
@@ -9573,11 +10423,15 @@ document.addEventListener("DOMContentLoaded", () => {
           showToast("⚠️ 請先輸入特務學號以完成建檔！");
           const input = document.getElementById("input-student-id");
           if (input) input.focus();
+        } else {
+          e.preventDefault();
+          closeProfileModal();
         }
       }
     }
   });
 });
+
 
 </script>
   <script>
@@ -9593,20 +10447,27 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const previewParam = params.get('preview');
-      if (previewParam === 'quiz') {
-        startChapterQuiz(1, 'advanced');
-        // Auto select option B to trigger feedback & step tracer view
-        setTimeout(() => {
-          selectQuizAnswer('B');
-        }, 100);
-      } else if (previewParam === 'briefing') {
-        openBriefingModal(3);
-      } else if (previewParam === 'profile') {
-        openProfileModal();
-      } else if (previewParam === 'radar') {
-        switchTab('analytics');
-      } else if (previewParam === 'exam_run') {
-        startExam('quick50', 25, 50);
+      if (previewParam) {
+        if (typeof appState !== 'undefined' && !appState.studentId && previewParam !== 'profile') {
+          appState.studentId = 'PREVIEW_AGENT';
+          saveState();
+          closeProfileModal();
+        }
+        if (previewParam === 'quiz') {
+          startChapterQuiz(1, 'advanced');
+          // Auto select option B to trigger feedback & step tracer view
+          setTimeout(() => {
+            selectQuizAnswer('B');
+          }, 100);
+        } else if (previewParam === 'briefing') {
+          openBriefingModal(3);
+        } else if (previewParam === 'profile') {
+          openProfileModal();
+        } else if (previewParam === 'radar') {
+          switchTab('analytics');
+        } else if (previewParam === 'exam_run') {
+          startExam('exam114_1', 60, 50);
+        }
       }
     });
   </script>

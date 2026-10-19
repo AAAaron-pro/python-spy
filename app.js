@@ -1,5 +1,5 @@
 /**
- * Python 爬蟲特務：代碼覺醒 - 核心遊戲引擎與控制器
+ * Python 特務：滿分計畫 - 核心遊戲引擎與控制器
  * 對應台大「程式設計與網路資料搜集」(GenEdu5010) Exam 1
  */
 
@@ -65,8 +65,10 @@ const DEFAULT_STATE = {
     5: { correct: 0, total: 0 },
     6: { correct: 0, total: 0 }
   },
-  mistakes: [], // Array of question IDs
-  seenQuestions: [] // Array of question IDs seen in exams
+  mistakes: [], // Array of active mistake question IDs
+  resolvedMistakes: [], // Tombstone array of resolved/dismissed mistake IDs (FIX-07)
+  seenQuestions: [], // Array of question IDs seen in exams
+  lastUpdated: 0
 };
 
 function cloneDefaultState() {
@@ -95,7 +97,7 @@ function cleanQuestionIdArray(arr) {
 }
 
 /**
- * 深度拷貝與 Schema 正規化 (CHK-04 & CHK-09)
+ * 深度拷貝與 Schema 正規化 (CHK-04, CHK-09, FIX-07, FIX-08)
  * 嚴格避免淺拷貝污染 DEFAULT_STATE，自動過濾孤兒題目 ID，並在舊紀錄無 dimensionStats 時由 chapterStats 回填。
  */
 function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
@@ -112,6 +114,7 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
   base.maxStreak = Math.max(base.streak, Number(rawObj.maxStreak) || 0);
   base.totalAnswered = Math.max(0, Number(rawObj.totalAnswered) || 0);
   base.totalCorrect = Math.max(0, Number(rawObj.totalCorrect) || 0);
+  base.lastUpdated = Math.max(0, Number(rawObj.lastUpdated) || 0);
 
   // 逐層深拷貝合併 chapterProgress (1~6)
   if (rawObj.chapterProgress && typeof rawObj.chapterProgress === "object") {
@@ -129,6 +132,7 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
 
   // 逐層深拷貝合併 chapterStats (1~6)
   let totalChStatCount = 0;
+  let totalChCorrectCount = 0;
   if (rawObj.chapterStats && typeof rawObj.chapterStats === "object") {
     for (let ch = 1; ch <= 6; ch++) {
       const src = rawObj.chapterStats[ch];
@@ -137,9 +141,14 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
         const t = Math.max(c, Number(src.total) || 0);
         base.chapterStats[ch] = { correct: c, total: t };
         totalChStatCount += t;
+        totalChCorrectCount += c;
       }
     }
   }
+
+  // 確保 totalAnswered / totalCorrect 不小於各章節統計總和 (FIX-08)
+  base.totalAnswered = Math.max(base.totalAnswered, totalChStatCount);
+  base.totalCorrect = Math.min(base.totalAnswered, Math.max(base.totalCorrect, totalChCorrectCount));
 
   // 逐層深拷貝合併 dimensionStats (6 大維度)
   let totalDimStatCount = 0;
@@ -166,8 +175,11 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
     }
   }
 
-  // 過濾無效孤兒題目 ID 並去重
+  // 過濾無效孤兒題目 ID 並去重 (FIX-07)
   base.mistakes = cleanQuestionIdArray(rawObj.mistakes);
+  base.resolvedMistakes = cleanQuestionIdArray(rawObj.resolvedMistakes).filter(
+    id => !base.mistakes.includes(id)
+  );
   base.answeredQuestions = cleanQuestionIdArray(rawObj.answeredQuestions);
   base.seenQuestions = cleanQuestionIdArray(rawObj.seenQuestions);
 
@@ -175,7 +187,10 @@ function normalizeAndMigrateState(rawObj, overrideStudentId = null) {
 }
 
 /**
- * 非破壞性智慧合併 (Smart Merge)：取最高星級、最高等級經驗值與題目紀錄聯集
+ * 非破壞性智慧合併 (Smart Merge - FIX-07 & FIX-08)：
+ * 1. 等級與 XP 以總累積經驗值 (level - 1) * 100 + xp 綁定取高，絕不混搭不同來源之 level 與 xp
+ * 2. 確保 totalAnswered / totalCorrect 與 chapterStats 總和滿足數學不變量
+ * 3. 支援 resolvedMistakes 墓碑機制 (Tombstone)，防止已消滅之錯題在跨裝置同步時「死灰復燃」
  */
 function smartMergeStates(stateA, stateB, targetStudentId = null) {
   const a = normalizeAndMigrateState(stateA, targetStudentId);
@@ -184,12 +199,12 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
 
   out.studentId = sanitizeStudentId(targetStudentId || b.studentId || a.studentId);
 
-  // 等級與 XP 智慧取高
-  const scoreA = (a.level - 1) * 200 + a.xp;
-  const scoreB = (b.level - 1) * 200 + b.xp;
-  if (a.level > b.level || (a.level === b.level && a.xp >= b.xp) || scoreA >= scoreB) {
-    out.level = Math.max(a.level, b.level);
-    out.xp = a.level === b.level ? Math.max(a.xp, b.xp) : (a.level > b.level ? a.xp : b.xp);
+  // 等級與 XP 智慧取高 (FIX-08: 統一以 100 XP 基底計算總經驗值並成對取用)
+  const totalXpA = (a.level - 1) * 100 + a.xp;
+  const totalXpB = (b.level - 1) * 100 + b.xp;
+  if (totalXpA >= totalXpB) {
+    out.level = a.level;
+    out.xp = a.xp;
   } else {
     out.level = b.level;
     out.xp = b.xp;
@@ -197,9 +212,9 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
 
   out.streak = Math.max(a.streak, b.streak);
   out.maxStreak = Math.max(a.maxStreak, b.maxStreak, out.streak);
-  out.totalAnswered = Math.max(a.totalAnswered, b.totalAnswered);
-  out.totalCorrect = Math.max(a.totalCorrect, b.totalCorrect);
 
+  let sumChapterTotal = 0;
+  let sumChapterCorrect = 0;
   for (let ch = 1; ch <= 6; ch++) {
     out.chapterProgress[ch] = {
       basicStars: Math.max(a.chapterProgress[ch].basicStars, b.chapterProgress[ch].basicStars),
@@ -209,7 +224,16 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
     const total = Math.max(a.chapterStats[ch].total, b.chapterStats[ch].total);
     const correct = Math.min(total, Math.max(a.chapterStats[ch].correct, b.chapterStats[ch].correct));
     out.chapterStats[ch] = { correct, total };
+    sumChapterTotal += total;
+    sumChapterCorrect += correct;
   }
+
+  // 確保總答題數與總答對數不低於各章節加總，且總答對數不超過總答題數 (FIX-08)
+  out.totalAnswered = Math.max(a.totalAnswered, b.totalAnswered, sumChapterTotal);
+  out.totalCorrect = Math.min(
+    out.totalAnswered,
+    Math.max(a.totalCorrect, b.totalCorrect, sumChapterCorrect)
+  );
 
   DIMENSION_KEYS.forEach(dimKey => {
     const total = Math.max(a.dimensionStats[dimKey].total, b.dimensionStats[dimKey].total);
@@ -217,7 +241,24 @@ function smartMergeStates(stateA, stateB, targetStudentId = null) {
     out.dimensionStats[dimKey] = { correct, total };
   });
 
-  out.mistakes = cleanQuestionIdArray([...a.mistakes, ...b.mistakes]);
+  // 錯題墓碑合併機制 (FIX-07: Zombie Mistake Resurrection Prevention)
+  const aTime = Number(a.lastUpdated) || 0;
+  const bTime = Number(b.lastUpdated) || 0;
+  out.lastUpdated = Math.max(aTime, bTime, Date.now());
+
+  const mergedResolved = new Set([...(a.resolvedMistakes || []), ...(b.resolvedMistakes || [])]);
+  if (bTime > aTime) {
+    (b.mistakes || []).forEach(id => mergedResolved.delete(id));
+  } else if (aTime > bTime) {
+    (a.mistakes || []).forEach(id => mergedResolved.delete(id));
+  }
+
+  const rawMistakes = cleanQuestionIdArray([...(a.mistakes || []), ...(b.mistakes || [])]);
+  out.mistakes = rawMistakes.filter(id => !mergedResolved.has(id));
+  out.resolvedMistakes = cleanQuestionIdArray(Array.from(mergedResolved)).filter(
+    id => !out.mistakes.includes(id)
+  );
+
   out.answeredQuestions = cleanQuestionIdArray([...a.answeredQuestions, ...b.answeredQuestions]);
   out.seenQuestions = cleanQuestionIdArray([...a.seenQuestions, ...b.seenQuestions]);
 
@@ -327,6 +368,7 @@ let appState = loadState();
 
 function saveState() {
   if (!appState || !appState.studentId) return;
+  appState.lastUpdated = Date.now();
   appState = normalizeAndMigrateState(appState, appState.studentId);
   try {
     localStorage.setItem(getStorageKeyForProfile(appState.studentId), JSON.stringify(appState));
@@ -348,7 +390,7 @@ let currentTraceIndex = 0;
 let examTimerInterval = null;
 let currentMistakeDimensionFilter = "all";
 
-// ==================== A + C + D CROSS-DEVICE SYNC ARCHITECTURE (CHK-05) ====================
+// ==================== A + C + D CROSS-DEVICE SYNC ARCHITECTURE (CHK-05, FIX-06, FIX-07, FIX-09) ====================
 
 function bytesToBase64Url(bytes) {
   let binary = "";
@@ -380,7 +422,10 @@ function base64UrlToUtf8(b64url) {
 }
 
 /**
- * 將題目 ID 陣列壓縮為緊湊索引陣列或 24-byte 位元遮罩 (~32 chars)，確保同步碼極致短小 (< 250 chars)
+ * 將題目 ID 陣列壓縮為緊湊索引陣列或 27-byte 位元遮罩 (~36 chars)，確保同步碼極致短小 (< 250 chars)。
+ * 【FIX-09 Canonical Order Guarantee】：
+ * QUESTIONS_DATABASE 前 192 題 (index 0..191) 之 ID 順序嚴格鎖定不可插入或重排；
+ * 新增擴充題一律以 append-only 方式追加於末端 (index 192..215)，確保新舊版本位元遮罩 100% 向下相容。
  */
 function compressQuestionIds(idList) {
   if (!Array.isArray(idList) || idList.length === 0) return [];
@@ -439,7 +484,8 @@ function decompressQuestionIds(compactVal) {
 }
 
 /**
- * 【方案 A】產生位元/緊湊壓縮之特務同步碼 (AGENTv2.<base64url>)，長度控制在 70~190 字元內 (< 250 chars)
+ * 【方案 A】產生位元/緊湊壓縮之特務同步碼 (AGENTv2.<base64url>)，長度控制在 70~210 字元內 (< 250 chars)
+ * 內含 resolvedMistakes 墓碑欄位 (FIX-07)，確保跨裝置同步時已消滅錯題不會復活。
  */
 function encodeCompactSyncToken(stateObj = appState) {
   const s = normalizeAndMigrateState(stateObj, stateObj ? stateObj.studentId : null);
@@ -472,6 +518,7 @@ function encodeCompactSyncToken(stateObj = appState) {
   const aqComp = compressQuestionIds(s.answeredQuestions);
   const sqComp = compressQuestionIds(s.seenQuestions);
   const sqOut = JSON.stringify(aqComp) === JSON.stringify(sqComp) ? 1 : sqComp;
+  const rmComp = compressQuestionIds(s.resolvedMistakes);
 
   const compactArray = [
     s.studentId || "AGENT",
@@ -488,6 +535,9 @@ function encodeCompactSyncToken(stateObj = appState) {
     aqComp,
     sqOut
   ];
+  if (Array.isArray(rmComp) ? rmComp.length > 0 : Boolean(rmComp)) {
+    compactArray.push(rmComp);
+  }
 
   return "AGENTv2." + utf8ToBase64Url(JSON.stringify(compactArray));
 }
@@ -557,6 +607,7 @@ function decodeCompactSyncToken(rawInput) {
     restored.mistakes = decompressQuestionIds(p[10]);
     restored.answeredQuestions = decompressQuestionIds(p[11]);
     restored.seenQuestions = p[12] === 1 ? restored.answeredQuestions.slice() : decompressQuestionIds(p[12]);
+    restored.resolvedMistakes = p.length >= 14 ? decompressQuestionIds(p[13]) : [];
 
     return normalizeAndMigrateState(restored, restored.studentId);
   }
@@ -608,6 +659,7 @@ function decodeCompactSyncToken(rawInput) {
   restored.mistakes = decompressQuestionIds(p.m);
   restored.answeredQuestions = decompressQuestionIds(p.aq);
   restored.seenQuestions = decompressQuestionIds(p.sq);
+  restored.resolvedMistakes = decompressQuestionIds(p.rm);
 
   return normalizeAndMigrateState(restored, restored.studentId);
 }
@@ -627,7 +679,7 @@ function getSyncShareUrl(token = null) {
 }
 
 /**
- * 【方案 C】前端動態生成高對比 QR Code (含 CDN qrcode-generator 與離線 SVG 容錯)
+ * 【方案 C】前端動態生成真實可掃描之 ISO/IEC 18004 QR Code (本機載入 qrcode.min.js - FIX-06)
  */
 function renderSyncQrCode() {
   const qrContainer = document.getElementById("sync-qr-container");
@@ -677,25 +729,10 @@ function renderSyncQrCode() {
       return;
     }
   } catch (e) {
-    console.warn("QR render fallback triggered:", e);
+    console.warn("QR render error:", e);
   }
 
-  // 離線無 CDN 時之決定性高對比矩陣 SVG 容錯圖騰
-  const size = 21;
-  let rects = "";
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      const isFinder =
-        (r < 7 && c < 7 && (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4))) ||
-        (r < 7 && c >= size - 7 && (r === 0 || r === 6 || c === size - 7 || c === size - 1 || (r >= 2 && r <= 4 && c >= size - 5 && c <= size - 3))) ||
-        (r >= size - 7 && c < 7 && (r === size - 7 || r === size - 1 || c === 0 || c === 6 || (r >= size - 5 && r <= size - 3 && c >= 2 && c <= 4)));
-      const hashBit = ((token.charCodeAt((r * size + c) % token.length) + r * 7 + c * 13) % 3) === 0;
-      if (isFinder || hashBit) {
-        rects += `<rect x="${c}" y="${r}" width="1" height="1" fill="#0f172a"/>`;
-      }
-    }
-  }
-  qrContainer.innerHTML = `<svg viewBox="0 0 ${size} ${size}" width="104" height="104" class="w-full h-full">${rects}</svg>`;
+  qrContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center text-center text-[10px] font-mono text-rose-500 p-2">QR 模組未載入，請使用下方同步碼複製</div>`;
 }
 
 function copySyncToken() {
@@ -994,7 +1031,7 @@ function openProfileModal(isMandatory = false) {
     setTimeout(() => input.focus(), 150);
   }
 
-  // 安全渲染歷史學號清單，徹底防止 XSS 注入 (CHK-09)
+  // 安全渲染歷史學號清單，徹底防止 XSS 注入 (CHK-09, FIX-10)
   const profiles = getAllProfiles();
   if (historySec && historyContainer) {
     historyContainer.innerHTML = "";
@@ -1006,7 +1043,7 @@ function openProfileModal(isMandatory = false) {
         const btn = document.createElement("button");
         btn.type = "button";
         const isCurrent = appState && cleanId === appState.studentId;
-        btn.className = `min-h-[38px] px-3 py-1 rounded-lg text-xs font-mono transition border ${
+        btn.className = `min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono transition border ${
           isCurrent
             ? "bg-cyan-500/20 text-cyan-300 border-cyan-500 font-bold"
             : "bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500"
@@ -1492,9 +1529,13 @@ function selectQuizAnswer(chosenLetter) {
     appState.totalCorrect += 1;
     appState.dimensionStats[dim].correct += 1;
 
-    // Eliminate mistake if resolved!
+    // Eliminate mistake if resolved & record tombstone (FIX-07)!
+    if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
     if (appState.mistakes && appState.mistakes.includes(q.id)) {
       appState.mistakes = appState.mistakes.filter(id => id !== q.id);
+      if (!appState.resolvedMistakes.includes(q.id)) {
+        appState.resolvedMistakes.push(q.id);
+      }
       showToast("🎯 錯題成功消滅！已自錯題情報庫移出！");
     }
 
@@ -1506,10 +1547,13 @@ function selectQuizAnswer(chosenLetter) {
     window.soundFX.playWrong();
     appState.streak = 0;
 
-    // Save to mistakes (deduplicated)
+    // Save to mistakes (deduplicated) & remove from resolvedMistakes if re-failed (FIX-07)
     if (!appState.mistakes) appState.mistakes = [];
     if (!appState.mistakes.includes(q.id)) {
       appState.mistakes.push(q.id);
+    }
+    if (appState.resolvedMistakes && appState.resolvedMistakes.includes(q.id)) {
+      appState.resolvedMistakes = appState.resolvedMistakes.filter(id => id !== q.id);
     }
 
     if (chosenBtn) {
@@ -1695,6 +1739,20 @@ function startExam(modeKey, questionCount, durationMinutes, filterDifficulty = n
     startTime: Date.now()
   };
 
+  // 動態更新考場頂部規格徽章 (FIX-05)
+  const titleBadge = document.getElementById("exam-title-badge");
+  if (titleBadge) {
+    const modeLabels = {
+      exam114_1: `114-1 期中考規格 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      exam114_2: `114-2 期中考規格 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      speed: `極速衝刺模式 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      standard: `標準期中模考 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      full: `全真高壓模考 (${durationMinutes}m / ${selectedQuestions.length}Q)`,
+      traps: `高頻陷阱特訓 (${durationMinutes}m / ${selectedQuestions.length}Q)`
+    };
+    titleBadge.textContent = modeLabels[modeKey] || `模擬試煉 (${durationMinutes}m / ${selectedQuestions.length}Q)`;
+  }
+
   document.getElementById("exam-active-container").classList.remove("hidden");
   document.getElementById("exam-result-container").classList.add("hidden");
 
@@ -1738,7 +1796,7 @@ function renderExamDots() {
     const isAnswered = currentSession.userAnswers[idx] !== null;
     const isCurrent = currentSession.currentIndex === idx;
 
-    dot.className = `w-7 h-7 rounded text-xs font-mono font-bold transition flex items-center justify-center ${
+    dot.className = `min-w-[44px] min-h-[44px] px-2 rounded text-xs font-mono font-bold transition flex items-center justify-center ${
       isCurrent
         ? "ring-2 ring-cyan-400 bg-cyan-500 text-slate-950"
         : isAnswered
@@ -1840,6 +1898,7 @@ function submitExam(isTimeout = false) {
   const reviewList = [];
 
   if (!appState.seenQuestions) appState.seenQuestions = [];
+  if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
   if (!appState.dimensionStats) appState.dimensionStats = JSON.parse(JSON.stringify(DEFAULT_DIMENSION_STATS));
 
   currentSession.questions.forEach((q, idx) => {
@@ -1869,9 +1928,15 @@ function submitExam(isTimeout = false) {
       appState.dimensionStats[dim].correct += 1;
       if (appState.mistakes && appState.mistakes.includes(q.id)) {
         appState.mistakes = appState.mistakes.filter(id => id !== q.id);
+        if (!appState.resolvedMistakes.includes(q.id)) {
+          appState.resolvedMistakes.push(q.id);
+        }
       }
     } else {
       if (!appState.mistakes.includes(q.id)) appState.mistakes.push(q.id);
+      if (appState.resolvedMistakes && appState.resolvedMistakes.includes(q.id)) {
+        appState.resolvedMistakes = appState.resolvedMistakes.filter(id => id !== q.id);
+      }
     }
     reviewList.push({ q, userAns, isRight });
   });
@@ -1985,7 +2050,7 @@ function submitExam(isTimeout = false) {
   lucide.createIcons();
 }
 
-// ==================== VIEW 3: MISTAKES VAULT (CHK-03 & CHK-09) ====================
+// ==================== VIEW 3: MISTAKES VAULT (CHK-03, CHK-09, FIX-07, FIX-10) ====================
 let currentMistakeFilter = 0;
 
 function filterMistakes(chId) {
@@ -1994,9 +2059,9 @@ function filterMistakes(chId) {
   const btns = document.querySelectorAll("#mistake-filter-bar button");
   btns.forEach((btn, idx) => {
     if (idx === chId) {
-      btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
+      btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
     } else {
-      btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
+      btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
     }
   });
   renderMistakes();
@@ -2010,9 +2075,9 @@ function filterMistakesByDimension(dim) {
     const btn = document.getElementById(`mdf-${d}`);
     if (btn) {
       if (d === dim) {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
+        btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
       } else {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
+        btn.className = "min-h-[44px] px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200";
       }
     }
   });
@@ -2054,11 +2119,11 @@ function renderMistakes() {
           <span class="text-xs text-slate-400 font-mono">${q.category}</span>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="reQuizSingle('${q.id}')" class="min-h-[40px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
+          <button onclick="reQuizSingle('${q.id}')" class="min-h-[44px] px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center gap-1">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
             <span>重新挑戰</span>
           </button>
-          <button onclick="dismissMistake('${q.id}')" class="min-h-[40px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
+          <button onclick="dismissMistake('${q.id}')" class="min-h-[44px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/70 border border-slate-700 hover:border-rose-600/60 text-slate-400 hover:text-rose-200 font-bold text-xs transition flex items-center gap-1" title="消滅並自錯題情報庫移除">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>消滅情報</span>
           </button>
@@ -2085,8 +2150,13 @@ function renderMistakes() {
 
 function dismissMistake(questionId) {
   if (!appState.mistakes) return;
+  if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
+  if (!appState.resolvedMistakes.includes(questionId)) {
+    appState.resolvedMistakes.push(questionId);
+  }
   appState.mistakes = appState.mistakes.filter(id => id !== questionId);
   saveState();
+  if (getCloudSyncUrl()) syncToCloud(true);
   updateHUD();
   renderMistakes();
   showToast("🗑️ 已成功從錯題情報庫移除！");
@@ -2132,8 +2202,15 @@ function reQuizAllMistakes() {
 
 function clearAllMistakes() {
   if (confirm("確定要清空所有錯題記錄嗎？")) {
+    if (!appState.resolvedMistakes) appState.resolvedMistakes = [];
+    (appState.mistakes || []).forEach(id => {
+      if (!appState.resolvedMistakes.includes(id)) {
+        appState.resolvedMistakes.push(id);
+      }
+    });
     appState.mistakes = [];
     saveState();
+    if (getCloudSyncUrl()) syncToCloud(true);
     renderMistakes();
     showToast("錯題庫已清空！");
   }
@@ -2321,7 +2398,7 @@ function escapeHtml(text) {
 
 // ==================== APP BOOTSTRAP ====================
 document.addEventListener("DOMContentLoaded", () => {
-  // 檢查網址是否帶有 ?sync=AGENTv2... 跨裝置同步參數 (CHK-05 Scheme A)
+  // 檢查網址是否帶有 ?sync=AGENTv2... 或 ?preview= 參數 (CHK-05, FIX-11)
   try {
     const params = new URLSearchParams(window.location.search);
     const syncParam = params.get("sync");
@@ -2331,8 +2408,12 @@ document.addEventListener("DOMContentLoaded", () => {
         applyIncomingSyncedState(incoming, "網址連結跨裝置同步");
       }
     }
+    const previewParam = params.get("preview");
+    if (previewParam && !getActiveStudentId()) {
+      switchProfile("PREVIEW_AGENT");
+    }
   } catch (e) {
-    console.warn("URL sync parameter parse warning:", e);
+    console.warn("URL parameter parse warning:", e);
   }
 
   const currentId = getActiveStudentId();
@@ -2362,9 +2443,30 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Prevent Escape key from closing mandatory modal if unauthenticated
+  // 全域 Escape 鍵無障礙關閉彈窗支援 (FIX-10)：依優先順序關閉頂層彈窗，並保護強制學號建檔視窗
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
+      const alarmModal = document.getElementById("tactical-alert-modal");
+      if (alarmModal && !alarmModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeAlarmModal();
+        return;
+      }
+
+      const briefingModal = document.getElementById("briefing-modal");
+      if (briefingModal && !briefingModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeBriefingModal();
+        return;
+      }
+
+      const quizModal = document.getElementById("quiz-modal");
+      if (quizModal && !quizModal.classList.contains("hidden")) {
+        e.preventDefault();
+        closeQuizModal();
+        return;
+      }
+
       const pModal = document.getElementById("profile-modal");
       if (pModal && !pModal.classList.contains("hidden")) {
         if (!appState || !appState.studentId) {
@@ -2372,8 +2474,12 @@ document.addEventListener("DOMContentLoaded", () => {
           showToast("⚠️ 請先輸入特務學號以完成建檔！");
           const input = document.getElementById("input-student-id");
           if (input) input.focus();
+        } else {
+          e.preventDefault();
+          closeProfileModal();
         }
       }
     }
   });
 });
+

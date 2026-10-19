@@ -185,6 +185,40 @@ def calculate_rank(points, level=1):  # 預設參數的等號兩邊不空格
 # ❌ agent-score = 100            (💥 SyntaxError: 減號被判定為減法運算)
 # ❌ pass = "Secret"              (💥 SyntaxError: pass 為關鍵保留字)`,
         tip: "考前 10 秒錦囊：短路運算「or 找第一個真值，and 找第一個假值（找不到就傳最後一個）」；PEP 8「逗號後面空一格，等號前後各一格，縮排用四格空格，變數全小寫加底線」。"
+      },
+      {
+        id: "ch1_c7",
+        title: "終端機 I/O 重導向 (<, >)、測資比對 (diff/fc) 與 PEP 8 切片例外",
+        keyPoints: [
+          "標準輸入重導向 `<`（Week 2 投影片 Slides 19–20）：在終端機執行 `python3 taxi.py < testcase.txt`（Windows cmd 為 `python taxi.py < testcase.txt`），會自動將 `testcase.txt` 的內容逐行餵給程式中的 `input()`，完全不需要修改 `.py` 原始碼！",
+          "Windows PowerShell 陷阱（Slide 19）：Windows 預設開啟的 PowerShell 不支援 `<` 輸入重導向，必須在終端機先輸入 `cmd` 切換至 Command Prompt 才能使用 `<`。",
+          "標準輸出重導向 `>` 與覆寫陷阱（Slides 21–22）：執行 `python3 taxi.py < testcase.txt > out.txt` 會將 `print()` 的所有輸出寫入 `out.txt`，螢幕上不會印出任何內容；且若 `out.txt` 原本已存在，`>` 會直接覆蓋（Overwrite）舊檔內容！",
+          "命令列檔案比對 `diff` 與 `fc`（Slide 23）：macOS/Linux 使用 `diff out.txt ans.txt`，Windows (`cmd`) 使用 `fc out.txt ans.txt`。當 `diff` 完全沒有印出任何訊息時，代表兩檔案內容完全一致（通過測資）！若印出 `2c2` 與 `< 85`、`> 80`，代表第 2 行需修改（change），`<` 為左邊檔案（`out.txt`），`>` 為右邊檔案（`ans.txt`）。",
+          "PEP 8 切片冒號不空格例外與 Python 之禪（Slides 27–30）：逗號 `,` 與一般冒號 `:` 是「前不空格、後空一格」，但用於切片（Slicing）時冒號前後皆不加空格（如 `s[1:4]`、`nums[1:8:2]`，寫成 `s[1: 4]` 違反 PEP 8）！變數命名應具語意（避免縮寫成 `ccc`），且執行 `import this` 會印出 Tim Peters 的《The Zen of Python》。"
+        ],
+        codeExample: `# ✅ 終端機 I/O 重導向與測資比對流程 (Week 2 Slides 19-23)
+# 1. 在 macOS/Linux 終端機（或 Windows 先輸入 cmd 切換後）：
+#    $ python3 taxi.py < testcase.txt > out.txt
+#    (input() 自動讀取 testcase.txt；print() 直接覆寫入 out.txt，螢幕不顯示)
+#
+# 2. 比對程式輸出 out.txt 與標準答案 ans.txt：
+#    $ diff out.txt ans.txt       # (Windows cmd 使用: fc out.txt ans.txt)
+#    -> 若終端機「完全無任何輸出」，代表兩檔案 100% 相同！
+#    -> 若輸出：
+#       2c2
+#       < 85                      # '<' 代表左邊檔案 (out.txt) 第 2 行內容
+#       ---
+#       > 80                      # '>' 代表右邊檔案 (ans.txt) 第 2 行內容
+
+# ✅ PEP 8 切片冒號例外 vs 一般冒號/逗號 (Slide 30) & Python 之禪 (Slide 28)
+import this                       # 印出 Tim Peters《The Zen of Python》設計哲學
+student_scores = [70, 80, 90, 100]  # ✅ 具清楚語意的 snake_case，逗號後空一格
+top_slice = student_scores[1:3]   # ✅ 切片冒號「前後都不加空格」！
+
+# ⚠️ 高頻地雷：把切片冒號當成字典冒號加空格、或過度縮寫變數名
+# ❌ bad_slice = student_scores[1: 3]  (違反 Slide 30 PEP 8 切片例外！)
+# ❌ ccc = [70,80,90]                  (違反 Slide 27：過度縮寫 ccc 且逗號後未空格)`,
+        tip: "考前 10 秒錦囊：`<` 餵給 input、`>` 覆寫存檔螢幕不印、PowerShell 要先打 `cmd`；`diff` 沒訊息就是全對，`<` 左檔 `>` 右檔；PEP 8 切片冒號 `s[1:4]` 前後都不准加空格！"
       }
     ]
   },
@@ -936,6 +970,38 @@ def pure_increment(val):
     return val + 1
 counter = pure_increment(counter)                 # 12`,
         tip: "考前 10 秒錦囊：函式裡只要後面有 x = ... 或 x += 1，前面只要想偷看偷印 print(x)，100% 當場暴斃噴 UnboundLocalError！因為看到賦值就認定是區域變數，前面沒給值就讀直接崩潰！"
+      },
+      {
+        id: "ch5_c7",
+        title: "遞迴函式（Recursion）：基底條件（Base Case）與呼叫堆疊追蹤",
+        keyPoints: [
+          "遞迴定義（NTU COOL 遞迴單元）：函式在自身內部呼叫自己，將大問題拆解為結構相同但規模更小的子問題。",
+          "兩大必備核心要件：1. 基底條件（Base Case / 終止條件）：不再遞迴、直接回傳明確值的邊界條件（如 `if n <= 1: return 1`）；2. 遞迴步驟（Recursive Step）：每次呼叫必須讓參數朝基底條件收斂（如 `n - 1` 或切片 `lst[1:]`）。",
+          "無限遞迴崩潰陷阱：若缺少 Base Case 或參數未收斂，呼叫堆疊（Call Stack）會不斷累積直到拋出 `RecursionError: maximum recursion depth exceeded`。",
+          "呼叫次數計算秘訣：追蹤遞迴總呼叫次數時，務必把「最後觸發 Base Case 的那一次呼叫」也算進去！若為雙分支遞迴（如 `f(n-1) + f(n-2)`），請畫出遞迴樹逐節點加總。"
+        ],
+        codeExample: `# ✅ 正確寫法 1：單分支遞迴（階乘與串列切片加總）
+def factorial(n):
+    if n <= 1:                        # 1. 基底條件 (Base Case)
+        return 1
+    return n * factorial(n - 1)       # 2. 遞迴步驟 (規模向 Base Case 收斂)
+
+print(factorial(4))                   # 4 * 3 * 2 * 1 = 24 (共呼叫 4 次：n=4, 3, 2, 1)
+
+# ✅ 正確寫法 2：雙分支遞迴樹與呼叫次數追蹤
+calls = 0
+def fib(n):
+    global calls
+    calls += 1
+    if n <= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(fib(3), calls)                  # 輸出: 2 5 (呼叫了 fib(3), fib(2), fib(1), fib(0), fib(1) 共 5 次！)
+
+# ⚠️ 高頻地雷：算呼叫次數時忘記算最後觸發 Base Case 的那一次
+# 例如 rec_sum([10, 20]) -> 呼叫 [10, 20]、[20]、[]，包含空串列 Base Case 共呼叫 3 次！`,
+        tip: "考前 10 秒錦囊：算遞迴先找 Base Case 停在哪！算「總共呼叫幾次」時，千萬記得把最後撞到 Base Case（例如 n=0 或空串列 []）的那一次也加進去！"
       }
     ]
   },
@@ -943,8 +1009,8 @@ counter = pure_increment(counter)                 # 12`,
   6: {
     chapterId: 6,
     chapterTitle: "第六章：特務高階工具箱",
-    chapterSubtitle: "zip、enumerate、串列表達式與例外處理",
-    description: "裝備最優雅的 Pythonic 武器！精通 zip/enumerate 的解包遍歷、單雙層 List Comprehension 及例外防禦。",
+    chapterSubtitle: "zip、enumerate、串列表達式、例外處理、檔案與模組",
+    description: "裝備最優雅的 Pythonic 武器！精通 zip/enumerate、List Comprehension、例外防禦、with open 檔案讀寫與標準模組匯入。",
     concepts: [
       {
         id: "ch6_c1",
@@ -1139,6 +1205,58 @@ role = user.get("role", "Guest")  # ✅ 正確安全做法：使用 .get() 附�
 # 6. AttributeError：物件無此方法
 # [1, 2].join("-")                # 💥 AttributeError: 'list' object has no attribute 'join'`,
         tip: "考前 10 秒錦囊：搞懂三大常客：TypeError 是「型態對不上」（如字串加整數）、ValueError 是「型態對但內容不合理」（如 int(\"abc\")）、IndexError 是「編號越界」！"
+      },
+      {
+        id: "ch6_c7",
+        title: "檔案讀寫（File I/O）：with open 上下文管理、read/readlines 與 'r'/'w'/'a' 模式",
+        keyPoints: [
+          "開啟模式三大天王（NTU COOL 檔案單元）：`'r'`（預設唯讀，檔案不存在拋 `FileNotFoundError`）、`'w'`（寫入模式，檔案不存在會新建，**若已存在會直接清空覆蓋 Overwrite！**）、`'a'`（附加模式 Append，保留原內容並將新資料寫在檔案末尾）。",
+          "`with open(...) as f:` 上下文管理器：離開 `with` 縮排區塊時，無論是否發生例外，Python 都會**自動呼叫 `f.close()` 關閉檔案**（離開後 `f.closed` 為 `True`）。",
+          "三種讀取方式與游標耗盡陷阱：`f.read()` 一次讀完回傳「單一長字串」；`f.readlines()` 一次讀完回傳「每行字串組成的 `list`」；`for line in f:` 逐行迭代最省記憶體。讀完一次後游標（Cursor）停在檔尾（EOF），若不重開檔案再讀只會拿到空字串或空串列！",
+          "行尾換行符 `\\n` 清理：從檔案讀出的每一行末尾通常帶有 `'\\n'`（例如 `'cat\\n'` 長度為 4），解析欄位前務必先用 `line.strip()` 去除首尾空白與換行符號！"
+        ],
+        codeExample: `# ✅ 正確寫法 1：使用 with open 自動管理檔案關閉與逐行清洗
+# with open("scores.csv", "r", encoding="utf-8") as f:
+#     for line in f:
+#         name, score = line.strip().split(",")   # 先 strip() 除掉 '\\n' 再 split()
+
+# ✅ 正確寫法 2：'w' 覆寫 vs 'a' 附加模式差異
+# with open("log.txt", "w") as f:
+#     f.write("First\\n")                         # 清空舊檔並寫入 First
+# with open("log.txt", "a") as f:
+#     f.write("Second\\n")                        # 附加在末尾，檔案現有兩行
+
+# ⚠️ 高頻地雷 1：檔案讀取游標 (Cursor) 耗盡陷阱
+import io
+with io.StringIO("Line1\\nLine2\\n") as f:
+    all_text = f.read()                           # 讀完 12 個字元，游標已停在檔尾 (EOF)
+    rest_lines = f.readlines()                    # 陷阱！游標已在檔尾，回傳空串列 []！
+print(len(all_text), rest_lines, f.closed)        # 輸出: 12 [] True`,
+        tip: "考前 10 秒錦囊：`'r'` 沒檔報錯、`'w'` 砍掉重練（覆蓋）、`'a'` 接在屁股後面！讀出來的行尾巴都有隱形 `'\\n'`（記得算進 len 或用 `.strip()` 拔掉），且 `read()` 讀過一次游標就到底了！"
+      },
+      {
+        id: "ch6_c8",
+        title: "標準函式庫與模組匯入（import math, random, from ... import, as 別名）",
+        keyPoints: [
+          "三種匯入語法（NTU COOL 模組單元）：1. `import math`（呼叫時須加前綴 `math.sqrt(16)`）；2. `from math import sqrt, ceil`（直接呼叫 `sqrt(16)`，不加 `math.`）；3. `import math as m` 或 `from math import factorial as fact`（使用 `as` 別名呼叫）。",
+          "`math` 模組必考函式：`math.sqrt(x)` 開根號**永遠回傳 `float` 浮點數**（如 `math.sqrt(16)` 為 `4.0`！）；`math.ceil(x)` 無條件進位回傳 `int`；`math.floor(x)` 無條件捨去回傳 `int`；`math.gcd(a, b)` 最大公因數。",
+          "`random` 模組閉區間大陷阱：雖然 `range(a, b)` 與切片 `s[a:b]` 都是「左閉右開 `[a, b)`」（不含 `b`），但 **`random.randint(a, b)` 是「左閉右閉 `[a, b]`」（包含 `b`！）**，所以 `random.randint(5, 5)` 合法且必定回傳 `5`！"
+        ],
+        codeExample: `# ✅ 正確寫法 1：import math 常用數值函式與回傳型態
+import math
+print(math.ceil(4.1))                             # 5   (無條件進位 -> int)
+print(math.floor(4.9))                            # 4   (無條件捨去 -> int)
+print(math.sqrt(16))                              # 4.0 (⚠️ 開根號永遠回傳 float！)
+
+# ✅ 正確寫法 2：from ... import ... as 別名匯入
+from math import factorial as fact, gcd
+print(fact(4), gcd(12, 18))                       # 24 6
+
+# ⚠️ 高頻地雷：random.randint(a, b) 包含右邊界 b（與 range 不同！）
+import random
+print(random.randint(5, 5))                       # 5  (包含上界 5！)
+print(len(range(5, 5)))                           # 0  (range 不含上界 5，為空序列)`,
+        tip: "考前 10 秒錦囊：`math.sqrt(16)` 出來是浮點數 `4.0` 不是 `4`！`range(a, b)` 不含 `b`，但 `random.randint(a, b)` 頭尾都包含（連 `b` 也抽得到）！"
       }
     ]
   }

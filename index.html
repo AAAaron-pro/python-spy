@@ -12,8 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Lightweight QR Code Generator for Cross-Device Sync (Scheme C) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <!-- Lightweight QR Code Generator for Cross-Device Sync (Scheme C - Local Embedded) -->
+  <script src="qrcode.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -253,83 +253,83 @@
       <!-- Exam Mode Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        <!-- Mode 1: 50min Exam 1 (114-1) -->
-        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
+        <!-- Mode 1: 50min / 60Q Exam 1 (114-1 Authentic Spec) -->
+        <div id="arena-exam-114-1" class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30 group-hover:scale-105 transition">
               <i data-lucide="timer" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">50 分鐘急速模考</h3>
-              <p class="text-xs text-cyan-400 font-mono">仿 114-1 期中試卷規格</p>
+              <h3 class="font-bold text-white text-lg">114-1 實戰模考</h3>
+              <p class="text-xs text-cyan-400 font-mono">對齊 114-1 真實期中試卷（50 分鐘 60 題高密度速決）</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              隨機抽取 25 題跨章節題目，嚴格計時 50 分鐘，考驗第一時間破題與敏銳度。
+              隨機抽取 60 題跨章節單選題，嚴格計時 50 分鐘（每題 1 分共 60 分），100% 還原 114-1 期中考高壓節奏！
             </p>
           </div>
-          <button onclick="startExam('quick50', 25, 50)" class="mt-5 w-full py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('exam114_1', 60, 50)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>開始測驗</span>
+            <span>開始 114-1 模考 (60題)</span>
           </button>
         </div>
 
-        <!-- Mode 2: 120min Exam 1 (114-2) -->
-        <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-blue-500/50 transition flex flex-col justify-between group shadow-lg">
+        <!-- Mode 2: 120min / 68Q Exam 1 (114-2 Authentic Spec) -->
+        <div id="arena-exam-114-2" class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-blue-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-105 transition">
               <i data-lucide="award" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">全真深度模擬考</h3>
-              <p class="text-xs text-blue-400 font-mono">仿 114-2 (120分/大題量)</p>
+              <h3 class="font-bold text-white text-lg">114-2 實戰模考</h3>
+              <p class="text-xs text-blue-400 font-mono">對齊 114-2 真實期中試卷（120 分鐘 68 題，含基礎與進階配分題）</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              抽取 40 題全方位混合題庫，計時 120 分鐘。全面涵蓋巢狀迴圈與記憶體參照魔王題。
+              抽取 68 題全方位題庫（Q1–31 每題 1 分、Q32–68 每題 2 分，原始滿分 105 分），計時 120 分鐘深度實戰。
             </p>
           </div>
-          <button onclick="startExam('full120', 40, 120)" class="mt-5 w-full py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('exam114_2', 68, 120)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>進入考場</span>
+            <span>開始 114-2 模考 (68題)</span>
           </button>
         </div>
 
-        <!-- Mode 3: 10 Q Sprint -->
+        <!-- Mode 3: 25 Q Standard Drill -->
         <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-emerald-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-105 transition">
               <i data-lucide="zap" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">10 題快速突擊</h3>
-              <p class="text-xs text-emerald-400 font-mono">5 分鐘碎片化刷題</p>
+              <h3 class="font-bold text-white text-lg">全題庫隨機刷題</h3>
+              <p class="text-xs text-emerald-400 font-mono">30 分鐘 / 25 題標準練習</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              隨機抽取 10 題快節奏速刷，適合搭車、課間或考前 10 分鐘迅速喚醒題感。
+              隨機抽取 25 題快節奏綜合演練，適合課間、通勤或考前 30 分鐘迅速檢視六大維度熟練度。
             </p>
           </div>
-          <button onclick="startExam('sprint10', 10, 15)" class="mt-5 w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('standard', 25, 30)" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>立即開打</span>
+            <span>立即開打 (25題)</span>
           </button>
         </div>
 
-        <!-- Mode 4: Weakness Drill -->
+        <!-- Mode 4: Devil Traps Drill -->
         <div class="bg-agent-card border border-agent-border rounded-xl p-5 hover:border-rose-500/50 transition flex flex-col justify-between group shadow-lg">
           <div class="space-y-3">
             <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/30 group-hover:scale-105 transition">
               <i data-lucide="target" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="font-bold text-white text-lg">高頻陷阱突擊</h3>
-              <p class="text-xs text-rose-400 font-mono">專攻最高失分率題目</p>
+              <h3 class="font-bold text-white text-lg">魔鬼陷阱特訓</h3>
+              <p class="text-xs text-rose-400 font-mono">25 分鐘 / 15 題高失分率專案</p>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-              匯總所有進階難度的陷阱題（可變引數、切片賦值、Scope 遮蔽），正面擊破難點！
+              匯總所有進階難度的陷阱題（可變預設參數、淺拷貝連坐、Scope 遮蔽、游標耗盡），正面擊破難點！
             </p>
           </div>
-          <button onclick="startExam('traps', 15, 25, 'advanced')" class="mt-5 w-full py-2.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
+          <button onclick="startExam('traps', 15, 25, 'advanced')" class="mt-5 w-full min-h-[44px] py-2.5 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-            <span>直面陷阱</span>
+            <span>直面陷阱 (15題)</span>
           </button>
         </div>
 
@@ -341,9 +341,9 @@
         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div class="flex items-center gap-3">
             <span id="exam-title-badge" class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold rounded border border-cyan-500/30">
-              50 分鐘模考
+              114-1 實戰模考 (50m/60題)
             </span>
-            <span class="text-slate-400 text-sm">進度：<strong id="exam-progress-text" class="text-white">1 / 25</strong></span>
+            <span class="text-slate-400 text-sm">進度：<strong id="exam-progress-text" class="text-white">1 / 60</strong></span>
           </div>
 
           <div class="flex items-center gap-4">
@@ -354,7 +354,7 @@
             </div>
 
             <!-- Hand in exam button -->
-            <button onclick="confirmSubmitExam()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition">
+            <button onclick="confirmSubmitExam()" class="min-h-[44px] px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition">
               提前交卷結算
             </button>
           </div>
@@ -372,7 +372,7 @@
 
         <!-- Exam Navigation Buttons -->
         <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-          <button id="btn-exam-prev" onclick="navigateExamQuestion(-1)" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition flex items-center gap-2">
+          <button id="btn-exam-prev" onclick="navigateExamQuestion(-1)" class="min-h-[44px] px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition flex items-center gap-2">
             <i data-lucide="chevron-left" class="w-4 h-4"></i>
             <span>上一題</span>
           </button>
@@ -382,7 +382,7 @@
             <!-- Question jump dots -->
           </div>
 
-          <button id="btn-exam-next" onclick="navigateExamQuestion(1)" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition flex items-center gap-2">
+          <button id="btn-exam-next" onclick="navigateExamQuestion(1)" class="min-h-[44px] px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition flex items-center gap-2">
             <span>下一題</span>
             <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
@@ -407,11 +407,11 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <button onclick="reQuizAllMistakes()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-rose-600/20">
+          <button onclick="reQuizAllMistakes()" class="min-h-[44px] px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-rose-600/20">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             <span>集中消滅所有錯題</span>
           </button>
-          <button onclick="clearAllMistakes()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-sm transition">
+          <button onclick="clearAllMistakes()" class="min-h-[44px] px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-sm transition">
             清空錯題
           </button>
         </div>
@@ -424,13 +424,13 @@
           <span>依六大特務作戰能力維度篩選：</span>
         </div>
         <div class="flex flex-wrap gap-2" id="mistake-dimension-filter-bar">
-          <button onclick="filterMistakesByDimension('all')" id="mdf-all" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">全部維度</button>
-          <button onclick="filterMistakesByDimension('syntax_io')" id="mdf-syntax_io" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">語法與I/O</button>
-          <button onclick="filterMistakesByDimension('strings_ascii')" id="mdf-strings_ascii" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">字串與ASCII</button>
-          <button onclick="filterMistakesByDimension('containers_memory')" id="mdf-containers_memory" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">容器與記憶體</button>
-          <button onclick="filterMistakesByDimension('control_flow')" id="mdf-control_flow" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">流程與迴圈</button>
-          <button onclick="filterMistakesByDimension('functions_scope')" id="mdf-functions_scope" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">函式與作用域</button>
-          <button onclick="filterMistakesByDimension('comprehensions_tools')" id="mdf-comprehensions_tools" class="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">高效工具與解析</button>
+          <button onclick="filterMistakesByDimension('all')" id="mdf-all" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">全部維度</button>
+          <button onclick="filterMistakesByDimension('syntax_io')" id="mdf-syntax_io" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">語法與I/O</button>
+          <button onclick="filterMistakesByDimension('strings_ascii')" id="mdf-strings_ascii" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">字串與ASCII</button>
+          <button onclick="filterMistakesByDimension('containers_memory')" id="mdf-containers_memory" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">容器與記憶體</button>
+          <button onclick="filterMistakesByDimension('control_flow')" id="mdf-control_flow" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">流程與迴圈</button>
+          <button onclick="filterMistakesByDimension('functions_scope')" id="mdf-functions_scope" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">函式與作用域</button>
+          <button onclick="filterMistakesByDimension('comprehensions_tools')" id="mdf-comprehensions_tools" class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-400 hover:text-slate-200">高效工具與解析</button>
         </div>
       </div>
 
@@ -881,20 +881,27 @@
       }
 
       const previewParam = params.get('preview');
-      if (previewParam === 'quiz') {
-        startChapterQuiz(1, 'advanced');
-        // Auto select option B to trigger feedback & step tracer view
-        setTimeout(() => {
-          selectQuizAnswer('B');
-        }, 100);
-      } else if (previewParam === 'briefing') {
-        openBriefingModal(3);
-      } else if (previewParam === 'profile') {
-        openProfileModal();
-      } else if (previewParam === 'radar') {
-        switchTab('analytics');
-      } else if (previewParam === 'exam_run') {
-        startExam('quick50', 25, 50);
+      if (previewParam) {
+        if (typeof appState !== 'undefined' && !appState.studentId && previewParam !== 'profile') {
+          appState.studentId = 'PREVIEW_AGENT';
+          saveState();
+          closeProfileModal();
+        }
+        if (previewParam === 'quiz') {
+          startChapterQuiz(1, 'advanced');
+          // Auto select option B to trigger feedback & step tracer view
+          setTimeout(() => {
+            selectQuizAnswer('B');
+          }, 100);
+        } else if (previewParam === 'briefing') {
+          openBriefingModal(3);
+        } else if (previewParam === 'profile') {
+          openProfileModal();
+        } else if (previewParam === 'radar') {
+          switchTab('analytics');
+        } else if (previewParam === 'exam_run') {
+          startExam('exam114_1', 60, 50);
+        }
       }
     });
   </script>

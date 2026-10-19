@@ -20,6 +20,9 @@ def build_standalone_html():
     with open(os.path.join(BASE_DIR, "index.html"), "r", encoding="utf-8") as f:
         html = f.read()
 
+    with open(os.path.join(BASE_DIR, "qrcode.min.js"), "r", encoding="utf-8") as f:
+        qrcode_js = f.read()
+
     with open(os.path.join(BASE_DIR, "questions.js"), "r", encoding="utf-8") as f:
         questions_js = f.read()
 
@@ -33,6 +36,7 @@ def build_standalone_html():
         app_js = f.read()
 
     # Inline scripts
+    html = html.replace('<script src="qrcode.min.js"></script>', f'<script>\n// --- INLINED qrcode.min.js ---\n{qrcode_js}\n</script>')
     html = html.replace('<script src="questions.js"></script>', f'<script>\n// --- INLINED questions.js ---\n{questions_js}\n</script>')
     html = html.replace('<script src="concept_briefings.js"></script>', f'<script>\n// --- INLINED concept_briefings.js ---\n{concept_briefings_js}\n</script>')
     html = html.replace('<script src="audio.js"></script>', f'<script>\n// --- INLINED audio.js ---\n{audio_js}\n</script>')
@@ -64,6 +68,7 @@ def build_zip_archive():
     
     files_to_include = [
         "index.html",
+        "qrcode.min.js",
         "questions.js",
         "concept_briefings.js",
         "audio.js",

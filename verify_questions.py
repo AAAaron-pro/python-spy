@@ -74,7 +74,7 @@ def extract_database():
         ts_count = len(re.findall(r'line:\s*\d+', ts_m.group(1))) if ts_m else 0
 
         code = code_m.group(1) if code_m else ""
-        code = code.replace('\\n', '\n').replace('\\"', '"').replace("\\'", "'")
+        code = code.replace('\\\\n', '\x00ESCAPED_NL\x00').replace('\\n', '\n').replace('\x00ESCAPED_NL\x00', '\\n').replace('\\"', '"').replace("\\'", "'")
 
         if qid_m and ch_m and ans_m:
             questions.append({
@@ -175,6 +175,14 @@ def main():
 
         dim_counter[q["dimension"]] += 1
         diff_counter[q["difficulty"]] += 1
+
+        # 3.5 防洩題靜態檢查 (Anti-Giveaway Check - FIX-01)
+        assert "valid_" not in q["code"], f"{q['id']}: code 區塊含 'valid_' 洩題字樣"
+        if any(kw in q["question"] for kw in ["符合規範", "合法的", "符合 PEP 8", "符合良好的 Coding Style"]):
+            ans_idx = ord(q["answer"]) - ord("A")
+            win_opt = re.sub(r'^[A-D]\.\s*', '', q["options"][ans_idx]).split(" (")[0].strip()
+            if win_opt and q["code"].strip():
+                assert win_opt not in q["code"], f"{q['id']}: 語法/PEP 8 判斷題於 code 直接洩漏正確選項 '{win_opt}'"
 
         # 4. 驗證 Python 代碼片段
         ok, detail = verify_code_snippet(q)

@@ -1,5 +1,5 @@
 /**
- * Python 爬蟲特務：代碼覺醒 - 題庫與章節資料庫
+ * Python 特務：滿分計畫 - 題庫與章節資料庫
  * 對齊台大「程式設計與網路資料搜集」(GenEdu5010) Exam 1 (W1-W5)
  * 全部題目皆為原創變形題，緊扣考古題核心觀念與易錯陷阱
  */
@@ -2104,8 +2104,7 @@ print(res)`,
     difficulty: "advanced",
     category: "PEP 8 規範檢驗",
     question: "依據 PEP 8 官方風格指南，下列變數定義敘述何者完全符合規範？",
-    code: `valid_pep8 = "max_score = 100"
-print(valid_pep8)`,
+    code: ``,
     options: [
       "A. max_score = 100 (前後各空一格，標準 PEP 8)",
       "B. max_score=100 (運算子兩側無空格)",
@@ -2113,10 +2112,10 @@ print(valid_pep8)`,
       "D. max_score  =  100 (運算子兩側有多個多餘空格)"
     ],
     answer: "A",
-    explanation: "PEP 8 規範明訂：一般變數應使用全小寫字母加底線（snake_case），不可用 CamelCase；二元賦值運算子 = 兩側應恰好各保留一個空格，不可緊貼或留多個空格。",
+    explanation: "【Week 2 投影片與 PEP 8 核心考點】PEP 8 規範明訂：一般變數應使用全小寫字母加底線（snake_case），不可用 CamelCase；二元賦值運算子 = 兩側應恰好各保留一個空格，不可緊貼或留多個空格。",
     traceSteps: [
-      { line: 1, text: "檢查 PEP 8 規範：小寫底線命名且二元運算子前後各空一格", vars: {"valid_pep8": "'max_score = 100'"} },
-      { line: 2, text: "印出符合規範之字串", vars: {"output": "'max_score = 100'"} }
+      { line: 1, text: "檢查變數命名規範：應採用全小寫底線 snake_case (max_score)", vars: {"naming": "'snake_case'"} },
+      { line: 1, text: "檢查二元運算子空白規範：= 前後應恰好各空一格", vars: {"spacing": "'single space'"} }
     ]
   },
   {
@@ -2373,25 +2372,27 @@ print(repr(part1), part2)`,
     id: "mock_36",
     chapterId: 2,
     dimension: "strings_ascii",
-    title: "ASCII 位元 XOR 大小寫互換",
+    title: "114-1 考古題 Q44：ASCII 差值大小寫平移",
     difficulty: "advanced",
-    category: "ASCII與位元運算",
-    question: "執行下列利用 XOR 32 進行字元轉換的程式碼後，輸出為何？",
-    code: `word = "NtU"
-converted = "".join(chr(ord(c) ^ 32) if c.isalpha() else c for c in word)
-print(converted)`,
+    category: "ASCII與ord/chr",
+    question: "執行下列利用 ord() 與 chr() 計算 ASCII 差值並平移字元的程式碼後，輸出為何？",
+    code: `s = "hello"
+diff = ord(s[0]) - ord(s[0].upper())
+new_char = chr(ord("Z") + diff)
+print(new_char)`,
     options: [
-      "A. NTU",
-      "B. ntu",
-      "C. nTu",
-      "D. NtU"
+      "A. Z",
+      "B. z",
+      "C. a",
+      "D. ValueError"
     ],
-    answer: "C",
-    explanation: "英文字母大寫與小寫 ASCII 碼差恰為 32（二進位第 5 位為 1）。對字母的 ASCII 碼進行 ^ 32 可以翻轉大小寫：'N'(大寫) 變 'n'，'t'(小寫) 變 'T'，'U'(大寫) 變 'u'，合併為 'nTu'。",
+    answer: "B",
+    explanation: "【114-1 考古題核心考點 (Q44)】s[0] 為小寫 'h' (ASCII 104)，s[0].upper() 為大寫 'H' (ASCII 72)，兩者相減 diff = 104 - 72 = 32（即小寫與大寫字母的固定 ASCII 差距）。接著將大寫 'Z' (ASCII 90) 加上 32 得到 122，經 chr(122) 轉換即為小寫 'z'。",
     traceSteps: [
-      { line: 1, text: "word = 'NtU'", vars: {"word": "'NtU'"} },
-      { line: 2, text: "ord('N')^32 -> 'n', ord('t')^32 -> 'T', ord('U')^32 -> 'u'", vars: {"converted": "'nTu'"} },
-      { line: 3, text: "印出 'nTu'", vars: {"output": "'nTu'"} }
+      { line: 1, text: "s = 'hello'，s[0] 為 'h'，s[0].upper() 為 'H'", vars: {"s": "'hello'"} },
+      { line: 2, text: "計算 ord('h') - ord('H') = 104 - 72 = 32", vars: {"diff": 32} },
+      { line: 3, text: "chr(ord('Z') + 32) = chr(90 + 32) = chr(122) = 'z'", vars: {"new_char": "'z'"} },
+      { line: 4, text: "印出 'z'", vars: {"output": "'z'"} }
     ]
   },
   {
@@ -3181,20 +3182,18 @@ print(calc(5, c=4, b=3))`,
     difficulty: "basic",
     category: "預設參數語法",
     question: "依據 Python 語法，下列何者是完全合法的函式定義宣告？",
-    code: `def valid_func(a, b=2, c=3):
-    return a + b + c
-print(valid_func(1))`,
+    code: ``,
     options: [
       "A. def f(a=1, b): pass",
       "B. def f(a, b=2, c): pass",
-      "C. def valid_func(a, b=2, c=3): pass",
+      "C. def f(a, b=2, c=3): pass",
       "D. def f(a=1, b=2, c): pass"
     ],
     answer: "C",
-    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError。因此只有 def valid_func(a, b=2, c=3): pass 合法，輸出 1 + 2 + 3 = 6。",
+    explanation: "Python 規定沒有預設值的參數（non-default argument）必須排在所有具有預設值的參數（default argument）之前，否則會拋出 SyntaxError: non-default argument follows default argument。因此只有 def f(a, b=2, c=3): pass 完全合法。",
     traceSteps: [
-      { line: 1, text: "定義合法的函式參數順序：無預設值 a 在前，具預設值 b=2, c=3 在後", vars: {} },
-      { line: 3, text: "呼叫 valid_func(1)：a=1, b=2, c=3，回傳 6", vars: {"output": 6} }
+      { line: 1, text: "檢查參數順序規則：無預設值的必要參數 a 必須排在最前面", vars: {"required": "'a'"} },
+      { line: 1, text: "具預設值的參數 b=2, c=3 排在後方，符合 Python 語法規範", vars: {"defaults": "'b=2, c=3'"} }
     ]
   },
   {
@@ -3801,25 +3800,22 @@ print(type(val) == float, val)`,
     id: "ch1_b13",
     chapterId: 1,
     dimension: "syntax_io",
-    title: "二進制與十六進制常數表示法",
+    title: "終端機標準輸入輸出重導向 (< 與 >)",
     difficulty: "basic",
-    category: "數字進制常數",
-    question: "執行下列進制常數程式碼後，印出的十進制結果為何？",
-    code: `a = 0b1010
-b = 0x1F
-print(a, b)`,
+    category: "終端機 I/O 重導向",
+    question: "【Week 2 投影片考點】在終端機執行 python3 taxi.py < testcase.txt > out.txt（且原本已存在舊的 out.txt）時，下列敘述何者正確？",
+    code: ``,
     options: [
-      "A. 10 15",
-      "B. 10 31",
-      "C. 1010 31",
-      "D. 12 31"
+      "A. 程式必須先刪除內部的 input() 呼叫，否則 < testcase.txt 會引發語法錯誤",
+      "B. 程式的 input() 會讀取 testcase.txt，且 print() 輸出會直接覆蓋 out.txt，螢幕上不印出任何內容",
+      "C. print() 的輸出會同時顯示在終端機螢幕上，並附加（append）在舊 out.txt 末尾",
+      "D. 在 Windows 預設的 PowerShell 中不需切換 cmd 即可直接使用 < 進行輸入重導向"
     ],
     answer: "B",
-    explanation: "在 Python 中，以 0b 開頭為二進制常數，0b1010 對應十進制 1*8 + 0*4 + 1*2 + 0*1 = 10；以 0x 開頭為十六進制常數，0x1F 對應 1*16 + 15 = 31。print 預設以十進制印出數值，因此輸出 10 31。",
+    explanation: "【Week 2 投影片核心考點 (Slides 19-22)】1. 標準輸入重導向 `< testcase.txt` 會將檔案內容逐行餵給 `input()`，完全不需修改 `.py` 原始碼；2. 標準輸出重導向 `> out.txt` 會將 `print()` 的所有輸出寫入檔案，螢幕上不會印出任何東西，且若 `out.txt` 已存在會直接覆蓋（Overwrite）舊內容；3. Windows PowerShell 不支援 `<`，必須先輸入 `cmd` 切換至 Command Prompt 才能使用。",
     traceSteps: [
-      { line: 1, text: "0b1010 解析為十進制整數 10", vars: {"a": 10} },
-      { line: 2, text: "0x1F 解析為十進制整數 31", vars: {"b": 31} },
-      { line: 3, text: "印出十進制數值 10 31", vars: {"output": "10 31"} }
+      { line: 1, text: "< testcase.txt 將測資檔案導入標準輸入 (stdin)，供 input() 讀取", vars: {"stdin": "'testcase.txt'"} },
+      { line: 1, text: "> out.txt 將標準輸出 (stdout) 導向檔案並直接覆蓋舊檔，螢幕無輸出", vars: {"stdout": "'out.txt (Overwrite)'"} }
     ]
   },
   {
@@ -3898,26 +3894,22 @@ print(f"Total: {x}")`,
     id: "ch1_a15",
     chapterId: 1,
     dimension: "syntax_io",
-    title: "位元 XOR 與位移運算求值",
+    title: "命令列測資比對指令 diff 與 fc 判讀",
     difficulty: "advanced",
-    category: "位元運算子",
-    question: "執行下列位元互斥或（XOR）與左移運算程式碼後，印出的結果為何？",
-    code: `x = 5
-y = 3
-z = (x ^ y) << 1
-print(z)`,
+    category: "終端機測資比對",
+    question: "【Week 2 投影片考點】在 macOS/Linux 終端機執行 diff out.txt ans.txt（或於 Windows cmd 執行 fc out.txt ans.txt）比對輸出與標準答案時，下列敘述何者正確？",
+    code: ``,
     options: [
-      "A. 6",
-      "B. 12",
-      "C. 16",
-      "D. 8"
+      "A. 當 diff out.txt ans.txt 完全沒有印出任何訊息時，代表兩個檔案內容完全一致（通過測資）",
+      "B. 當 diff out.txt ans.txt 沒有印出任何訊息時，代表比對指令執行失敗或檔案為空",
+      "C. 若 diff 印出 2c2 以及 < 85 與 > 80，其中 < 85 代表右邊檔案 ans.txt 的內容",
+      "D. Windows 終端機內建只能使用 diff 指令，而 macOS 只能使用 fc 指令"
     ],
-    answer: "B",
-    explanation: "x = 5（二進制 0101），y = 3（二進制 0011）。x ^ y 進行位元互斥或運算：0101 ^ 0011 = 0110（十進制 6）。接著 << 1 進行左移一位運算，相當於乘以 2 的 1 次方，6 * 2 = 12。故印出 12。",
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slide 23)】macOS/Linux 使用 `diff out.txt ans.txt`，Windows (`cmd`) 使用 `fc out.txt ans.txt`。當 `diff` 完全沒有印出任何訊息時，代表兩檔案一模一樣！若印出 `2c2` 與 `< 85`、`> 80`，代表第 2 行需修改（change），`<` 代表左邊檔案（`out.txt`）的內容，`>` 代表右邊目標檔案（`ans.txt`）的內容。",
     traceSteps: [
-      { line: 1, text: "x = 5 (0b0101), y = 3 (0b0011)", vars: {"x": 5, "y": 3} },
-      { line: 3, text: "計算 5 ^ 3 = 6 (0b0110)，接著左移 1 位 6 << 1 = 12", vars: {"z": 12} },
-      { line: 4, text: "印出 z 之值 12", vars: {"output": 12} }
+      { line: 1, text: "執行 diff out.txt ans.txt 比對左側輸出檔與右側解答檔", vars: {"left": "'out.txt'", "right": "'ans.txt'"} },
+      { line: 1, text: "無任何訊息輸出代表兩檔案完全相同；若有差異則 < 指左檔、> 指右檔", vars: {"identical": true} }
     ]
   },
   {
@@ -4932,6 +4924,634 @@ print(res)`,
       { line: 1, text: "x 為 0, 1, 2 時，條件不滿足映射為 -1", vars: {} },
       { line: 1, text: "x 為 3, 4 時，條件滿足映射為 x 本身", vars: {"res": "[-1, -1, -1, 3, 4]"} },
       { line: 2, text: "輸出 [-1, -1, -1, 3, 4]", vars: {"output": "[-1, -1, -1, 3, 4]"} }
+    ]
+  },
+  // ==================== ROUND 2 ADDITIONS (INDEX >= 192: W2 SLIDES, FILE I/O, MODULES, RECURSION, 114-1/114-2 ARCHETYPES) ====================
+  {
+    id: "ch1_b17",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "114-2 考古題 Q5：變數識別字 vs 字串字面量",
+    difficulty: "basic",
+    category: "基礎輸出與識別字",
+    question: "【114-2 考古題 Q5 考點】執行下列 Python 程式碼後，終端機印出的結果為何？",
+    code: `x = 10
+y = 25
+print("x", y)`,
+    options: [
+      "A. 10 25",
+      "B. x 25",
+      "C. x y",
+      "D. NameError"
+    ],
+    answer: "B",
+    explanation: "【114-2 考古題核心考點 (Q5)】被雙引號包住的 \"x\" 是字串字面量（string literal），print 會直接印出字元 x 本身；而未加引號的 y 則是變數識別字（identifier），print 會印出變數 y 儲存的數值 25。因此輸出為 x 25。",
+    traceSteps: [
+      { line: 1, text: "變數初始化：x = 10, y = 25", vars: {"x": 10, "y": 25} },
+      { line: 3, text: "'x' 加了雙引號視為字串字面量，y 視為變數取出值 25", vars: {"output": "'x 25'"} }
+    ]
+  },
+  {
+    id: "ch1_b18",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "Week 2 投影片：Python 之禪 (import this) 與語意化命名",
+    difficulty: "basic",
+    category: "PEP 8 與 Python 哲學",
+    question: "【Week 2 投影片考點】關於 Python 內建彩蛋指令與投影片第 27–28 頁強調的變數命名原則，下列敘述何者正確？",
+    code: ``,
+    options: [
+      "A. 執行 import this 會印出 Tim Peters 撰寫的《The Zen of Python》，且變數命名應具清楚語意（如 student_age 優於 sa 或 a）",
+      "B. 為了打字快速，應盡量將長變數名稱如 coding_and_coworking_club 縮寫為單一縮寫 ccc",
+      "C. 執行 import zen 才會印出 Python 設計哲學，import this 會引發 ModuleNotFoundError",
+      "D. PEP 8 建議一般區域變數一律使用全大寫（如 STUDENT_NAME）以利辨識"
+    ],
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slides 27-28)】1. 在程式中執行 `import this` 會印出 Tim Peters 撰寫的 *The Zen of Python*（Python 之禪，如 Readability counts）；2. 變數命名應使用具清楚語意的英文單字並以底線連接（`snake_case`），避免使用無意義單字母或讓人看不懂的過度縮寫（如投影片舉例勿將社團名稱縮寫為 `ccc`）。",
+    traceSteps: [
+      { line: 1, text: "import this 載入內建彩蛋模組，輸出 The Zen of Python 19 條設計哲學", vars: {"module": "'this'"} },
+      { line: 1, text: "檢視命名原則：Readability counts，使用具語意之 snake_case 變數名", vars: {"style": "'semantic snake_case'"} }
+    ]
+  },
+  {
+    id: "ch1_a17",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "Week 2 投影片：PEP 8 切片冒號不空格例外",
+    difficulty: "advanced",
+    category: "PEP 8 規範檢驗",
+    question: "【Week 2 投影片 Slide 30 考點】投影片特別強調 PEP 8 中冒號「:」與逗號「,」的空白規範與「例外情況」。下列哪一行程式碼完全符合 PEP 8 標準？",
+    code: ``,
+    options: [
+      "A. part = data[1:5] (用於切片 Slicing 時，冒號前後皆不加空格)",
+      "B. part = data[1: 5] (切片冒號比照字典冒號，後面應空一格)",
+      "C. items = [1,2,3] (串列逗號後面不加空格)",
+      "D. info = {'id' : 101} (字典冒號前後都必須空一格)"
+    ],
+    answer: "A",
+    explanation: "【Week 2 投影片核心考點 (Slide 30)】投影片第 30 頁特別框出例外：雖然逗號 `,` 與一般冒號 `:` 的規則是「前面不空格、後面空一格」（例如 `[1, 2, 3]`、`{'id': 101}`），但**當冒號 `:` 用於串列或字串切片（Slicing）時屬於例外，冒號前後都不加空格**（應寫為 `data[1:5]`，寫成 `data[1: 5]` 違反 PEP 8）！",
+    traceSteps: [
+      { line: 1, text: "一般規則：逗號與字典冒號為『前不空格、後空一格』", vars: {"general": "'[1, 2], {k: v}'"} },
+      { line: 1, text: "Slide 30 例外規則：切片 (Slicing) 冒號前後皆不加空格 -> data[1:5]", vars: {"slicing_pep8": "'data[1:5]'"} }
+    ]
+  },
+  {
+    id: "ch1_a18",
+    chapterId: 1,
+    dimension: "syntax_io",
+    title: "標準函式庫 math 模組：ceil、floor 與 sqrt",
+    difficulty: "advanced",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列匯入標準函式庫 math 模組的程式碼後，印出的結果為何？",
+    code: `import math
+a = math.ceil(4.1)
+b = math.floor(4.9)
+c = math.sqrt(16)
+print(a, b, c)`,
+    options: [
+      "A. 5 4 4.0",
+      "B. 4 5 4",
+      "C. 5 4 4",
+      "D. 4 4 4.0"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】1. `math.ceil(4.1)` 為無條件進位（天花板函式），回傳整數 `5`；2. `math.floor(4.9)` 為無條件捨去（地板函式），回傳整數 `4`；3. **高頻陷阱**：`math.sqrt(16)` 開根號永遠回傳浮點數（`float`），即 `4.0` 而非整數 `4`！故輸出 `5 4 4.0`。",
+    traceSteps: [
+      { line: 2, text: "math.ceil(4.1) 向上取整數得 5", vars: {"a": 5} },
+      { line: 3, text: "math.floor(4.9) 向下取整數得 4", vars: {"b": 4} },
+      { line: 4, text: "math.sqrt(16) 回傳浮點數 4.0", vars: {"c": 4.0} },
+      { line: 5, text: "印出 5 4 4.0", vars: {"output": "'5 4 4.0'"} }
+    ]
+  },
+  {
+    id: "ch2_b17",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-1 考古題 Q27：字串步長切片傳奇彩蛋題",
+    difficulty: "basic",
+    category: "字串切片運算",
+    question: "【114-1 考古題 Q27 原題】執行下列字串切片程式碼後，終端機的正確輸出為何？",
+    code: `s = "programming"
+print(s[2:8:2])`,
+    options: [
+      "A. orm",
+      "B. ormg",
+      "C. rga",
+      "D. org"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q27 傳奇送分題彩蛋)】字串 `s = 'programming'` 各字元索引為：0:'p', 1:'r', 2:'o', 3:'g', 4:'r', 5:'a', 6:'m', 7:'m', 8:'i'。切片 `s[2:8:2]` 從索引 2 開始，每次步長 +2，取索引 2 ('o')、4 ('r')、6 ('m')，因為終止索引 8 不包含在內，所以正確答案為 `'orm'`！（考古題彩蛋：114-1 實戰考卷當年印成 ormg、rga、org、ram 四個選項，因漏印 `'orm'` 而成為全班送分題！）",
+    traceSteps: [
+      { line: 1, text: "s = 'programming'，索引 2='o', 4='r', 6='m', 8='i'(不含)", vars: {"s": "'programming'"} },
+      { line: 2, text: "s[2:8:2] 取出索引 2, 4, 6 字元組合為 'orm'", vars: {"output": "'orm'"} }
+    ]
+  },
+  {
+    id: "ch2_b18",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-2 考古題原型：字串走訪與母音計數",
+    difficulty: "basic",
+    category: "字串走訪與方法",
+    question: "【114-2 考古題原型】執行下列結合 lower() 與 in 運算子的字串統計程式碼後，印出的結果為何？",
+    code: `text = "Education"
+count = 0
+for ch in text.lower():
+    if ch in "aeiou":
+        count += 1
+print(count)`,
+    options: [
+      "A. 4",
+      "B. 5",
+      "C. 3",
+      "D. 6"
+    ],
+    answer: "B",
+    explanation: "【114-2 考古題核心考點】`text.lower()` 先將 `'Education'` 全轉為小寫 `'education'`（使得原本大寫的 `'E'` 也能被匹配）。逐字檢查是否屬於母音 `'aeiou'`：`'e'`, `'u'`, `'a'`, `'i'`, `'o'` 共 5 個母音字母，故 `count` 為 `5`。",
+    traceSteps: [
+      { line: 3, text: "text.lower() 轉為 'education'", vars: {"lower_text": "'education'"} },
+      { line: 4, text: "依序匹配到母音 'e', 'u', 'a', 'i', 'o' 共 5 次", vars: {"count": 5} },
+      { line: 6, text: "印出 5", vars: {"output": 5} }
+    ]
+  },
+  {
+    id: "ch2_a17",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "檔案讀寫字串清理：strip() 去除換行符與 split()",
+    difficulty: "advanced",
+    category: "檔案字串解析",
+    question: "【NTU COOL 檔案單元考點】讀取檔案時每行末尾常帶有換行符號 '\\n'。執行下列模擬逐行清理與切割的程式碼後，印出的結果為何？",
+    code: `raw_lines = ["Alice,90\\n", "Bob,85\\n"]
+total = 0
+for line in raw_lines:
+    parts = line.strip().split(",")
+    total += int(parts[1])
+print(parts[0], total)`,
+    options: [
+      "A. Bob 175",
+      "B. Alice 175",
+      "C. Bob 9085",
+      "D. ValueError"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案與字串核心考點】從檔案逐行讀取時，每行結尾預設帶有 `'\\n'`。透過 `line.strip()` 可先乾淨移除首尾空白與 `'\\n'`，再用 `.split(',')` 切分為 `['Alice', '90']` 與 `['Bob', '85']`。`int(parts[1])` 將分數轉為整數累加 `90 + 85 = 175`，迴圈結束時 `parts[0]` 為最後一行的 `'Bob'`，印出 `Bob 175`。",
+    traceSteps: [
+      { line: 4, text: "第一輪：'Alice,90\\n' strip 後 split 得 ['Alice', '90']，total = 90", vars: {"parts": "['Alice', '90']", "total": 90} },
+      { line: 4, text: "第二輪：'Bob,85\\n' strip 後 split 得 ['Bob', '85']，total = 175", vars: {"parts": "['Bob', '85']", "total": 175} },
+      { line: 6, text: "印出 Bob 175", vars: {"output": "'Bob 175'"} }
+    ]
+  },
+  {
+    id: "ch2_a18",
+    chapterId: 2,
+    dimension: "strings_ascii",
+    title: "114-1 考古題變形：負步長反向切片與索引邊界",
+    difficulty: "advanced",
+    category: "字串切片運算",
+    question: "【114-1 考古題切片考點】執行下列包含負步長（Negative Step）的字串切片程式碼後，輸出為何？",
+    code: `s = "algorithm"
+print(s[7:2:-2])`,
+    options: [
+      "A. hio",
+      "B. hro",
+      "C. mtr",
+      "D. hrg"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點】在 `'algorithm'` 中，索引為 0:'a', 1:'l', 2:'g', 3:'o', 4:'r', 5:'i', 6:'t', 7:'h', 8:'m'。切片 `s[7:2:-2]` 從索引 7 ('h') 開始往左走，每次步長 -2，依序取出索引 7 ('h')、索引 5 ('i')、索引 3 ('o')，終止索引 2 ('g') 不包含，故輸出 `hio`。",
+    traceSteps: [
+      { line: 1, text: "s = 'algorithm' (0:a, 1:l, 2:g, 3:o, 4:r, 5:i, 6:t, 7:h, 8:m)", vars: {"s": "'algorithm'"} },
+      { line: 2, text: "s[7:2:-2] 依序取索引 7('h'), 5('i'), 3('o')，索引 2 不含", vars: {"output": "'hio'"} }
+    ]
+  },
+  {
+    id: "ch3_b17",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-1 考古題 Q54：建立空串列 [] / list() 與 {} 陷阱",
+    difficulty: "basic",
+    category: "容器初始化語法",
+    question: "【114-1 考古題 Q54 考點】執行下列容器初始化程式碼後，印出的結果為何？",
+    code: `a = []
+b = list()
+c = {}
+print(a == b, type(a).__name__, type(c).__name__)`,
+    options: [
+      "A. True list dict",
+      "B. True list set",
+      "C. False list dict",
+      "D. True tuple dict"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q54)】在 Python 中，`a = []` 與 `b = list()` 都是建立「空串列（empty list）」的合法方式，因此 `a == b` 為 `True`（114-1 考卷 Q54 選 `[]` 或 `list()` 皆給分）。**最大陷阱**：單獨寫 `c = {}` 建立的是「空字典（`dict`）」，而不是空集合（空集合必須寫 `set()`）！",
+    traceSteps: [
+      { line: 1, text: "a = [] 與 b = list() 皆建立空串列 []", vars: {"a": "[]", "b": "[]"} },
+      { line: 3, text: "c = {} 建立空字典 (dict)", vars: {"c": "{}"} },
+      { line: 4, text: "印出 True list dict", vars: {"output": "'True list dict'"} }
+    ]
+  },
+  {
+    id: "ch3_b18",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-2 考古題 Q68：二維串列（Matrix）雙重索引存取",
+    difficulty: "basic",
+    category: "二維串列索引",
+    question: "【114-2 考古題 Q68 考點】執行下列二維串列（2D List）存取程式碼後，印出的結果為何？",
+    code: `matrix = [
+    [10, 20, 30],
+    [40, 50, 60],
+    [70, 80, 90]
+]
+print(matrix[1][2], matrix[-1][0])`,
+    options: [
+      "A. 60 70",
+      "B. 20 70",
+      "C. 60 90",
+      "D. 50 40"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q68)】在二維串列 `matrix[row][col]` 中，第一個索引代表「列（row，由 0 算起）」，第二個索引代表該列中的「欄（column，由 0 算起）」。`matrix[1][2]` 取第 1 列 `[40, 50, 60]` 的索引 2 元素，即 `60`；`matrix[-1][0]` 取最後一列 `[70, 80, 90]` 的索引 0 元素，即 `70`。",
+    traceSteps: [
+      { line: 6, text: "matrix[1] 為 [40, 50, 60]，其索引 2 為 60", vars: {"val1": 60} },
+      { line: 6, text: "matrix[-1] 為 [70, 80, 90]，其索引 0 為 70", vars: {"val2": 70, "output": "'60 70'"} }
+    ]
+  },
+  {
+    id: "ch3_a17",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "114-2 考古題 Q67/Q68：二維矩陣雙層迴圈元素加總",
+    difficulty: "advanced",
+    category: "二維串列走訪",
+    question: "【114-2 考古題 Q67/Q68 考點】執行下列走訪二維串列（Matrix）並篩選累加的程式碼後，印出的 total 為何？",
+    code: `matrix = [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+total = 0
+for row in matrix:
+    for val in row:
+        if val > 5:
+            total += val
+print(total)`,
+    options: [
+      "A. 30",
+      "B. 35",
+      "C. 45",
+      "D. 24"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q67/Q68)】外層迴圈 `for row in matrix:` 依序取出每一列子串列，內層迴圈 `for val in row:` 取出該列中的每個數字。滿足 `val > 5` 的數字有：第一列的 `7`、第二列的 `8`、第三列的 `6` 與 `9`，總和 `total = 7 + 8 + 6 + 9 = 30`。",
+    traceSteps: [
+      { line: 3, text: "走訪三列子串列，篩選大於 5 的元素：7, 8, 6, 9", vars: {"matched": "[7, 8, 6, 9]"} },
+      { line: 7, text: "累加 7 + 8 + 6 + 9 = 30 並印出", vars: {"total": 30, "output": 30} }
+    ]
+  },
+  {
+    id: "ch3_a18",
+    chapterId: 3,
+    dimension: "containers_memory",
+    title: "檔案 readlines() 回傳串列容器與換行字元長度陷阱",
+    difficulty: "advanced",
+    category: "檔案與串列容器",
+    question: "【NTU COOL 檔案單元考點】使用 io.StringIO 模擬檔案物件並呼叫 readlines() 後，執行下列程式碼的輸出為何？",
+    code: `import io
+fake_file = io.StringIO("cat\\ndog\\nfox")
+lines = fake_file.readlines()
+print(len(lines), len(lines[0]), lines[2])`,
+    options: [
+      "A. 3 4 fox",
+      "B. 3 3 fox",
+      "C. 3 5 fox",
+      "D. 1 11 fox"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案與容器核心考點】`readlines()` 會將檔案所有行讀取為一個串列（`list`），此處共有 3 行故 `len(lines)` 為 `3`。**高頻陷阱**：`lines[0]` 是 `'cat\\n'`，因為末尾包含一個換行字元 `'\\n'`（算 1 個字元），所以 `len('cat\\n')` 是 `4` 而不是 `3`！最後一行 `'fox'` 末尾沒有換行符，印出 `3 4 fox`。",
+    traceSteps: [
+      { line: 3, text: "readlines() 回傳 ['cat\\n', 'dog\\n', 'fox']，串列長度為 3", vars: {"lines": "['cat\\n', 'dog\\n', 'fox']"} },
+      { line: 4, text: "len('cat\\n') 包含換行字元共 4 個字元，lines[2] 為 'fox'", vars: {"output": "'3 4 fox'"} }
+    ]
+  },
+  {
+    id: "ch4_b17",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-1 考古題 Q45：連續獨立 if 與 elif 控制流差異",
+    difficulty: "basic",
+    category: "條件判斷分支",
+    question: "【114-1 考古題 Q45 考點】執行下列包含兩個獨立 if 敘述的程式碼後，印出的結果為何？",
+    code: `x = 10
+res = ""
+if x > 5:
+    res += "A"
+else:
+    res += "B"
+if x > 8:
+    res += "C"
+else:
+    res += "D"
+print(res)`,
+    options: [
+      "A. AC",
+      "B. A",
+      "C. AD",
+      "D. BC"
+    ],
+    answer: "A",
+    explanation: "【114-1 考古題核心考點 (Q45)】這題是期中考極高頻陷阱！請注意第 7 行是獨立的 `if x > 8:` 而不是 `elif x > 8:`。當 `x = 10` 時，第一組 `if x > 5:` 成立，將 `'A'` 加入 `res`；接著程式繼續執行第二組獨立的 `if x > 8:`，同樣成立並將 `'C'` 加入 `res`，故最終印出 `AC`。",
+    traceSteps: [
+      { line: 3, text: "第一組 if：x = 10 > 5 成立，res 變為 'A'", vars: {"res": "'A'"} },
+      { line: 7, text: "第二組獨立 if：x = 10 > 8 亦成立，res 加上 'C' 變為 'AC'", vars: {"res": "'AC'", "output": "'AC'"} }
+    ]
+  },
+  {
+    id: "ch4_b18",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q60：手刻迴圈尋找串列最大值與索引",
+    difficulty: "basic",
+    category: "迴圈極值搜尋",
+    question: "【114-2 考古題 Q60 考點】在不呼叫內建 max() 的情況下，執行下列手刻最大值搜尋迴圈後，印出的結果為何？",
+    code: `numbers = [15, 42, 8, 42, 23]
+biggest = numbers[0]
+best_idx = 0
+for i in range(len(numbers)):
+    if numbers[i] > biggest:
+        biggest = numbers[i]
+        best_idx = i
+print(biggest, best_idx)`,
+    options: [
+      "A. 42 1",
+      "B. 42 3",
+      "C. 23 4",
+      "D. 15 0"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q60)】標準手刻最大值模式：先將 `biggest` 初始化為首項 `numbers[0]` (15)。當 `i = 1` 時，`numbers[1]` 為 `42 > 15`，更新 `biggest = 42`、`best_idx = 1`；當 `i = 3` 時，雖然 `numbers[3]` 也是 `42`，但條件為嚴格大於 `>`（`42 > 42` 為 `False`），因此不會覆蓋 `best_idx`，最終印出 `42 1`。",
+    traceSteps: [
+      { line: 2, text: "初始化 biggest = 15, best_idx = 0", vars: {"biggest": 15, "best_idx": 0} },
+      { line: 5, text: "i=1 時 42 > 15 成立，更新 biggest=42, best_idx=1；i=3 時 42 > 42 不成立", vars: {"biggest": 42, "best_idx": 1} },
+      { line: 8, text: "印出 42 1", vars: {"output": "'42 1'"} }
+    ]
+  },
+  {
+    id: "ch4_a17",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q63/Q65：雙層巢狀迴圈列印星號矩陣",
+    difficulty: "advanced",
+    category: "雙層巢狀迴圈",
+    question: "【114-2 考古題 Q63/Q65 考點】執行下列雙層巢狀迴圈搭配 end=\"\" 與外層 print() 的程式碼後，終端機的輸出排版為何？",
+    code: `for i in range(2):
+    for j in range(3):
+        print("*", end="")
+    print()`,
+    options: [
+      "A. ***\n***",
+      "B. **\n**\n**",
+      "C. ******",
+      "D. *\n*\n*\n*\n*\n*"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q63/Q65)】外層迴圈 `for i in range(2):` 控制總共印出 **2 列（rows）**；內層迴圈 `for j in range(3):` 搭配 `print('*', end='')` 不換行，在同一列連續印出 **3 顆星號 `***`**。每次內層迴圈跑完後，外層的 `print()` 負責換行，因此形成 2 列 × 3 欄的 `***\\n***` 星號矩陣。",
+    traceSteps: [
+      { line: 1, text: "外層 i=0：內層連印 3 顆星 '***' 後由外層 print() 換行", vars: {"row0": "'***'"} },
+      { line: 1, text: "外層 i=1：內層連印 3 顆星 '***' 後由外層 print() 換行", vars: {"output": "'***\\n***'"} }
+    ]
+  },
+  {
+    id: "ch4_a18",
+    chapterId: 4,
+    dimension: "control_flow",
+    title: "114-2 考古題 Q65 變形：雙層巢狀迴圈列印直角座標索引",
+    difficulty: "advanced",
+    category: "雙層巢狀迴圈",
+    question: "【114-2 考古題 Q65 考點】執行下列外層變數影響內層 range 邊界的雙層迴圈後，輸出的結果為何？",
+    code: `for i in range(1, 4):
+    for j in range(1, i + 1):
+        print(j, end="")
+    print("-", end="")`,
+    options: [
+      "A. 1-12-123-",
+      "B. 1-22-333-",
+      "C. 123-123-123-",
+      "D. 1-12-123"
+    ],
+    answer: "A",
+    explanation: "【114-2 考古題核心考點 (Q65)】1. 當 `i = 1`：內層 `range(1, 2)` 印出 `1`，接著外層印出 `-`；2. 當 `i = 2`：內層 `range(1, 3)` 印出 `12`，接著外層印出 `-`；3. 當 `i = 3`：內層 `range(1, 4)` 印出 `123`，接著外層印出 `-`。因為全程都設定了 `end=''` 不換行，故串接為 `1-12-123-`。",
+    traceSteps: [
+      { line: 1, text: "i=1 印出 '1-'；i=2 印出 '12-'；i=3 印出 '123-'", vars: {"output": "'1-12-123-'"} }
+    ]
+  },
+  {
+    id: "ch5_b17",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：基底條件與回傳順序追蹤",
+    difficulty: "basic",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列包含基底條件（Base Case）的遞迴函式後，印出的字串為何？",
+    code: `def count_down(n):
+    if n <= 0:
+        return "GO"
+    return f"{n}-" + count_down(n - 2)
+
+print(count_down(4))`,
+    options: [
+      "A. 4-2-GO",
+      "B. 4-3-2-1-GO",
+      "C. 4-2-0-GO",
+      "D. GO-2-4"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】遞迴呼叫必須逐步收斂至基底條件（Base Case: `if n <= 0: return 'GO'`）。展開過程：`count_down(4)` 回傳 `'4-' + count_down(2)` ➔ `'4-' + ('2-' + count_down(0))` ➔ 當 `n = 0` 時觸發 `n <= 0` 直接回傳 `'GO'`（不再印出 0），合併結果為 `'4-2-GO'`。",
+    traceSteps: [
+      { line: 4, text: "count_down(4) 呼叫 count_down(2)，再呼叫 count_down(0)", vars: {"stack": "[4, 2, 0]"} },
+      { line: 2, text: "n=0 觸發 Base Case 回傳 'GO'，逐層拼回 '4-2-GO'", vars: {"output": "'4-2-GO'"} }
+    ]
+  },
+  {
+    id: "ch5_b18",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "標準模組匯入語法：from math import 與別名 as",
+    difficulty: "basic",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列使用 from ... import ... as 別名匯入的程式碼後，印出的結果為何？",
+    code: `from math import factorial as fact, gcd
+print(fact(4), gcd(12, 18))`,
+    options: [
+      "A. 24 6",
+      "B. 16 6",
+      "C. 24 3",
+      "D. NameError"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】`from math import factorial as fact, gcd` 將階乘函式 `factorial` 匯入並取別名為 `fact`，同時直接匯入最大公因數函式 `gcd`。`fact(4)` 計算 `4! = 4 * 3 * 2 * 1 = 24`；`gcd(12, 18)` 計算 12 與 18 的最大公因數為 `6`，故印出 `24 6`。",
+    traceSteps: [
+      { line: 1, text: "匯入 math.factorial 並命名為 fact，匯入 math.gcd", vars: {} },
+      { line: 2, text: "fact(4) = 24，gcd(12, 18) = 6，印出 24 6", vars: {"output": "'24 6'"} }
+    ]
+  },
+  {
+    id: "ch5_a17",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：串列切片遞迴加總與呼叫堆疊次數",
+    difficulty: "advanced",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列透過串列切片 lst[1:] 進行遞迴加總的程式碼後，印出的總和與函式總呼叫次數 calls 為何？",
+    code: `calls = 0
+def rec_sum(lst):
+    global calls
+    calls += 1
+    if len(lst) == 0:
+        return 0
+    return lst[0] + rec_sum(lst[1:])
+
+print(rec_sum([10, 20, 30]), calls)`,
+    options: [
+      "A. 60 4",
+      "B. 60 3",
+      "C. 30 3",
+      "D. 60 1"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】計算呼叫次數時，**千萬別漏掉最後觸發 Base Case（空串列 `[]`）的那一次呼叫**！呼叫順序為：第 1 次 `rec_sum([10, 20, 30])` ➔ 第 2 次 `rec_sum([20, 30])` ➔ 第 3 次 `rec_sum([30])` ➔ 第 4 次 `rec_sum([])`（此時 `len(lst) == 0` 回傳 `0`）。因此總和為 `60`，`calls` 為 `4`。",
+    traceSteps: [
+      { line: 2, text: "依序呼叫 rec_sum([10,20,30]), [20,30], [30], [] 共 4 次", vars: {"calls": 4} },
+      { line: 7, text: "回傳 10 + 20 + 30 + 0 = 60，印出 60 4", vars: {"output": "'60 4'"} }
+    ]
+  },
+  {
+    id: "ch5_a18",
+    chapterId: 5,
+    dimension: "functions_scope",
+    title: "遞迴函式（Recursion）：雙分支遞迴樹呼叫次數追蹤",
+    difficulty: "advanced",
+    category: "遞迴函式追蹤",
+    question: "【NTU COOL 遞迴單元考點】執行下列雙分支遞迴函式 f(3) 後，印出的回傳值與全域計數器 count 分別為何？",
+    code: `count = 0
+def f(n):
+    global count
+    count += 1
+    if n <= 1:
+        return n
+    return f(n - 1) + f(n - 2)
+
+print(f(3), count)`,
+    options: [
+      "A. 2 5",
+      "B. 2 3",
+      "C. 3 5",
+      "D. 2 4"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 遞迴單元核心考點】追蹤費氏數列遞迴樹 `f(3)`：\n1. 呼叫 `f(3)` (第1次) 展開為 `f(2) + f(1)`；\n2. 左分支呼叫 `f(2)` (第2次) 展開為 `f(1)` (第3次，回傳1) + `f(0)` (第4次，回傳0)，故 `f(2)` 得 `1`；\n3. 右分支呼叫 `f(1)` (第5次，回傳1)。\n最終回傳值為 `1 + 1 = 2`，總共呼叫了 `f` 函式 `5` 次！",
+    traceSteps: [
+      { line: 7, text: "f(3) 展開呼叫 f(2)[再呼叫 f(1), f(0)] 與 f(1)，共計 5 次呼叫", vars: {"count": 5} },
+      { line: 9, text: "f(3) = 2，印出 2 5", vars: {"output": "'2 5'"} }
+    ]
+  },
+  {
+    id: "ch6_b17",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：'w' 覆寫模式 vs 'a' 附加模式",
+    difficulty: "basic",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】關於 Python 內建 open(filename, mode) 的寫入模式 'w' (write) 與 'a' (append)，下列敘述何者正確？",
+    code: ``,
+    options: [
+      "A. 'w' 模式若檔案已存在會直接清空並覆蓋原內容；'a' 模式則會保留原內容並將新資料寫在檔案末尾",
+      "B. 'w' 模式會在檔案不存在時拋出 FileNotFoundError，只有 'a' 模式會自動建立新檔",
+      "C. 'a' 模式會將新資料插入在檔案的最開頭（第一行之前）",
+      "D. 使用 open() 寫入檔案後即使不呼叫 close() 或不使用 with，資料也保證立即寫入硬碟絕不遺失"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `'w'` (Write) 與 `'a'` (Append) 在檔案不存在時都會自動建立新檔案；2. 兩者最大差異在於檔案已存在時：`'w'` 會**清空並覆蓋（Overwrite）**原有內容，而 `'a'` 會將游標移至檔案尾端**附加（Append）**新內容；3. 實務上應優先使用 `with open(...) as f:` 確保自動關閉檔案並將緩衝區寫入磁碟。",
+    traceSteps: [
+      { line: 1, text: "比較 mode='w' (清空覆寫) 與 mode='a' (尾端附加)", vars: {"w_mode": "'overwrite'", "a_mode": "'append'"} }
+    ]
+  },
+  {
+    id: "ch6_b18",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "標準模組 random：randint(a, b) 閉區間特性 vs range(a, b)",
+    difficulty: "basic",
+    category: "標準模組匯入",
+    question: "【NTU COOL 模組單元考點】執行下列設定亂數種子與呼叫 random.randint(1, 1) 的程式碼後，輸出為何？（注意 randint 與 range 的右邊界差異！）",
+    code: `import random
+val = random.randint(5, 5)
+r_len = len(range(5, 5))
+print(val, r_len)`,
+    options: [
+      "A. 5 0",
+      "B. 5 1",
+      "C. ValueError",
+      "D. None 0"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 模組單元核心考點】這是極常考的邊界比較陷阱！`range(start, stop)` 是「左閉右開 `[start, stop)`」（不包含 `stop`），所以 `range(5, 5)` 為空，長度為 `0`；但 **`random.randint(a, b)` 是「左閉右閉 `[a, b]`」（包含終點 `b`！）**，因此 `random.randint(5, 5)` 必定回傳 `5`。輸出為 `5 0`。",
+    traceSteps: [
+      { line: 2, text: "random.randint(5, 5) 包含上下界 [5, 5]，必定回傳 5", vars: {"val": 5} },
+      { line: 3, text: "range(5, 5) 不包含右邊界，為空序列，長度為 0", vars: {"r_len": 0, "output": "'5 0'"} }
+    ]
+  },
+  {
+    id: "ch6_a17",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：read() vs readlines() vs 逐行迭代",
+    difficulty: "advanced",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】執行下列模擬檔案讀取游標（File Cursor）移動與 read() / readlines() 的程式碼後，印出的結果為何？",
+    code: `import io
+with io.StringIO("Line1\\nLine2\\n") as f:
+    first_read = f.read()
+    second_read = f.readlines()
+print(len(first_read), second_read)`,
+    options: [
+      "A. 12 []",
+      "B. 2 ['Line1\\n', 'Line2\\n']",
+      "C. 12 ['Line1\\n', 'Line2\\n']",
+      "D. 10 []"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `f.read()` 會一次讀出整個檔案的所有字元成為單一字串 `'Line1\\nLine2\\n'`（共 6 + 6 = 12 個字元），且此時**檔案讀取游標（Cursor）已經停在檔案最末端（EOF）**！2. 緊接著再呼叫 `f.readlines()` 時，因為游標已在檔尾無剩餘內容可讀，故回傳空串列 `[]`！",
+    traceSteps: [
+      { line: 3, text: "f.read() 讀完所有 12 個字元，檔案游標移至檔尾 (EOF)", vars: {"first_read": "'Line1\\nLine2\\n'"} },
+      { line: 4, text: "游標已在 EOF，再次呼叫 f.readlines() 回傳空串列 []", vars: {"second_read": "[]", "output": "'12 []'"} }
+    ]
+  },
+  {
+    id: "ch6_a18",
+    chapterId: 6,
+    dimension: "comprehensions_tools",
+    title: "檔案讀寫（File I/O）：with open 上下文管理與逐行過濾",
+    difficulty: "advanced",
+    category: "檔案讀寫 File I/O",
+    question: "【NTU COOL 檔案單元考點】執行下列使用 with 上下文管理器逐行讀取並過濾註解行的程式碼後，印出的結果為何？",
+    code: `import io
+content = "# Header\\n10\\n# Comment\\n25\\n"
+total = 0
+with io.StringIO(content) as f:
+    for line in f:
+        clean = line.strip()
+        if not clean.startswith("#"):
+            total += int(clean)
+print(total, f.closed)`,
+    options: [
+      "A. 35 True",
+      "B. 35 False",
+      "C. ValueError",
+      "D. 1025 True"
+    ],
+    answer: "A",
+    explanation: "【NTU COOL 檔案單元核心考點】1. `for line in f:` 可直接逐行迭代檔案物件，搭配 `line.strip()` 移除換行符並以 `not clean.startswith('#')` 略過 `#` 開頭的註解行，將 `'10'` 與 `'25'` 轉整數相加得 `35`；2. 當離開 `with ... as f:` 縮排區塊時，Python 會**自動關閉檔案**，因此 `f.closed` 必為 `True`。",
+    traceSteps: [
+      { line: 5, text: "逐行迭代過濾 '#' 開頭註解行，累加 10 + 25 = 35", vars: {"total": 35} },
+      { line: 9, text: "離開 with 區塊自動關閉檔案，f.closed 為 True，印出 35 True", vars: {"output": "'35 True'"} }
     ]
   }
 ];

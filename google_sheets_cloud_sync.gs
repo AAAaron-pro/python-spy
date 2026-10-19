@@ -26,7 +26,10 @@ function getOrCreateSheet() {
 }
 
 /**
- * 伺服器端智慧合併 (Smart Merge)：確保雙向同步永遠保留最高星級、最高經驗值與題目聯集
+ * 伺服器端智慧合併 (Smart Merge - FIX-07 & FIX-08)：
+ * 1. 等級與 XP 依累積總經驗值 ((level - 1) * 100 + xp) 成對取高，絕不混合不同來源的等級與經驗值
+ * 2. 總答題數與總答對數嚴格滿足不小於各章節總和的不變量
+ * 3. 支援 resolvedMistakes 墓碑機制 (Tombstone)，徹底防止跨裝置同步時已消滅之錯題死灰復燃
  */
 function smartMergeState(existing, incoming) {
   if (!existing || typeof existing !== "object") return incoming;
@@ -34,12 +37,20 @@ function smartMergeState(existing, incoming) {
 
   const merged = JSON.parse(JSON.stringify(existing));
   merged.studentId = incoming.studentId || existing.studentId;
-  merged.level = Math.max(Number(existing.level) || 1, Number(incoming.level) || 1);
-  merged.xp = Math.max(Number(existing.xp) || 0, Number(incoming.xp) || 0);
+
+  // 等級與經驗值智慧成對取高 (FIX-08)
+  const totalXpE = ((Number(existing.level) || 1) - 1) * 100 + (Number(existing.xp) || 0);
+  const totalXpI = ((Number(incoming.level) || 1) - 1) * 100 + (Number(incoming.xp) || 0);
+  if (totalXpI >= totalXpE) {
+    merged.level = Number(incoming.level) || 1;
+    merged.xp = Number(incoming.xp) || 0;
+  } else {
+    merged.level = Number(existing.level) || 1;
+    merged.xp = Number(existing.xp) || 0;
+  }
+
   merged.streak = Math.max(Number(existing.streak) || 0, Number(incoming.streak) || 0);
   merged.maxStreak = Math.max(Number(existing.maxStreak) || 0, Number(incoming.maxStreak) || 0);
-  merged.totalAnswered = Math.max(Number(existing.totalAnswered) || 0, Number(incoming.totalAnswered) || 0);
-  merged.totalCorrect = Math.max(Number(existing.totalCorrect) || 0, Number(incoming.totalCorrect) || 0);
 
   // 合併章節星級 (1~6)
   merged.chapterProgress = merged.chapterProgress || {};
@@ -54,17 +65,30 @@ function smartMergeState(existing, incoming) {
     };
   }
 
-  // 合併章節統計
+  // 合併章節統計與總數不變量 (FIX-08)
   merged.chapterStats = merged.chapterStats || {};
   const inCs = incoming.chapterStats || {};
+  let sumChapterTotal = 0;
+  let sumChapterCorrect = 0;
   for (let ch = 1; ch <= 6; ch++) {
     const eStat = merged.chapterStats[ch] || { correct: 0, total: 0 };
     const iStat = inCs[ch] || { correct: 0, total: 0 };
-    merged.chapterStats[ch] = {
-      correct: Math.max(Number(eStat.correct) || 0, Number(iStat.correct) || 0),
-      total: Math.max(Number(eStat.total) || 0, Number(iStat.total) || 0)
-    };
+    const t = Math.max(Number(eStat.total) || 0, Number(iStat.total) || 0);
+    const c = Math.min(t, Math.max(Number(eStat.correct) || 0, Number(iStat.correct) || 0));
+    merged.chapterStats[ch] = { correct: c, total: t };
+    sumChapterTotal += t;
+    sumChapterCorrect += c;
   }
+
+  merged.totalAnswered = Math.max(
+    Number(existing.totalAnswered) || 0,
+    Number(incoming.totalAnswered) || 0,
+    sumChapterTotal
+  );
+  merged.totalCorrect = Math.min(
+    merged.totalAnswered,
+    Math.max(Number(existing.totalCorrect) || 0, Number(incoming.totalCorrect) || 0, sumChapterCorrect)
+  );
 
   // 合併六維度統計
   const dims = ["syntax_io", "strings_ascii", "containers_memory", "control_flow", "functions_scope", "comprehensions_tools"];
@@ -74,10 +98,9 @@ function smartMergeState(existing, incoming) {
     const d = dims[i];
     const eDim = merged.dimensionStats[d] || { correct: 0, total: 0 };
     const iDim = inDs[d] || { correct: 0, total: 0 };
-    merged.dimensionStats[d] = {
-      correct: Math.max(Number(eDim.correct) || 0, Number(iDim.correct) || 0),
-      total: Math.max(Number(eDim.total) || 0, Number(iDim.total) || 0)
-    };
+    const dt = Math.max(Number(eDim.total) || 0, Number(iDim.total) || 0);
+    const dc = Math.min(dt, Math.max(Number(eDim.correct) || 0, Number(iDim.correct) || 0));
+    merged.dimensionStats[d] = { correct: dc, total: dt };
   }
 
   // 合併已答題與已見題 (取聯集)
@@ -95,10 +118,32 @@ function smartMergeState(existing, incoming) {
 
   merged.answeredQuestions = unionArr(existing.answeredQuestions, incoming.answeredQuestions);
   merged.seenQuestions = unionArr(existing.seenQuestions, incoming.seenQuestions);
-  // 錯題以最新傳入的狀態或聯集為準 (若 incoming 明確傳入 mistakes 陣列則採用 incoming 消滅後的結果與新錯題)
-  merged.mistakes = Array.isArray(incoming.mistakes) ? incoming.mistakes : unionArr(existing.mistakes, incoming.mistakes);
-  merged.updatedAt = new Date().toISOString();
 
+  // 墓碑合併機制：避免已消滅之錯題在跨裝置同步中復活 (FIX-07)
+  const mergedResolved = unionArr(existing.resolvedMistakes, incoming.resolvedMistakes);
+  const eTime = Date.parse(existing.updatedAt || "") || 0;
+  const iTime = Date.parse(incoming.updatedAt || incoming.lastUpdated || "") || 0;
+  let activeResolved = mergedResolved.slice();
+
+  if (iTime > eTime) {
+    (incoming.mistakes || []).forEach(function(id) {
+      activeResolved = activeResolved.filter(function(x) { return x !== id; });
+    });
+  } else if (eTime > iTime) {
+    (existing.mistakes || []).forEach(function(id) {
+      activeResolved = activeResolved.filter(function(x) { return x !== id; });
+    });
+  }
+
+  const rawMistakes = unionArr(existing.mistakes, incoming.mistakes);
+  merged.mistakes = rawMistakes.filter(function(id) {
+    return activeResolved.indexOf(id) === -1;
+  });
+  merged.resolvedMistakes = activeResolved.filter(function(id) {
+    return merged.mistakes.indexOf(id) === -1;
+  });
+
+  merged.updatedAt = new Date().toISOString();
   return merged;
 }
 
